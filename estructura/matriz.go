@@ -15,7 +15,7 @@ var tiendas [2][2][5]int
 
 var matriz = make([][][]list.Tienda, 5)
 var rowmajor = make([]int, prueba)
-var arr [40]list.Tienda
+var arr [40]list.Lista
 
 func testa() {
 	cont := 1

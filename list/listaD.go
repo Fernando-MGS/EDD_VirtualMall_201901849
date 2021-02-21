@@ -21,10 +21,10 @@ func NewLista() *Lista { //crea una lista
 }
 
 type Tienda struct {
-	Nombre       string
-	Descripcion  string
-	Contacto     string
-	Calificacion int
+	Nombre       string `json: "Nombre, omitempty"`
+	Descripcion  string `json: "Descripcion, omitempty"`
+	Contacto     string `json: "Contacto, omitempty"`
+	Calificacion int    `json: "Calificacion, omitempty"`
 }
 
 func (m *Lista) Insertar(valor Tienda) { //insertar un nodo
@@ -49,11 +49,52 @@ func (m *Lista) Imprimir() { //IMPRIMIR
 	fmt.Print(m.tam)
 }
 
-func (m *Lista) Tamaño() { //IMPRIMIR TAMAÑO DE LISTA
-	fmt.Print(m.tam)
+func (m *Lista) Tamaño() int { //IMPRIMIR TAMAÑO DE LISTA
+	return m.tam
 }
 
-func (m *Lista) GetItem(index int) { //Devuelve un dato de la lista
+func (m *Lista) Borrar(pos int) {
+	aux := m.inicio
+	sum := 0
+	for sum < pos {
+		aux = aux.siguiente
+		sum++
+	}
+	fmt.Println("Llegom", sum)
+	if m.inicio == aux {
+		fmt.Println("inicio", m.tam)
+		fmt.Println(aux.dato.Nombre)
+		//i := m.tam - 1
+		m.inicio = m.inicio.siguiente
+		m.inicio.anterior = nil
+		/*if i > 0 {
+			fmt.Println("Llego 1.", i)
+			m.inicio = aux.siguiente
+			aux.siguiente.anterior = nil
+			aux.siguiente = nil
+		} else {
+			fmt.Println("Llego 2", aux.dato.Nombre, " ", i)
+			aux = nil
+			m.inicio = aux
+			m.inicio.siguiente = nil
+			m.inicio.anterior = nil
+		}*/
+
+	} else if m.ultimo == aux {
+		fmt.Println("adios1")
+		m.ultimo = aux.anterior
+		aux.anterior.siguiente = nil
+	} else {
+		fmt.Println("adios2")
+		aux.anterior.siguiente = aux.siguiente
+		aux.siguiente.anterior = aux.anterior
+		aux.anterior = nil
+		aux.siguiente = nil
+	}
+
+}
+
+func (m *Lista) GetItem(index int) Tienda { //Devuelve un dato de la lista
 	ind := 1
 	aux := m.inicio
 	if index <= m.tam {
@@ -61,9 +102,7 @@ func (m *Lista) GetItem(index int) { //Devuelve un dato de la lista
 			aux = aux.siguiente
 			ind++
 		}
-		fmt.Println(aux.dato)
-	} else {
-		fmt.Println("Dato inexistente")
-	}
 
+	}
+	return aux.dato
 }

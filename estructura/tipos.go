@@ -1,5 +1,9 @@
 package estructura
 
+import (
+	"github.com/Fernando-MGS/TEST/list"
+)
+
 type archivo struct {
 	Datos []Data `json: "Dato,omitempty"`
 }
@@ -9,8 +13,8 @@ type Data struct {
 	Departamentos []Depto `json: "Departamento, omitempty"`
 }
 type Depto struct {
-	Nombre  string   `json: "Nombre, omitempty"`
-	Tiendas []Tienda `json: "Tiendas, omitempty"`
+	Nombre  string        `json: "Nombre, omitempty"`
+	Tiendas []list.Tienda `json: "Tiendas, omitempty"`
 }
 
 type Tienda struct {

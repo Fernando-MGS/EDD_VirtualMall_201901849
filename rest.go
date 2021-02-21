@@ -7,6 +7,8 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strconv"
+	"strings"
 
 	"github.com/Fernando-MGS/TEST/estructura"
 	"github.com/Fernando-MGS/TEST/list"
@@ -14,48 +16,29 @@ import (
 	//"github.com/Fernando-MGS/TEST/list"
 )
 
-type Person struct {
-	ID        string `json:"id,omitempty"`
-	FirstName string `json: "firstname,omitempty"`
-	LastName  string `json: "lastname,omitempty"`
-}
-
 type entrada struct {
 	Datos []estructura.Data `json: "Datos,omitempty"`
 }
 
-type especifica struct{}
+type especifica []list.Tienda
+
+type busqueda struct {
+	Departamento string `json:"Departamento,omitempty"`
+	Nombre       string `json:"Nombre,omitempty"`
+	Calificacion int    `json:"Calificacion,omitempty"`
+}
 
 var rowmajor []list.Lista
-var people []Person
+var depto []string
 var e entrada
-var largo = 3 * 2
-var ti list.Lista
 
 func graficar() {
+
 	b := []byte("Hola mundo!\n")
 	err := ioutil.WriteFile("personal.pdf", b, 0644)
 	if err != nil {
 		log.Fatal(err)
 	}
-}
-
-func GetPeopleEndpoint(w http.ResponseWriter, req *http.Request) {
-	json.NewEncoder(w).Encode(people)
-	fmt.Print("Hola")
-}
-
-func GetPersonEndpoint(w http.ResponseWriter, req *http.Request) {
-	params := mux.Vars(req)
-	fmt.Print(params)
-	for _, item := range people {
-		if item.ID == params["id"] {
-			json.NewEncoder(w).Encode(item)
-			return
-		}
-	}
-	json.NewEncoder(w).Encode(&Person{})
-
 }
 
 func tienda_especifica(info entrada) {
@@ -88,17 +71,31 @@ func readBody(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func llenar_depto(e entrada) {
+	var inf = e.Datos
+	var i = inf[0]
+	var j = i.Departamentos
+	sum := 0
+	for sum < len(j) {
+		depto = append(depto, j[sum].Nombre)
+		sum++
+	}
+}
+
 func llenar_matriz(info entrada) {
 	contador := 0
+	llenar_depto(info)
 	var inf = info.Datos
-	var i = inf[contador]
-	var j = i.Departamentos
-	long := len(inf) * len(j) * 5 //inf es filas, j es columnas y las 5 calificaciones
+	var a = inf[0]
+	var b = a.Departamentos
+	long := len(inf) * len(b) * 5 //inf es filas, b es columnas y las 5 calificaciones
 	var prelista = make([]list.Lista, long)
 	for contador <= len(inf)-1 {
-		fmt.Println("tOTAL", long)
-		fmt.Println("Filas", len(inf))
-		fmt.Println("Columnas,", len(j))
+		var i = inf[contador]
+		var j = i.Departamentos
+		fmt.Println("tOTAL", len(inf))
+		/*fmt.Println("Filas", len(inf))
+		fmt.Println("Columnas,", len(j))*/
 		var suma = 0
 		//fmt.Println(i.Indice)
 		for suma <= len(j)-1 { //sa
@@ -106,7 +103,6 @@ func llenar_matriz(info entrada) {
 			//fmt.Println("{")
 			var k = j[suma].Tiendas
 			var calif = 1
-
 			for calif <= 5 {
 				lis := list.NewLista()
 				var cont = 0
@@ -114,10 +110,11 @@ func llenar_matriz(info entrada) {
 					if k[cont].Calificacion == calif {
 						//fmt.Println(k[cont].Nombre, "--", k[cont].Calificacion)
 						var store list.Tienda
-						store.Nombre = k[cont].Nombre
+						store = k[cont]
+						/*store.Nombre = k[cont].Nombre
 						store.Contacto = k[cont].Contacto
 						store.Descripcion = k[cont].Descripcion
-						store.Calificacion = k[cont].Calificacion
+						store.Calificacion = k[cont].Calificacion*/
 						lis.Insertar(store)
 					}
 					cont++
@@ -131,9 +128,8 @@ func llenar_matriz(info entrada) {
 			suma++
 			//fmt.Println("}")
 		}
-		contador = contador + 1
+		contador++
 	}
-	fmt.Println("La long de row es ", len(rowmajor))
 	llenar_lista(prelista)
 }
 
@@ -154,27 +150,31 @@ func errorResponse(w http.ResponseWriter, message string, httpStatusCode int) {
 	w.Write(jsonResp)
 }
 
-func DeletePersonEndpoint(w http.ResponseWriter, req *http.Request) {
-	params := mux.Vars(req)
-	for index, item := range people {
-		if item.ID == params["id"] {
-			people = append(people[:index], people[index+1:]...)
-			break
-		}
+func GetList(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	conv := params["numero"]
+	i, err := strconv.Atoi(conv)
+	tam := rowmajor[i].Tamaño()
+	var salida []list.Tienda
+	j := 1
+	for j <= tam {
+		salida = append(salida, rowmajor[i].GetItem(j))
+		j++
 	}
-	json.NewEncoder(w).Encode(people)
+	fmt.Println(tam)
+	fmt.Println(salida)
+	var exit especifica
+	exit = salida
+	json.NewEncoder(w).Encode(exit)
+	fmt.Println(err)
 }
-
-func CreateGraphicArray(w http.ResponseWriter, req *http.Request) {
-
-}
-func GetStore(w http.ResponseWriter, r *http.Request) {
+func DeleteStore(w http.ResponseWriter, r *http.Request) {
 	headerContentTtype := r.Header.Get("Content-Type")
 	if headerContentTtype != "application/json" {
 		errorResponse(w, "Content Type is not application/json", http.StatusUnsupportedMediaType)
 		return
 	}
-	var e entrada
+	var e busqueda
 	var unmarshalErr *json.UnmarshalTypeError
 
 	decoder := json.NewDecoder(r.Body)
@@ -188,29 +188,123 @@ func GetStore(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
-	errorResponse(w, "Archivo Recibido", http.StatusOK)
-	tienda_especifica(e)
+
+	borrar(e)
+	fmt.Println("Final")
 	return
 }
-func DeleteStore(w http.ResponseWriter, req *http.Request) {
 
+func borrar(store busqueda) {
+	indice := dev_indice(store.Nombre)
+	no_dept := dev_depto(store.Departamento)
+
+	coordenada := store.Calificacion + 5*(no_dept+len(depto)*indice) - 1
+
+	tes := rowmajor[coordenada]
+
+	sum := 0
+	for sum < tes.Tamaño() {
+		if tes.GetItem(sum).Nombre == store.Nombre {
+			break
+		}
+		sum++
+
+	}
+	fmt.Println("coor ", coordenada, " indice ", indice, " dept ", no_dept, " sum ", sum)
+	fmt.Println("Final 1")
+	rowmajor[coordenada].Borrar(sum)
+	fmt.Println("Final 2")
+}
+
+func dev_indice(indice string) int { //devuelve el indice del alfabeto
+	sum := 0
+	nombre := strings.Split(indice, "")
+
+	alfabeto := []string{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"}
+	for sum < len(alfabeto) {
+		if alfabeto[sum] == nombre[0] {
+			break
+		}
+		sum++
+	}
+	return sum
+}
+
+func dev_depto(nombre string) int {
+	sum := 0
+	for sum < len(depto) {
+		if nombre == depto[sum] {
+			break
+		}
+		sum++
+	}
+	return sum
+}
+
+func GetStore(w http.ResponseWriter, r *http.Request) {
+	headerContentTtype := r.Header.Get("Content-Type")
+	if headerContentTtype != "application/json" {
+		errorResponse(w, "Content Type is not application/json", http.StatusUnsupportedMediaType)
+		return
+	}
+	var e busqueda
+	var unmarshalErr *json.UnmarshalTypeError
+
+	decoder := json.NewDecoder(r.Body)
+	decoder.DisallowUnknownFields()
+	err := decoder.Decode(&e)
+	if err != nil {
+		if errors.As(err, &unmarshalErr) {
+			errorResponse(w, "Bad Request. Wrong Type provided for field "+unmarshalErr.Field, http.StatusBadRequest)
+		} else {
+			errorResponse(w, "Bad Request "+err.Error(), http.StatusBadRequest)
+		}
+		return
+	}
+	exit := give_tienda(e)
+	json.NewEncoder(w).Encode(exit)
+	return
+
+}
+
+func give_tienda(store busqueda) list.Tienda {
+	indice := dev_indice(store.Nombre)
+
+	no_dept := dev_depto(store.Departamento)
+	coordenada := store.Calificacion + 5*(no_dept+len(depto)*indice) - 1
+	fmt.Println(store.Nombre, "nombre-coor", coordenada)
+	fmt.Println(depto)
+	tes := rowmajor[coordenada]
+	sum := 0
+	for sum < tes.Tamaño() {
+		if tes.GetItem(sum).Nombre == store.Nombre {
+			fmt.Println(tes.GetItem(sum).Nombre, "SUM ES", sum)
+			break
+		}
+		sum++
+	}
+	fmt.Println(tes.GetItem(sum).Nombre, "SUM ES", sum)
+	fmt.Println(tes.GetItem(sum - 1).Nombre)
+	return (tes.GetItem(sum))
+}
+
+func Save(w http.ResponseWriter, r *http.Request) {
+	var e entrada
+	exit := give_tienda(e)
+	json.NewEncoder(w).Encode(exit)
+	return
 }
 
 func main() {
 	graficar()
 	router := mux.NewRouter()
-	people = append(people, Person{ID: "1", FirstName: "Ryan", LastName: "Rey"})
-	people = append(people, Person{ID: "2", FirstName: "Joe", LastName: "Yei"})
 	//endpoint-rutas
-	router.HandleFunc("/people", GetPeopleEndpoint).Methods("GET")
-	router.HandleFunc("/people/{id}", GetPersonEndpoint).Methods("GET") //buscar por id
-	router.HandleFunc("/people/{id}", DeletePersonEndpoint).Methods("DELETE")
-	router.HandleFunc("/getArreglo", CreateGraphicArray).Methods("GET")
-	router.HandleFunc("/TiendaEspecifica", GetStore).Methods("GET")
-	router.HandleFunc("/cargartienda", readBody).Methods("POST")
-	router.HandleFunc("/id/{numero}", readBody).Methods("GET")
-	router.HandleFunc("/Eliminar", DeleteStore).Methods("DELETE")
 
+	router.HandleFunc("/TiendaEspecifica", GetStore).Methods("POST") //LISTO
+	router.HandleFunc("/id/{numero}", GetList).Methods("GET")        //LISTO
+	router.HandleFunc("/cargartienda", readBody).Methods("POST")     //LISTO
+	router.HandleFunc("/Eliminar", DeleteStore).Methods("DELETE")
+	router.HandleFunc("/guardar", Save).Methods("GET")
 	log.Fatal(http.ListenAndServe(":3000", router))
 
 }

@@ -1,25 +1,44 @@
 package estructura
 
 import (
+	"github.com/Fernando-MGS/TEST/AVL"
 	"github.com/Fernando-MGS/TEST/list"
 )
 
-type archivo struct {
-	Datos []Data `json: "Dato,omitempty"`
+type Archivo struct {
+	Datos []Data `json:"Dato,omitempty"`
 }
 
 type Data struct {
-	Indice        string  `json: "Indice, omitempty"`
-	Departamentos []Depto `json: "Departamento, omitempty"`
+	Indice        string  `json:"Indice,omitempty"`
+	Departamentos []Depto `json:"Departamentos,omitempty"`
 }
 type Depto struct {
-	Nombre  string        `json: "Nombre, omitempty"`
-	Tiendas []list.Tienda `json: "Tiendas, omitempty"`
+	Nombre  string        `json:"Nombre,omitempty"`
+	Tiendas []list.Tienda `json:"Tiendas,omitempty"`
 }
 
 type Tienda struct {
-	Nombre       string `json: "Nombre, omitempty"`
-	Descripcion  string `json: "Descripcion, omitempty"`
-	Contacto     string `json: "Contacto, omitempty"`
-	Calificacion int    `json: "Calificacion, omitempty"`
+	Nombre       string `json:"Nombre,omitempty"`
+	Descripcion  string `json:"Descripcion,omitempty"`
+	Contacto     string `json:"Contacto,omitempty"`
+	Calificacion int    `json:"Calificacion,omitempty"`
+	Logo         string `json:"Logo,omitempty"`
+	Inventario   AVL.AVL
+}
+
+type Inventario struct {
+	Tienda       string     `json:"Tienda,omitempty"`
+	Departamento string     `json:"Departamento,omitempty"`
+	Calificacion int        `json:"Calificacion,omitempty"`
+	Productos    []Producto `json:"Productos,omitempty"`
+}
+
+type Producto struct {
+	Nombre      string `json:"Nombre,omitempty"`
+	Codigo      int    `json:"Codigo,omitempty"`
+	Descripcion string `json:"Descripcion,omitempty"`
+	Precio      int    `json:"Precio,omitempty"`
+	Cantidad    int    `json:"Cantidad,omitempty"`
+	Imagen      string `json:"Imagen,omitempty"`
 }

@@ -1,9 +1,8 @@
 package list
 
-import (
-	"fmt"
-)
+import "fmt"
 
+//a ver si se subio
 type nodo struct { //lugar donde se almacena, tipo tienda del package empresa
 	anterior  *nodo
 	siguiente *nodo
@@ -21,10 +20,11 @@ func NewLista() *Lista { //crea una lista
 }
 
 type Tienda struct {
-	Nombre       string `json: "Nombre, omitempty"`
-	Descripcion  string `json: "Descripcion, omitempty"`
-	Contacto     string `json: "Contacto, omitempty"`
-	Calificacion int    `json: "Calificacion, omitempty"`
+	Nombre       string `json:"Nombre,omitempty"`
+	Descripcion  string `json:"Descripcion,omitempty"`
+	Contacto     string `json:"Contacto,omitempty"`
+	Calificacion int    `json:"Calificacion,omitempty"`
+	Logo         string `json:"Logo,omitempty"`
 }
 
 func (m *Lista) Insertar(valor Tienda) { //insertar un nodo

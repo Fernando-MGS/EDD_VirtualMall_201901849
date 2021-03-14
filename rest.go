@@ -17,7 +17,11 @@ import (
 )
 
 type entrada struct {
-	Datos []estructura.Data `json: "Datos,omitempty"`
+	Datos []estructura.Data `json:"Datos,omitempty"`
+}
+
+type Inventarios struct {
+	Inventario []estructura.Inventario `json:"Inventarios,omitempty"`
 }
 
 type especifica []list.Tienda
@@ -30,6 +34,7 @@ type busqueda struct {
 
 var rowmajor []list.Lista
 var depto []string
+var index []string
 var e entrada
 
 func graficar() {
@@ -82,9 +87,20 @@ func llenar_depto(e entrada) {
 	}
 }
 
+func llenar_index(e entrada) {
+	var inf = e.Datos
+	sum := 0
+	for sum < len(inf) {
+		index = append(index, inf[sum].Indice)
+		sum++
+	}
+	fmt.Println(index)
+}
+
 func llenar_matriz(info entrada) {
 	contador := 0
 	llenar_depto(info)
+	llenar_index(info)
 	var inf = info.Datos
 	var a = inf[0]
 	var b = a.Departamentos
@@ -94,13 +110,8 @@ func llenar_matriz(info entrada) {
 		var i = inf[contador]
 		var j = i.Departamentos
 		fmt.Println("tOTAL", len(inf))
-		/*fmt.Println("Filas", len(inf))
-		fmt.Println("Columnas,", len(j))*/
 		var suma = 0
-		//fmt.Println(i.Indice)
 		for suma <= len(j)-1 { //sa
-			//fmt.Println(j[suma].Nombre, suma)
-			//fmt.Println("{")
 			var k = j[suma].Tiendas
 			var calif = 1
 			for calif <= 5 {
@@ -108,25 +119,17 @@ func llenar_matriz(info entrada) {
 				var cont = 0
 				for cont <= len(k)-1 {
 					if k[cont].Calificacion == calif {
-						//fmt.Println(k[cont].Nombre, "--", k[cont].Calificacion)
 						var store list.Tienda
 						store = k[cont]
-						/*store.Nombre = k[cont].Nombre
-						store.Contacto = k[cont].Contacto
-						store.Descripcion = k[cont].Descripcion
-						store.Calificacion = k[cont].Calificacion*/
 						lis.Insertar(store)
 					}
 					cont++
 				}
 				var a = (calif - 1) + 5*(suma+len(j)*contador)
 				prelista[a] = *lis
-				//fmt.Println("Indice", a)
-				//terminar de arreglar la posicion y hacerpruebas para guardar la lista
 				calif++
 			}
 			suma++
-			//fmt.Println("}")
 		}
 		contador++
 	}
@@ -188,7 +191,6 @@ func DeleteStore(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
-
 	borrar(e)
 	fmt.Println("Final")
 	return
@@ -220,9 +222,9 @@ func dev_indice(indice string) int { //devuelve el indice del alfabeto
 	sum := 0
 	nombre := strings.Split(indice, "")
 
-	alfabeto := []string{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"}
-	for sum < len(alfabeto) {
-		if alfabeto[sum] == nombre[0] {
+	//alfabeto := []string{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"}
+	for sum < len(index) {
+		if index[sum] == nombre[0] {
 			break
 		}
 		sum++
@@ -289,10 +291,66 @@ func give_tienda(store busqueda) list.Tienda {
 }
 
 func Save(w http.ResponseWriter, r *http.Request) {
-	var e entrada
-	exit := give_tienda(e)
-	json.NewEncoder(w).Encode(exit)
+	var file estructura.Archivo
+	arch := file.Datos
+	sum := 0
+	row := 0
+	for sum < len(index) {
+		var dato estructura.Data
+		dato.Indice = index[sum]
+		var depts estructura.Depto
+		cont := 0
+		for cont < len(depto) {
+			var store []list.Tienda
+			depts.Nombre = depto[cont]
+			calif := 0
+			for calif < 5 {
+				long := 0
+				for long < rowmajor[row].Tamaño() {
+					store = append(store, rowmajor[row].GetItem(long))
+				}
+				calif++
+				row++
+			}
+			depts.Tiendas = store
+
+			cont++
+		}
+		sum++
+		arch = append(arch, dato)
+	}
+	file.Datos = arch
+	json.NewEncoder(w).Encode(file)
 	return
+}
+func l_inventario(w http.ResponseWriter, r *http.Request) {
+	headerContentTtype := r.Header.Get("Content-Type")
+	if headerContentTtype != "application/json" {
+		errorResponse(w, "Content Type is not application/json", http.StatusUnsupportedMediaType)
+		return
+	}
+	var e Inventarios
+	var unmarshalErr *json.UnmarshalTypeError
+
+	decoder := json.NewDecoder(r.Body)
+	decoder.DisallowUnknownFields()
+	err := decoder.Decode(&e)
+	if err != nil {
+		if errors.As(err, &unmarshalErr) {
+			errorResponse(w, "Bad Request. Wrong Type provided for field "+unmarshalErr.Field, http.StatusBadRequest)
+		} else {
+			errorResponse(w, "Bad Request "+err.Error(), http.StatusBadRequest)
+		}
+		return
+	}
+	errorResponse(w, "Archivo Recibido", http.StatusOK)
+	llenar_avl(e)
+	return
+
+}
+
+func llenar_avl(e Inventarios) {
+
 }
 
 func main() {
@@ -304,6 +362,7 @@ func main() {
 	router.HandleFunc("/id/{numero}", GetList).Methods("GET")        //LISTO
 	router.HandleFunc("/cargartienda", readBody).Methods("POST")     //LISTO
 	router.HandleFunc("/Eliminar", DeleteStore).Methods("DELETE")
+	router.HandleFunc("/Inventarios", l_inventario).Methods("POST")
 	router.HandleFunc("/guardar", Save).Methods("GET")
 	log.Fatal(http.ListenAndServe(":3000", router))
 

@@ -1,0 +1,33 @@
+<nav class="navbar navbar-dark bg-info">
+  <a class="navbar-brand" href="/">
+    <h2>EDD MALL</h2>  
+  </a>  
+  <span class="join" ><h4><a class="link" href="/">Tiendas</a></h4></span>
+  <h4><a class="link" href="/">Pedidos</a></h4>
+  <h4><a class="link" href="/">Inventarios</a></h4>
+</nav>  
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-8 mt-4"> 
+      <ul class="list-group">
+        <li 
+        *ngFor="let store of storearray"
+        class="list-group-item mt-1">
+        <img src={{store.Logo}} width="80px" height="80px">
+         {{store.Nombre}} 
+        </li>
+      </ul>
+      <div class="card mt-4">
+        <div class="card-body">
+          <div class="card-title">
+              Ingresar tiendas
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4"> 
+      <img src="https://www.braindw.com/wp-content/uploads/2018/05/logo-walmart.jpg" width="80px" height="80px">
+    </div>
+  </div>
+</div> 

@@ -1,7 +1,7 @@
 package estructura
 
 import (
-	"github.com/Fernando-MGS/TEST/AVL"
+	"github.com/Fernando-MGS/TEST/AV"
 	"github.com/Fernando-MGS/TEST/list"
 )
 
@@ -24,7 +24,7 @@ type Tienda struct {
 	Contacto     string `json:"Contacto,omitempty"`
 	Calificacion int    `json:"Calificacion,omitempty"`
 	Logo         string `json:"Logo,omitempty"`
-	Inventario   AVL.AVL
+	Inventario   AV.AVL
 }
 
 type Inventario struct {
@@ -35,10 +35,10 @@ type Inventario struct {
 }
 
 type Producto struct {
-	Nombre      string `json:"Nombre,omitempty"`
-	Codigo      int    `json:"Codigo,omitempty"`
-	Descripcion string `json:"Descripcion,omitempty"`
-	Precio      int    `json:"Precio,omitempty"`
-	Cantidad    int    `json:"Cantidad,omitempty"`
-	Imagen      string `json:"Imagen,omitempty"`
+	Nombre      string  `json:"Nombre,omitempty"`
+	Codigo      int     `json:"Codigo,omitempty"`
+	Descripcion string  `json:"Descripcion,omitempty"`
+	Precio      float64 `json:"Precio,omitempty"`
+	Cantidad    int     `json:"Cantidad,omitempty"`
+	Imagen      string  `json:"Imagen,omitempty"`
 }

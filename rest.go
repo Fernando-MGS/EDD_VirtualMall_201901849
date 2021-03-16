@@ -10,6 +10,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/Fernando-MGS/TEST/AV"
 	"github.com/Fernando-MGS/TEST/estructura"
 	"github.com/Fernando-MGS/TEST/list"
 	"github.com/gorilla/mux"
@@ -18,6 +19,9 @@ import (
 
 type entrada struct {
 	Datos []estructura.Data `json:"Datos,omitempty"`
+}
+type Stores struct {
+	Array []list.Tienda
 }
 
 type Inventarios struct {
@@ -166,6 +170,7 @@ func GetList(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Println(tam)
 	fmt.Println(salida)
+	salida[0].Inventario.Print()
 	var exit especifica
 	exit = salida
 	json.NewEncoder(w).Encode(exit)
@@ -271,7 +276,6 @@ func GetStore(w http.ResponseWriter, r *http.Request) {
 
 func give_tienda(store busqueda) list.Tienda {
 	indice := dev_indice(store.Nombre)
-
 	no_dept := dev_depto(store.Departamento)
 	coordenada := store.Calificacion + 5*(no_dept+len(depto)*indice) - 1
 	fmt.Println(store.Nombre, "nombre-coor", coordenada)
@@ -350,7 +354,52 @@ func l_inventario(w http.ResponseWriter, r *http.Request) {
 }
 
 func llenar_avl(e Inventarios) {
+	fmt.Println("llego")
+	cont := 0
+	for cont < len(e.Inventario) {
+		index_dep := dev_depto(e.Inventario[cont].Departamento)
+		index_ind := dev_indice(e.Inventario[cont].Tienda)
+		fmt.Println("llEGO2", e.Inventario[cont].Departamento, index_dep, "---", e.Inventario[cont].Tienda, index_ind)
+		_index := (e.Inventario[cont].Calificacion) + 5*(index_dep+len(depto)*index_ind) - 1
+		fmt.Println(_index)
+		tmp := rowmajor[_index].Get(e.Inventario[cont].Tienda)
+		sum := 0
+		fmt.Println("LLego 3")
+		for sum < len(e.Inventario[cont].Productos) {
+			var prod AV.Producto
+			prod.Nombre = e.Inventario[cont].Productos[sum].Nombre
+			prod.Cantidad = e.Inventario[cont].Productos[sum].Cantidad
+			prod.Codigo = e.Inventario[cont].Productos[sum].Codigo
+			prod.Descripcion = e.Inventario[cont].Productos[sum].Descripcion
+			prod.Precio = e.Inventario[cont].Productos[sum].Precio
+			prod.Imagen = e.Inventario[cont].Productos[sum].Imagen
+			tmp.Inventario.Insertar(prod)
+			fmt.Println("Llego 4")
+			sum++
+			rowmajor[_index].Set_Inventario(tmp)
+		}
+		fmt.Println("Llego 5")
+		cont++
+	}
+}
 
+func give_tiendas(w http.ResponseWriter, r *http.Request) {
+	sum := 0
+	var i Stores
+	for sum < len(rowmajor) {
+		if rowmajor[sum].Tamaño() > 0 {
+			cont := 0
+			tmp := rowmajor[sum]
+			for cont < rowmajor[sum].Tamaño() {
+				i.Array = append(i.Array, tmp.GetItem(cont))
+				cont++
+			}
+
+		}
+		sum++
+	}
+	json.NewEncoder(w).Encode(i)
+	return
 }
 
 func main() {
@@ -361,9 +410,10 @@ func main() {
 	router.HandleFunc("/TiendaEspecifica", GetStore).Methods("POST") //LISTO
 	router.HandleFunc("/id/{numero}", GetList).Methods("GET")        //LISTO
 	router.HandleFunc("/cargartienda", readBody).Methods("POST")     //LISTO
-	router.HandleFunc("/Eliminar", DeleteStore).Methods("DELETE")
+	router.HandleFunc("/Eliminar", DeleteStore).Methods("POST")
 	router.HandleFunc("/Inventarios", l_inventario).Methods("POST")
 	router.HandleFunc("/guardar", Save).Methods("GET")
+	router.HandleFunc("/Tiendas", give_tiendas).Methods("GET")
 	log.Fatal(http.ListenAndServe(":3000", router))
 
 }

@@ -3,19 +3,35 @@
     <h2>EDD MALL</h2>  
   </a>  
   <span class="join" ><h4><a class="link" href="/">Tiendas</a></h4></span>
-  <h4><a class="link" href="/">Pedidos</a></h4>
+  <h4><a class="link" href="/">Pedido</a></h4>
   <h4><a class="link" href="/">Inventarios</a></h4>
 </nav>  
-
+<div *ngIf="tiendas">
+  hola
+  { tiendas }
+</div>
 <div class="container">
   <div class="row">
     <div class="col-md-8 mt-4"> 
-      <ul class="list-group">
-        <li 
+      <ul class="list-group mt-1" id="li_st">
+        <li id="li_st" style="border-radius: 10px;" 
         *ngFor="let store of storearray"
         class="list-group-item mt-1">
-        <img src={{store.Logo}} width="80px" height="80px">
-         {{store.Nombre}} 
+        <div class="container">
+          <div class="row">
+        <div class="col-sm mt-1">
+          <img src={{store.Logo}} width="80px" height="80px">
+          {{store.Nombre}} 
+        </div>
+         <div id="li_st" class="col-sm" style="color:white;">
+          <br>
+          {{store.Descripcion}}
+        </div>
+        <div class="col-sm">
+          
+        </div>
+      </div>
+    </div>
         </li>
       </ul>
       <div class="card mt-4">

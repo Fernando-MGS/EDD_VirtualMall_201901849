@@ -1,22 +1,22 @@
 digraph G {
 
     graph [fontsize=10 fontname="Verdana"];
-    node [shape=record fontsize=10 fontname="Verdana"];
+    nodo_me [shape=record fontsize=10 fontname="Verdana"];
 
     subgraph cluster_0 {
-        node [style=filled];
+        nodo_me [style=filled];
         "Item 1" "Item 2" "Item 10";
         color=white;
     }
 
     subgraph cluster_1 {
-        node [style=filled];
+        nodo_me [style=filled];
         "Item 3" "Item 4";
         color=white;
     }
 
     subgraph cluster_2 {
-        node [style=filled];
+        nodo_me [style=filled];
         "Item 5" "Item 6";
         label = "Container C";
         color=blue;
@@ -28,7 +28,7 @@ digraph G {
     "Item 2" -> "Item 10";
     "Item 4" -> "Item 3";
 
-    // Both of these create new nodes
+    // Both of these create new nodo_mes
     cluster_1 -> cluster_2;
     "Container A" -> "Container C";
 }

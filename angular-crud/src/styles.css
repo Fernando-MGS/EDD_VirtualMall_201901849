@@ -7,8 +7,19 @@ background: linear-gradient(to bottom, #6dd5ed, #2193b0); /* W3C, IE 10+/ Edge, 
     height: 100vh;
 
 }
-.link { color: #FFFB89;   } /* CSS link color (red) */
-.link:hover { color: #00FF00; }
+.link { color:#FFFB89;
+    text-decoration:none;
+} /* CSS link color (red) */
+.link:hover { color: #E7D960;
+    text-decoration:none;
+}
 .join:hover{
-    background-color: red;
+    background-color: #61BAD5;
   }
+  /*#li_st:hover{
+    
+}*/
+#li_st:hover{
+    background-color: #61BAD5;
+    color:black;
+}

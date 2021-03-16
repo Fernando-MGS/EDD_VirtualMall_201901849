@@ -1,22 +1,21 @@
-package list
+package AVL_M
 
 import (
 	"fmt"
-
-	"github.com/Fernando-MGS/TEST/AV"
 )
 
 //a ver si se subio
-type nodo_m struct { //lugar donde se almacena, tipo tienda del package empresa
-	anterior  *nodo_m
-	siguiente *nodo_m
-	dato      Tienda
+type nodo_l struct { //lugar donde se almacena, tipo tienda del package empresa
+	anterior  *nodo_l
+	siguiente *nodo_l
+	mes       int
 }
 
 type Lista struct { //apuntadores
-	inicio *nodo_m
-	ultimo *nodo_m
+	inicio *nodo_l
+	ultimo *nodo_l
 	tam    int
+	año    int
 }
 
 func NewLista() *Lista { //crea una lista
@@ -29,11 +28,10 @@ type Tienda struct {
 	Contacto     string `json:"Contacto,omitempty"`
 	Calificacion int    `json:"Calificacion,omitempty"`
 	Logo         string `json:"Logo,omitempty"`
-	Inventario   AV.AVL
 }
 
-func (m *Lista) Insertar(valor Tienda) { //insertar un nodo_m
-	nuevo := &nodo_m{nil, nil, valor}
+func (m *Lista) Insertar(valor Tienda) { //insertar un nodo_l
+	nuevo := &nodo_l{nil, nil, valor}
 	if m.inicio == nil {
 		m.inicio = nuevo
 		m.ultimo = nuevo
@@ -68,7 +66,6 @@ func (m *Lista) Borrar(pos int) {
 	fmt.Println("Llegom", sum)
 	if m.inicio == aux {
 		fmt.Println("inicio", m.tam)
-		fmt.Println(aux.dato.Nombre)
 		//i := m.tam - 1
 		m.inicio = m.inicio.siguiente
 		m.inicio.anterior = nil
@@ -109,21 +106,13 @@ func (m *Lista) GetItem(index int) Tienda { //Devuelve un dato de la lista
 		}
 
 	}
-	return aux.dato
+	return aux
 }
 
-func (m *Lista) Get(nombre string) Tienda { //Devuelve una tienda en especifico
+/*func (m *Lista) Get(nombre string) Tienda { //Devuelve una tienda en especifico
 	aux := m.inicio
 	for nombre != aux.dato.Nombre {
 		aux = aux.siguiente
 	}
 	return aux.dato
-}
-
-func (m *Lista) Set_Inventario(tmp Tienda) { //Devuelve un dato de la lista
-	aux := m.inicio
-	for tmp.Nombre != aux.dato.Nombre {
-		aux = aux.siguiente
-	}
-	aux.dato = tmp
-}
+}*/

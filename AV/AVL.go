@@ -1,30 +1,30 @@
-package AVL
+package AV
 
 import (
 	"fmt"
 )
 
 type Producto struct {
-	Nombre      string `json:"Nombre,omitempty"`
-	Codigo      int    `json:"Codigo,omitempty"`
-	Descripcion string `json:"Descripcion,omitempty"`
-	Precio      int    `json:"Precio,omitempty"`
-	Cantidad    int    `json:"Cantidad,omitempty"`
-	Imagen      string `json:"Imagen,omitempty"`
+	Nombre      string
+	Codigo      int
+	Descripcion string
+	Precio      float64
+	Cantidad    int
+	Imagen      string
 }
 
-type nod struct {
+type nodo_m struct {
 	indice   Producto
 	altura   int
-	izq, der *nod
+	izq, der *nodo_m
 }
 
-func newNodo(indice Producto) *nod {
-	return &nod{indice, 0, nil, nil}
+func newnodo_m(indice Producto) *nodo_m {
+	return &nodo_m{indice, 0, nil, nil}
 }
 
 type AVL struct {
-	raiz *nod
+	raiz *nodo_m
 }
 
 func NewAVL() *AVL {
@@ -38,14 +38,14 @@ func max(val1 int, val2 int) int {
 	return val2
 }
 
-func altura(temp *nod) int {
+func altura(temp *nodo_m) int {
 	if temp != nil {
 		return temp.altura
 	}
 	return -1
 }
 
-func rotacionIzquierda(temp **nod) {
+func rotacionIzquierda(temp **nodo_m) {
 	aux := (*temp).izq
 	(*temp).izq = aux.der
 	aux.der = *temp
@@ -54,7 +54,7 @@ func rotacionIzquierda(temp **nod) {
 	*temp = aux
 }
 
-func rotacionDerecha(temp **nod) {
+func rotacionDerecha(temp **nodo_m) {
 	aux := (*temp).der
 	(*temp).der = aux.izq
 	aux.izq = *temp
@@ -63,19 +63,19 @@ func rotacionDerecha(temp **nod) {
 	*temp = aux
 }
 
-func rotacionDobleIzquierda(temp **nod) {
+func rotacionDobleIzquierda(temp **nodo_m) {
 	rotacionDerecha(&(*temp).izq)
 	rotacionIzquierda(temp)
 }
 
-func rotacionDobleDerecha(temp **nod) {
+func rotacionDobleDerecha(temp **nodo_m) {
 	rotacionIzquierda(&(*temp).der)
 	rotacionDerecha(temp)
 }
 
-func insert(indice Producto, root **nod) {
+func insert(indice Producto, root **nodo_m) {
 	if (*root) == nil {
-		*root = newNodo(indice)
+		*root = newnodo_m(indice)
 		return
 	}
 	if indice.Codigo < (*root).indice.Codigo {
@@ -97,7 +97,7 @@ func insert(indice Producto, root **nod) {
 			}
 		}
 	} else {
-		fmt.Println("Ya se inserto el indice")
+		(*root).indice.Cantidad = (*root).indice.Cantidad + indice.Cantidad
 	}
 
 	(*root).altura = max(altura((*root).izq), altura((*root).der)) + 1
@@ -111,10 +111,17 @@ func (avl *AVL) Print() {
 	inOrden(avl.raiz)
 }
 
-func inOrden(temp *nod) {
+func (avl *AVL) prob_nil() int {
+	if avl.raiz == nil {
+		return 0
+	}
+	return 1
+}
+
+func inOrden(temp *nodo_m) {
 	if temp != nil {
 		inOrden(temp.izq)
-		fmt.Println("Index: ", temp.indice.Nombre)
+		fmt.Println("Index: ", temp.indice)
 		inOrden(temp.der)
 	}
 }

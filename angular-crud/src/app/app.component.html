@@ -1,38 +1,38 @@
+
+<title>EDD MALL</title>
 <nav class="navbar navbar-dark bg-info">
   <a class="navbar-brand" href="/">
     <h2>EDD MALL</h2>  
   </a>  
-  <span class="join" ><h4><a class="link" href="/">Tiendas</a></h4></span>
+  <span class="link" ><h4><a class="link" href="/">Tiendas</a></h4></span>
   <h4><a class="link" href="/">Pedido</a></h4>
   <h4><a class="link" href="/">Inventarios</a></h4>
 </nav>  
-<div *ngIf="tiendas">
-  hola
-  { tiendas }
-</div>
+
 <div class="container">
   <div class="row">
     <div class="col-md-8 mt-4"> 
       <ul class="list-group mt-1" id="li_st">
-        <li id="li_st" style="border-radius: 10px;" 
+        <a href="" id="li_st" style="border-radius: 10px;" 
         *ngFor="let store of storearray"
         class="list-group-item mt-1">
-        <div class="container">
+        <div class="contaasiner">
           <div class="row">
         <div class="col-sm mt-1">
-          <img src={{store.Logo}} width="80px" height="80px">
-          {{store.Nombre}} 
+          <img src={{store.Logo}} title={{store.Nombre}} color width="80px" height="80px" >
+           
+        </div>
+        <div id="li_st" class="col-sm" style="color:darkorange;">
+          <br>
+          {{store.Nombre}}
         </div>
          <div id="li_st" class="col-sm" style="color:white;">
           <br>
           {{store.Descripcion}}
         </div>
-        <div class="col-sm">
-          
-        </div>
       </div>
     </div>
-        </li>
+  </a>
       </ul>
       <div class="card mt-4">
         <div class="card-body">

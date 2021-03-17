@@ -3,5 +3,10 @@
         "target": "http://localhost:3000",
         "secure": false,
         "loglevel": "debug"
+    },
+    "/Tiendas":{
+        "target": "http://localhost:3000",
+        "secure": false,
+        "loglevel": "debug"
     }
 }

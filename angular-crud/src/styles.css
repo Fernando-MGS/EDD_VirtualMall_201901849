@@ -22,4 +22,5 @@ background: linear-gradient(to bottom, #6dd5ed, #2193b0); /* W3C, IE 10+/ Edge, 
 #li_st:hover{
     background-color: #61BAD5;
     color:black;
+    text-decoration:none;
 }

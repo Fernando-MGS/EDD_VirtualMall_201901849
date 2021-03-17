@@ -22,6 +22,6 @@ export class TiendaService {
   }
   getStore():Observable <any>{
     console.log("hOLA1")
-    return this.http.get<any>('/id/79')
+    return this.http.get<any>('/Tiendas')
   }
 }

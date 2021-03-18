@@ -268,45 +268,7 @@
                     ]
                 }
             ]
-        },{
-            "Indice": "S",
-            "Departamentos": [
-                {
-                    "Nombre": "Amazon Coins",
-                    "Tiendas": [
-                        
-                    ]
-                },{
-                    "Nombre": "Deporte",
-                    "Tiendas": [
-                    ]
-                },{
-                    "Nombre": "Lectura",
-                    "Tiendas": [
-                    ]
-                },
-                {
-                    "Nombre": "Sensores",
-                    "Tiendas": [
-                        
-                    ]
-                },{
-                    "Nombre": "Tecnologia",
-                    "Tiendas": [
-                    ]
-                },{
-                    "Nombre": "Videojuegos",
-                    "Tiendas": [
-                        {
-                            "Nombre": "Zona Gamer",
-                            "Descripcion": "Minus esse nemo eveniet sapiente iste sapiente repudiandae sapiente.",
-                            "Contacto": "918-764-088",
-                            "Calificacion": 4,
-                            "Logo":"https://img.freepik.com/vector-gratis/logotipo-retro-videojuegos-luces-neon_23-2148236554.jpg?size=338&ext=jpg"
-                        }
-                    ]
-                }
-            ]
         }
+        
     ]
 }

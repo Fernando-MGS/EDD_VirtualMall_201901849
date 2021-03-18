@@ -5,3 +5,4 @@ export class Store {
     Calificacion: number
     Logo: string
 }
+

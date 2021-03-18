@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import {Observable} from 'rxjs';
 @Injectable({
   providedIn: 'root'
@@ -23,5 +23,13 @@ export class TiendaService {
   getStore():Observable <any>{
     console.log("hOLA1")
     return this.http.get<any>('/Tiendas')
+  }
+  putStores(stores:any):Observable<any>{
+    console.log("hOLA2");
+    return this.http.post<any>('/cargartienda',stores,)
+  }
+  putInvts(stores:any):Observable<any>{
+    console.log("hOLA3");
+    return this.http.post<any>('/Inventarios',stores,)
   }
 }

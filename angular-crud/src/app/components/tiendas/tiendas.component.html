@@ -1,0 +1,34 @@
+
+<div class="container">
+    <div class="row">
+      <div class="col-md-8 mt-4"> 
+        <ul class="list-group mt-1" id="li_st">
+          <a href="/products" id="li_st" style="border-radius: 10px;" 
+          *ngFor="let store of storearray"
+          class="list-group-item mt-1">
+          <div class="contaasiner">
+            <div class="row">
+          <div class="col-sm mt-1">
+            <img src={{store.Logo}} title={{store.Nombre}} width="80px" height="80px" >
+             
+          </div>
+          <div id="li_st" class="col-sm" style="color:darkorange;">
+            <br>
+            {{store.Nombre}}
+          </div>
+           <div id="li_st" class="col-sm" style="color:white;">
+            <br>
+            {{store.Descripcion}}
+          </div>
+        </div>
+      </div>
+    </a>
+        </ul>
+     <div class="col-md-4"> 
+        <img src="https://www.braindw.com/wp-content/uploads/2018/05/logo-walmart.jpg" width="80px" height="80px">
+      </div>
+    </div>
+    <div class="col-md-4"> 
+      <button value=""></button>
+    </div>
+  </div> 

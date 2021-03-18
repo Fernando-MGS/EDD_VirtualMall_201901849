@@ -1,49 +1,23 @@
 
 <title>EDD MALL</title>
-<nav class="navbar navbar-dark bg-info">
-  <a class="navbar-brand" href="/">
-    <h2>EDD MALL</h2>  
-  </a>  
-  <span class="link" ><h4><a class="link" href="/">Tiendas</a></h4></span>
-  <h4><a class="link" href="/">Pedido</a></h4>
-  <h4><a class="link" href="/">Inventarios</a></h4>
-</nav>  
-
 <div class="container">
   <div class="row">
-    <div class="col-md-8 mt-4"> 
-      <ul class="list-group mt-1" id="li_st">
-        <a href="" id="li_st" style="border-radius: 10px;" 
-        *ngFor="let store of storearray"
-        class="list-group-item mt-1">
-        <div class="contaasiner">
-          <div class="row">
-        <div class="col-sm mt-1">
-          <img src={{store.Logo}} title={{store.Nombre}} color width="80px" height="80px" >
-           
-        </div>
-        <div id="li_st" class="col-sm" style="color:darkorange;">
-          <br>
-          {{store.Nombre}}
-        </div>
-         <div id="li_st" class="col-sm" style="color:white;">
-          <br>
-          {{store.Descripcion}}
-        </div>
-      </div>
-    </div>
-  </a>
-      </ul>
-      <div class="card mt-4">
-        <div class="card-body">
-          <div class="card-title">
-              Ingresar tiendas
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-4"> 
-      <img src="https://www.braindw.com/wp-content/uploads/2018/05/logo-walmart.jpg" width="80px" height="80px">
+    <div class="col">
+    <h3 style="text-align: left;">                INGRESE LOS ARCHIVOS DE CARGA</h3>
+  <textarea #carga style="width: 100vh; height: 15cm; align-self: center;"></textarea>
+</div>
+<div class="col">
+  <div class="dropdown">
+    <button class="dropbtn">ENVIAR PARA:</button>
+    <div class="dropdown-content">
+      <a href="#"></a>
+      <button class="btn btn-success" (click)="getStores(carga.value)">Hola</button>
+      <button class="btn btn-success" (click)="getInvent(carga.value)">Hola</button>
+      <a href="product.html" >TIENDAS</a>
+      <a href="#">INVENTARIOS</a>
+      <a href="#">PEDIDOS</a>
     </div>
   </div>
-</div> 
+</div>
+  </div>
+</div>

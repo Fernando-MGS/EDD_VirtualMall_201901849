@@ -7,11 +7,13 @@ import { AppComponent } from './app.component';
 //servicios
 import {  TiendaService} from './tienda.service';
 import { ProductsComponent } from './components/products/products.component';
-import { TiendasComponent } from './components/tiendas/tiendas.component'
+import { TiendasComponent } from './components/tiendas/tiendas.component';
+import { CargaComponent } from './components/carga/carga.component'
 
 @NgModule({
   declarations: [
-  TiendasComponent],
+  TiendasComponent,
+  CargaComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

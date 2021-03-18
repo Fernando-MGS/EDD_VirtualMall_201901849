@@ -1,23 +1,2 @@
 
-<title>EDD MALL</title>
-<div class="container">
-  <div class="row">
-    <div class="col">
-    <h3 style="text-align: left;">                INGRESE LOS ARCHIVOS DE CARGA</h3>
-  <textarea #carga style="width: 100vh; height: 15cm; align-self: center;"></textarea>
-</div>
-<div class="col">
-  <div class="dropdown">
-    <button class="dropbtn">ENVIAR PARA:</button>
-    <div class="dropdown-content">
-      <a href="#"></a>
-      <button class="btn btn-success" (click)="getStores(carga.value)">Hola</button>
-      <button class="btn btn-success" (click)="getInvent(carga.value)">Hola</button>
-      <a href="product.html" >TIENDAS</a>
-      <a href="#">INVENTARIOS</a>
-      <a href="#">PEDIDOS</a>
-    </div>
-  </div>
-</div>
-  </div>
-</div>
+<router-outlet></router-outlet>

@@ -2,23 +2,29 @@
 <div class="container">
     <div class="row">
       <div class="col-md-8 mt-4"> 
-        <ul class="list-group mt-1" id="li_st">
+        <ul class="list-group mt-1" >
           <a href="/products" id="li_st" style="border-radius: 10px;" 
           *ngFor="let store of storearray"
           class="list-group-item mt-1">
           <div class="contaasiner">
             <div class="row">
-          <div class="col-sm mt-1">
+          <div class="col mt-1">
             <img src={{store.Logo}} title={{store.Nombre}} width="80px" height="80px" >
              
           </div>
-          <div id="li_st" class="col-sm" style="color:darkorange;">
+          <div id="li_st" class="col" style="color:darkorange;">
             <br>
             {{store.Nombre}}
           </div>
-           <div id="li_st" class="col-sm" style="color:white;">
+           <div id="li_h" class="col" style="color:white;">
             <br>
             {{store.Descripcion}}
+          </div>
+          <div class="=col">
+            <br>
+            <button type="button" class="btn btn-primary btn-circle">
+              <i class="fa fa-list"></i>
+            </button>
           </div>
         </div>
       </div>

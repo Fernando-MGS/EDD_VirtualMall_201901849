@@ -4,5 +4,6 @@ export class Store {
     Contacto: string
     Calificacion: number
     Logo: string
+    ID: number
 }
 

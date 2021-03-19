@@ -32,4 +32,8 @@ export class TiendaService {
     console.log("hOLA3");
     return this.http.post<any>('/Inventarios',stores,)
   }
+  getProd(prod:any):Observable<any>{
+    console.log("hoLA4");
+    return this.http.get<any>('/products/:id')
+  }
 }

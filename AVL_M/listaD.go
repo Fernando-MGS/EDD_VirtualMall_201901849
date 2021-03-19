@@ -1,5 +1,6 @@
 package AVL_M
 
+/*
 import (
 	"fmt"
 )
@@ -8,6 +9,7 @@ import (
 type nodo_l struct { //lugar donde se almacena, tipo tienda del package empresa
 	anterior  *nodo_l
 	siguiente *nodo_l
+
 	mes       int
 }
 
@@ -15,7 +17,6 @@ type Lista struct { //apuntadores
 	inicio *nodo_l
 	ultimo *nodo_l
 	tam    int
-	año    int
 }
 
 func NewLista() *Lista { //crea una lista
@@ -80,7 +81,7 @@ func (m *Lista) Borrar(pos int) {
 			m.inicio = aux
 			m.inicio.siguiente = nil
 			m.inicio.anterior = nil
-		}*/
+		}
 
 	} else if m.ultimo == aux {
 		fmt.Println("adios1")
@@ -109,7 +110,7 @@ func (m *Lista) GetItem(index int) Tienda { //Devuelve un dato de la lista
 	return aux
 }
 
-/*func (m *Lista) Get(nombre string) Tienda { //Devuelve una tienda en especifico
+func (m *Lista) Get(nombre string) Tienda { //Devuelve una tienda en especifico
 	aux := m.inicio
 	for nombre != aux.dato.Nombre {
 		aux = aux.siguiente

@@ -23,6 +23,9 @@ type entrada struct {
 type Stores struct {
 	Array []list.Tienda
 }
+type Products struct {
+	Array []AV.Producto
+}
 
 type Inventarios struct {
 	Inventario []estructura.Inventario `json:"Inventarios,omitempty"`
@@ -30,6 +33,11 @@ type Inventarios struct {
 
 type especifica []list.Tienda
 
+type especifica_listado []AV.Producto
+
+type listado struct {
+	Inventario []AV.Producto
+}
 type busqueda struct {
 	Departamento string `json:"Departamento,omitempty"`
 	Nombre       string `json:"Nombre,omitempty"`
@@ -123,7 +131,10 @@ func llenar_matriz(info entrada) {
 				var cont = 0
 				for cont <= len(k)-1 {
 					if k[cont].Calificacion == calif {
+						var a = (calif - 1) + 5*(suma+len(j)*contador)
 						var store list.Tienda
+						id := strconv.Itoa(a)
+						k[cont].ID = id + "-" + k[cont].Nombre
 						store = k[cont]
 						lis.Insertar(store)
 					}
@@ -168,14 +179,26 @@ func GetList(w http.ResponseWriter, r *http.Request) {
 		salida = append(salida, rowmajor[i].GetItem(j))
 		j++
 	}
-	fmt.Println(tam)
-	fmt.Println(salida)
+	fmt.Println("El invt es")
 	salida[0].Inventario.Print()
 	var exit especifica
 	exit = salida
 	json.NewEncoder(w).Encode(exit)
 	fmt.Println(err)
 }
+
+func getProduct(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	conv := params["numero"]
+	index := strings.Split(conv, "-") //El index[0] tiene el indice en el array y el [1] tiene el nombre
+	i, err := strconv.Atoi(index[0])
+	str := rowmajor[i].Get(index[1])
+	var j Products
+	j.Array = str.Inventario.Get_Inventario()
+	json.NewEncoder(w).Encode(j)
+	fmt.Println(0, err)
+}
+
 func DeleteStore(w http.ResponseWriter, r *http.Request) {
 	headerContentTtype := r.Header.Get("Content-Type")
 	if headerContentTtype != "application/json" {
@@ -354,17 +377,13 @@ func l_inventario(w http.ResponseWriter, r *http.Request) {
 }
 
 func llenar_avl(e Inventarios) {
-	fmt.Println("llego")
 	cont := 0
 	for cont < len(e.Inventario) {
 		index_dep := dev_depto(e.Inventario[cont].Departamento)
 		index_ind := dev_indice(e.Inventario[cont].Tienda)
-		fmt.Println("llEGO2", e.Inventario[cont].Departamento, index_dep, "---", e.Inventario[cont].Tienda, index_ind)
 		_index := (e.Inventario[cont].Calificacion) + 5*(index_dep+len(depto)*index_ind) - 1
-		fmt.Println(_index)
 		tmp := rowmajor[_index].Get(e.Inventario[cont].Tienda)
 		sum := 0
-		fmt.Println("LLego 3")
 		for sum < len(e.Inventario[cont].Productos) {
 			var prod AV.Producto
 			prod.Nombre = e.Inventario[cont].Productos[sum].Nombre
@@ -374,11 +393,9 @@ func llenar_avl(e Inventarios) {
 			prod.Precio = e.Inventario[cont].Productos[sum].Precio
 			prod.Imagen = e.Inventario[cont].Productos[sum].Imagen
 			tmp.Inventario.Insertar(prod)
-			fmt.Println("Llego 4")
 			sum++
 			rowmajor[_index].Set_Inventario(tmp)
 		}
-		fmt.Println("Llego 5")
 		cont++
 	}
 }
@@ -414,6 +431,7 @@ func main() {
 	router.HandleFunc("/Inventarios", l_inventario).Methods("POST")
 	router.HandleFunc("/guardar", Save).Methods("GET")
 	router.HandleFunc("/Tiendas", give_tiendas).Methods("GET")
+	router.HandleFunc("/products/{numero}", getProduct).Methods("GET")
 	log.Fatal(http.ListenAndServe(":3000", router))
 
 }

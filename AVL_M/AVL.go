@@ -1,9 +1,9 @@
 package AVL_M
 
-import (
+/*import (
 	"fmt"
-)
-
+)*/
+/*
 type nodo_m struct {
 	indice   Lista
 	altura   int
@@ -116,3 +116,4 @@ func inOrden(temp *nodo_m) {
 		inOrden(temp.der)
 	}
 }
+*/

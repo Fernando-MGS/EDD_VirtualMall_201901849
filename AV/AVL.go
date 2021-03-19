@@ -13,6 +13,8 @@ type Producto struct {
 	Imagen      string
 }
 
+var Listado []Producto
+
 type nodo_m struct {
 	indice   Producto
 	altura   int
@@ -75,6 +77,7 @@ func rotacionDobleDerecha(temp **nodo_m) {
 
 func insert(indice Producto, root **nodo_m) {
 	if (*root) == nil {
+		fmt.Println("Insertar: ", indice.Nombre)
 		*root = newnodo_m(indice)
 		return
 	}
@@ -104,7 +107,12 @@ func insert(indice Producto, root **nodo_m) {
 }
 
 func (avl *AVL) Insertar(indice Producto) {
-	insert(indice, &avl.raiz)
+	if prob_exist(indice.Codigo, &avl.raiz) == 0 || prob_exist(indice.Codigo, &avl.raiz) == 2 {
+		insert(indice, &avl.raiz)
+	} else {
+		fmt.Println("Si llego")
+		agregar_cant(indice.Codigo, &avl.raiz, indice)
+	}
 }
 
 func (avl *AVL) Print() {
@@ -118,10 +126,56 @@ func (avl *AVL) prob_nil() int {
 	return 1
 }
 
+func prob_exist(indice int, root **nodo_m) int { //0 no existe, 1 si existe
+	if (*root) == nil {
+		fmt.Println("A ley tenes que aparecer")
+		return 0
+	}
+	if indice < (*root).indice.Codigo {
+		prob_exist(indice, &(*root).izq)
+	} else if indice > (*root).indice.Codigo {
+		prob_exist(indice, &(*root).der)
+	} else {
+		fmt.Println("A ver si apareces")
+		return 1
+	}
+
+	return 2
+}
+
+func agregar_cant(indice int, root **nodo_m, prod Producto) { //0 no existe, 1 si existe
+	if indice < (*root).indice.Codigo {
+		agregar_cant(indice, &(*root).izq, prod)
+	} else if indice > (*root).indice.Codigo {
+		agregar_cant(indice, &(*root).der, prod)
+	} else {
+		fmt.Println((*root).indice.Nombre, " Llego en agr")
+		(*root).indice.Cantidad = (*root).indice.Cantidad + prod.Cantidad
+	}
+	return
+}
+
 func inOrden(temp *nodo_m) {
 	if temp != nil {
 		inOrden(temp.izq)
 		fmt.Println("Index: ", temp.indice)
 		inOrden(temp.der)
 	}
+}
+
+func InOrden_prod(temp *nodo_m) {
+	if temp != nil {
+		InOrden_prod(temp.izq)
+		Listado = append(Listado, temp.indice)
+		InOrden_prod(temp.der)
+	}
+}
+
+func (avl *AVL) Get_Inventario() []Producto {
+	var Nuevo []Producto
+	Listado = Nuevo
+	InOrden_prod(avl.raiz)
+	fmt.Println("len es ", len(Listado))
+
+	return Listado
 }

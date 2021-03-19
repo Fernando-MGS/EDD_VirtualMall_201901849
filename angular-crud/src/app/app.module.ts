@@ -8,12 +8,14 @@ import { AppComponent } from './app.component';
 import {  TiendaService} from './tienda.service';
 import { ProductsComponent } from './components/products/products.component';
 import { TiendasComponent } from './components/tiendas/tiendas.component';
-import { CargaComponent } from './components/carga/carga.component'
+import { CargaComponent } from './components/carga/carga.component';
+import { InventarioComponent } from './components/inventario/inventario.component'
 
 @NgModule({
   declarations: [
   TiendasComponent,
-  CargaComponent],
+  CargaComponent,
+  InventarioComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

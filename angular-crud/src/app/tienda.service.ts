@@ -34,6 +34,6 @@ export class TiendaService {
   }
   getProd(prod:any):Observable<any>{
     console.log("hoLA4");
-    return this.http.get<any>('/products/:id')
+    return this.http.get<any>('/products/'+prod)
   }
 }

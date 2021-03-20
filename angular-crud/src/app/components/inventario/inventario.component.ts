@@ -14,8 +14,11 @@ export class InventarioComponent implements OnInit {
   constructor(private rutaActiva: ActivatedRoute, private storeServices: TiendaService) { }
   Prodc: Prod[]
   ngOnInit(): void {
-    this.id=this.rutaActiva.snapshot.paramMap.get('')
-    
+    this.id=this.rutaActiva.snapshot.params.id
+    this.storeServices.getProd(this.id).subscribe((res)=>{
+      this.Prodc=res.Array
+      console.log(this.Prodc)
+    })
   }
 
 }

@@ -1,1 +1,16 @@
-<p>{{id}}</p>
+
+
+ 
+  <div class="row">
+    <div *ngFor="let producto of Prodc"class="col-sm-4">
+      <div class="card">
+        <div class="card-body">
+
+          <img src={{producto.Imagen}} width="80px" height="80px">
+          <span class="badge badge-primary badge-pill" style="background-color: rgb(165, 111, 216);;">Stock:{{producto.Cantidad}}</span>
+          <p class="card-text">{{producto.Nombre}}</p>
+          
+          <a href="inventario/{{id}}" class="btn btn-primary" style="background-color: rgb(165, 111, 216);;">Agregar</a>
+        </div>
+      </div>
+    </div>

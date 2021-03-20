@@ -21,7 +21,7 @@ body{
 }
 
 #li_st:hover{
-    background-color: #DEC7FF;
+    background-color: rgb(165, 111, 216);
     color:black;
     text-decoration:none;
     border-radius: 10px;

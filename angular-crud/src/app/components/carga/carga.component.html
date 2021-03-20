@@ -2,18 +2,16 @@
     <div class="row">
       <div class="col">
       <h3 style="text-align: left;">                INGRESE LOS ARCHIVOS DE CARGA</h3>
-    <textarea #carga style="width: 100vh; height: 15cm; align-self: center;"></textarea>
+    <textarea #carga style="width: 100vh; height: 15cm; align-self: center; background-color: rgb(180, 253, 219) ;"></textarea>
   </div>
   <div class="col">
     <div class="dropdown">
+      <br>
+      <br>
       <button class="dropbtn">ENVIAR PARA:</button>
       <div class="dropdown-content">
-        <a href="#"></a>
-        <button class="btn btn-success" (click)="getStores(carga.value)">Hola</button>
-        <button class="btn btn-success" (click)="getInvent(carga.value)">Hola</button>
         <a href="/tiendas"(click)="getStores(carga.value)" >TIENDAS</a>
         <a href="/tiendas"(click)="getInvent(carga.value)">INVENTARIOS</a>
-        <a href="#">PEDIDOS</a>
       </div>
     </div>
   </div>

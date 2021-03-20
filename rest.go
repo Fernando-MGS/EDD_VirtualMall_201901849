@@ -13,6 +13,7 @@ import (
 	"github.com/Fernando-MGS/TEST/AV"
 	"github.com/Fernando-MGS/TEST/estructura"
 	"github.com/Fernando-MGS/TEST/list"
+	"github.com/Fernando-MGS/TEST/lista"
 	"github.com/gorilla/mux"
 	//"github.com/Fernando-MGS/TEST/list"
 )
@@ -48,6 +49,7 @@ var rowmajor []list.Lista
 var depto []string
 var index []string
 var e entrada
+var carrito lista.List
 
 func graficar() {
 
@@ -419,11 +421,24 @@ func give_tiendas(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
+func GetCart(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	conv := params["numero"]
+	index := strings.Split(conv, "-") //El index[0] tiene el indice en el array y el [1] tiene el nombre
+	i, err := strconv.Atoi(index[0])
+	str := rowmajor[i].Get(index[1])
+	var j Products
+	j.Array = str.Inventario.Get_Inventario()
+	json.NewEncoder(w).Encode(j)
+	fmt.Println(0, err)
+}
+func addProd(w http.ResponseWriter, r *http.Request) {
+
+}
 func main() {
 	graficar()
 	router := mux.NewRouter()
 	//endpoint-rutas
-
 	router.HandleFunc("/TiendaEspecifica", GetStore).Methods("POST") //LISTO
 	router.HandleFunc("/id/{numero}", GetList).Methods("GET")        //LISTO
 	router.HandleFunc("/cargartienda", readBody).Methods("POST")     //LISTO
@@ -432,6 +447,8 @@ func main() {
 	router.HandleFunc("/guardar", Save).Methods("GET")
 	router.HandleFunc("/Tiendas", give_tiendas).Methods("GET")
 	router.HandleFunc("/products/{numero}", getProduct).Methods("GET")
+	router.HandleFunc("/addProduct", addProd).Methods("POST")
+	router.HandleFunc("/getCart", GetCart).Methods("GET")
 	log.Fatal(http.ListenAndServe(":3000", router))
 
 }

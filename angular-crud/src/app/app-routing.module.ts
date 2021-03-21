@@ -6,6 +6,7 @@ import { BrowserModule } from '@angular/platform-browser'
 import { CargaComponent } from './components/carga/carga.component';
 import { TiendasComponent } from './components/tiendas/tiendas.component';
 import { InventarioComponent } from './components/inventario/inventario.component';
+import { CarritoComponent } from './components/carrito/carrito.component';
 const routes: Routes = [
   
   { path:'', component: CargaComponent},
@@ -13,7 +14,8 @@ const routes: Routes = [
   { path:'products', component: ProductsComponent},
   { path:'carga', component: CargaComponent},
   { path:'tiendas', component: TiendasComponent},
-  {path:'inventario/:id', component: InventarioComponent}
+  {path:'inventario/:id', component: InventarioComponent},
+  {path:'carrito', component: CarritoComponent}
   
 ];
 

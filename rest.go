@@ -25,7 +25,9 @@ type Stores struct {
 	Array []list.Tienda
 }
 type Products struct {
-	Array []AV.Producto
+	Array  []AV.Producto
+	Tamaño int
+	Precio float64
 }
 
 type Inventarios struct {
@@ -186,7 +188,7 @@ func GetList(w http.ResponseWriter, r *http.Request) {
 	var exit especifica
 	exit = salida
 	json.NewEncoder(w).Encode(exit)
-	fmt.Println(err)
+	fmt.Println(0, err)
 }
 
 func getProduct(w http.ResponseWriter, r *http.Request) {
@@ -421,19 +423,109 @@ func give_tiendas(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-func GetCart(w http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
-	conv := params["numero"]
-	index := strings.Split(conv, "-") //El index[0] tiene el indice en el array y el [1] tiene el nombre
-	i, err := strconv.Atoi(index[0])
-	str := rowmajor[i].Get(index[1])
+func getCart(w http.ResponseWriter, r *http.Request) {
 	var j Products
-	j.Array = str.Inventario.Get_Inventario()
+	fmt.Println(carrito.GetProducts())
+	j.Array = carrito.GetProducts()
+	fmt.Println(j.Array)
+	j.Tamaño = carrito.Tamaño()
+	j.Precio = carrito.Precio()
 	json.NewEncoder(w).Encode(j)
-	fmt.Println(0, err)
+	return
 }
 func addProd(w http.ResponseWriter, r *http.Request) {
+	headerContentTtype := r.Header.Get("Content-Type")
+	if headerContentTtype != "application/json" {
+		errorResponse(w, "Content Type is not application/json", http.StatusUnsupportedMediaType)
+		return
+	}
+	var e AV.Producto
+	var unmarshalErr *json.UnmarshalTypeError
 
+	decoder := json.NewDecoder(r.Body)
+	decoder.DisallowUnknownFields()
+	err := decoder.Decode(&e)
+	if err != nil {
+		if errors.As(err, &unmarshalErr) {
+			errorResponse(w, "Bad Request. Wrong Type provided for field "+unmarshalErr.Field, http.StatusBadRequest)
+		} else {
+			errorResponse(w, "Bad Request "+err.Error(), http.StatusBadRequest)
+		}
+		return
+	}
+	errorResponse(w, "Archivo Recibido", http.StatusOK)
+	carrito.Add(e)
+	return
+}
+
+func addProduct(w http.ResponseWriter, r *http.Request) {
+	headerContentTtype := r.Header.Get("Content-Type")
+	if headerContentTtype != "application/json" {
+		errorResponse(w, "Content Type is not application/json", http.StatusUnsupportedMediaType)
+		return
+	}
+
+	var unmarshalErr *json.UnmarshalTypeError
+	var e AV.Producto
+	decoder := json.NewDecoder(r.Body)
+	decoder.DisallowUnknownFields()
+	err := decoder.Decode(&e)
+	if err != nil {
+		if errors.As(err, &unmarshalErr) {
+			errorResponse(w, "Bad Request. Wrong Type provided for field "+unmarshalErr.Field, http.StatusBadRequest)
+		} else {
+			errorResponse(w, "Bad Request "+err.Error(), http.StatusBadRequest)
+		}
+		return
+	}
+	params := mux.Vars(r)
+	conv := params["id"]
+	index := strings.Split(conv, "-") //El index[0] tiene el indice en el array y el [1] tiene el nombre
+	fmt.Println(index)
+	i, err := strconv.Atoi(index[0])
+	str := rowmajor[i].Get(index[1])
+	j, er := strconv.Atoi(index[2])
+	str.Inventario.Print()
+	str.Inventario.Quitar(j, e)
+	fmt.Println("fallo")
+	fmt.Println(er, "   ", j)
+	e.Cantidad = j
+	fmt.Println("fallo")
+	errorResponse(w, "Archivo Recibido", http.StatusOK)
+	carrito.Add(e)
+	fmt.Println("Show")
+	carrito.Show()
+	return
+}
+
+func resetCart(w http.ResponseWriter, r *http.Request) {
+	var reset lista.List
+	carrito = reset
+}
+func offProduct(w http.ResponseWriter, r *http.Request) {
+	headerContentTtype := r.Header.Get("Content-Type")
+	if headerContentTtype != "application/json" {
+		errorResponse(w, "Content Type is not application/json", http.StatusUnsupportedMediaType)
+		return
+	}
+	var e AV.Producto
+	var unmarshalErr *json.UnmarshalTypeError
+
+	decoder := json.NewDecoder(r.Body)
+	decoder.DisallowUnknownFields()
+	err := decoder.Decode(&e)
+	if err != nil {
+		if errors.As(err, &unmarshalErr) {
+			errorResponse(w, "Bad Request. Wrong Type provided for field "+unmarshalErr.Field, http.StatusBadRequest)
+		} else {
+			errorResponse(w, "Bad Request "+err.Error(), http.StatusBadRequest)
+		}
+		return
+	}
+	errorResponse(w, "Archivo Recibido", http.StatusOK)
+	carrito.Putoff_car(e)
+	carrito.Show()
+	return
 }
 func main() {
 	graficar()
@@ -448,7 +540,10 @@ func main() {
 	router.HandleFunc("/Tiendas", give_tiendas).Methods("GET")
 	router.HandleFunc("/products/{numero}", getProduct).Methods("GET")
 	router.HandleFunc("/addProduct", addProd).Methods("POST")
-	router.HandleFunc("/getCart", GetCart).Methods("GET")
+	router.HandleFunc("/resetCart", resetCart).Methods("GET")
+	router.HandleFunc("/offProduct", offProduct).Methods("POST")
+	router.HandleFunc("/addProducto/{id}", addProduct).Methods("POST")
+	router.HandleFunc("/getCart", getCart).Methods("GET")
 	log.Fatal(http.ListenAndServe(":3000", router))
 
 }

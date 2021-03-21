@@ -36,4 +36,11 @@ export class TiendaService {
     console.log("hoLA4");
     return this.http.get<any>('/products/'+prod)
   }
-}
+  addProd(inv:any, url:any):Observable<any>{
+    console.log("hOLA5");
+    return this.http.post<any>('/addProducto/'+url,inv)
+  }
+  GetCart():Observable <any>{
+    console.log("hOLA6")
+    return this.http.get<any>('/getCart')
+  }}

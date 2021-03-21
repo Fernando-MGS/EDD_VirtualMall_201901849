@@ -5,4 +5,5 @@ export class Prod {
     Precio: number
     Cantidad: number
     Imagen: string
+    Cant: number[]
 }

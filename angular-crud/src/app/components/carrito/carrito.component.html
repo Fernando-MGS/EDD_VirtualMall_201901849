@@ -1,1 +1,24 @@
-<p>carrito works!</p>
+  <table class="table">
+    <thead >
+      <tr>
+        <th scope="col">Codigo</th>
+        <th scope="col">Nombre</th>
+        <th scope="col">Cantidad</th>
+        <th scope="col">Precio</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let producto of Prodc">
+        <th scope="row">{{producto.Codigo}}</th>
+        <td>{{producto.Nombre}}</td>
+        <td><span class="badge badge-primary badge-pill" style="background-color: rgb(165, 111, 216);;">{{producto.Cantidad}}</span></td>
+        <td>Q{{producto.Precio}}</td>
+      </tr>
+      <tr>
+        <th>Totales</th>
+        <th></th>
+        <th>{{Large}}</th>
+        <th>Q{{Precio}}</th>
+      </tr>
+    </tbody>
+  </table>

@@ -18,15 +18,26 @@ type Node struct {
 type List struct {
 	head   *Node
 	tamaño int
+	precio float64
+}
+
+var carrito []AV.Producto
+
+func (l *List) Tamaño() int {
+	return l.tamaño
+}
+
+func (l *List) Precio() float64 {
+	return float64(l.precio)
 }
 
 func (l *List) Add(data AV.Producto) {
 	if l.prob_exist(data.Codigo) == 0 {
-
-		fmt.Println("iNSERTAR")
+		fmt.Println("iNSERTAR en carro")
 		if l.head == nil {
 			tmp := &Node{data: data, next: l.head}
 			l.tamaño = l.tamaño + data.Cantidad
+			l.precio = l.precio + float64(data.Cantidad)*data.Precio
 			l.head = tmp
 		} else {
 			tmp := l.head
@@ -35,9 +46,11 @@ func (l *List) Add(data AV.Producto) {
 			}
 			tmp.next = &Node{data: data, next: nil}
 			l.tamaño = l.tamaño + data.Cantidad
+			l.precio = l.precio + float64(data.Cantidad)*data.Precio
 		}
 	} else {
 		l.add_prod(data.Codigo, data.Cantidad)
+		l.precio = l.precio + float64(data.Cantidad)*data.Precio
 	}
 }
 
@@ -113,11 +126,16 @@ func (l *List) delete(data int) {
 }
 
 func (l *List) GetProducts() []AV.Producto {
-	var carrito []AV.Producto
+	fmt.Println("Llega al get")
+	var carr []AV.Producto
 	tmp := l.head
 	for tmp.next != nil {
-		carrito = append(carrito, tmp.data)
+		carr = append(carr, tmp.data)
+		tmp = tmp.next
 	}
+	carr = append(carr, tmp.data)
+	fmt.Println(carrito)
+	carrito = carr
 	return carrito
 }
 

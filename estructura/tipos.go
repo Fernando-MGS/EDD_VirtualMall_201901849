@@ -42,4 +42,5 @@ type Producto struct {
 	Precio      float64 `json:"Precio,omitempty"`
 	Cantidad    int     `json:"Cantidad,omitempty"`
 	Imagen      string  `json:"Imagen,omitempty"`
+	Cant        []int
 }

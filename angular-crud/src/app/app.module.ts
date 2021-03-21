@@ -10,14 +10,16 @@ import { ProductsComponent } from './components/products/products.component';
 import { TiendasComponent } from './components/tiendas/tiendas.component';
 import { CargaComponent } from './components/carga/carga.component';
 import { InventarioComponent } from './components/inventario/inventario.component';
-import { CarritoComponent } from './components/carrito/carrito.component'
+import { CarritoComponent } from './components/carrito/carrito.component';
+import { NavbarComponent } from './components/navbar/navbar.component'
 
 @NgModule({
   declarations: [
   TiendasComponent,
   CargaComponent,
   InventarioComponent,
-  CarritoComponent],
+  CarritoComponent,
+  NavbarComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

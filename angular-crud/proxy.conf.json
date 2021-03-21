@@ -23,5 +23,15 @@
         "target": "http://localhost:3000",
         "secure": false,
         "loglevel": "debug"
+    },
+    "/addProducto/*":{
+        "target": "http://localhost:3000",
+        "secure": false,
+        "loglevel": "debug"
+    },
+    "/getCart":{
+        "target": "http://localhost:3000",
+        "secure": false,
+        "loglevel": "debug"
     }
 }

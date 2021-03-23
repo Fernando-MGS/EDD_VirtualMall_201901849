@@ -34,6 +34,11 @@ export class CargaComponent implements OnInit {
     this.storeServices.putInvts(this.inv).subscribe(data=>console.log(data),err=>console.log(err),()=>console.log("Finish"));
     console.log(this.inv);
   }
+  postPedido(file:any){
+    this.inv=JSON.parse(file);
+    this.storeServices.addPedido(this.inv).subscribe(data=>console.log(data),err=>console.log(err),()=>console.log("Finish"));
+    console.log(this.inv);
+  }
     ngOnInit(){
       console.log("Jola");
      /* this.storeServices.getStore().subscribe((res) =>{

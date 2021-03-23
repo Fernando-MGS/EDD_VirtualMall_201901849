@@ -4,16 +4,17 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"strconv"
 	"strings"
 
+	//"github.com/Fernando-MGS/TEST/pedidos"
 	"github.com/Fernando-MGS/TEST/AV"
 	"github.com/Fernando-MGS/TEST/estructura"
 	"github.com/Fernando-MGS/TEST/list"
 	"github.com/Fernando-MGS/TEST/lista"
+	"github.com/Fernando-MGS/TEST/pedidos"
 	"github.com/gorilla/mux"
 	//"github.com/Fernando-MGS/TEST/list"
 )
@@ -29,7 +30,9 @@ type Products struct {
 	Tamaño int
 	Precio float64
 }
-
+type Pedidos struct {
+	Pedidos []estructura.Pedido `json:"Pedidos,omitempty"`
+}
 type Inventarios struct {
 	Inventario []estructura.Inventario `json:"Inventarios,omitempty"`
 }
@@ -52,19 +55,9 @@ var depto []string
 var index []string
 var e entrada
 var carrito lista.List
+var AVL_Pedidos pedidos.AVL
 
-func graficar() {
-
-	b := []byte("Hola mundo!\n")
-	err := ioutil.WriteFile("personal.pdf", b, 0644)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-func tienda_especifica(info entrada) {
-
-}
+func tienda_especifica(info entrada) {}
 
 func readBody(w http.ResponseWriter, r *http.Request) {
 	headerContentTtype := r.Header.Get("Content-Type")
@@ -203,37 +196,10 @@ func getProduct(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(0, err)
 }
 
-func DeleteStore(w http.ResponseWriter, r *http.Request) {
-	headerContentTtype := r.Header.Get("Content-Type")
-	if headerContentTtype != "application/json" {
-		errorResponse(w, "Content Type is not application/json", http.StatusUnsupportedMediaType)
-		return
-	}
-	var e busqueda
-	var unmarshalErr *json.UnmarshalTypeError
-
-	decoder := json.NewDecoder(r.Body)
-	decoder.DisallowUnknownFields()
-	err := decoder.Decode(&e)
-	if err != nil {
-		if errors.As(err, &unmarshalErr) {
-			errorResponse(w, "Bad Request. Wrong Type provided for field "+unmarshalErr.Field, http.StatusBadRequest)
-		} else {
-			errorResponse(w, "Bad Request "+err.Error(), http.StatusBadRequest)
-		}
-		return
-	}
-	borrar(e)
-	fmt.Println("Final")
-	return
-}
-
 func borrar(store busqueda) {
 	indice := dev_indice(store.Nombre)
 	no_dept := dev_depto(store.Departamento)
-
 	coordenada := store.Calificacion + 5*(no_dept+len(depto)*indice) - 1
-
 	tes := rowmajor[coordenada]
 
 	sum := 0
@@ -527,14 +493,97 @@ func offProduct(w http.ResponseWriter, r *http.Request) {
 	carrito.Show()
 	return
 }
+
+func addPedido(w http.ResponseWriter, r *http.Request) {
+	headerContentTtype := r.Header.Get("Content-Type")
+	if headerContentTtype != "application/json" {
+		errorResponse(w, "Content Type is not application/json", http.StatusUnsupportedMediaType)
+		return
+	}
+	var e Pedidos
+	var unmarshalErr *json.UnmarshalTypeError
+
+	decoder := json.NewDecoder(r.Body)
+	decoder.DisallowUnknownFields()
+	err := decoder.Decode(&e)
+	if err != nil {
+		if errors.As(err, &unmarshalErr) {
+			errorResponse(w, "Bad Request. Wrong Type provided for field "+unmarshalErr.Field, http.StatusBadRequest)
+		} else {
+			errorResponse(w, "Bad Request "+err.Error(), http.StatusBadRequest)
+		}
+		return
+	}
+	errorResponse(w, "Archivo Recibido", http.StatusOK)
+	pedido_json(e)
+	return
+
+}
+
+func pedido_json(pedido Pedidos) {
+	envio := pedido.Pedidos
+	find := 0
+	cont := 0
+	for cont < len(envio) {
+		fmt.Println("Entro al for")
+		fecha := strings.Split(envio[cont].Fecha, "-") //dd-mm-aa
+		dia, err := strconv.Atoi(fecha[0])
+		mes, err := strconv.Atoi(fecha[1])
+		año, err := strconv.Atoi(fecha[2])
+		cont2 := 0
+		meses := pedidos.NewLista()
+		elemento := envio[cont].Producto
+		index_dep := dev_depto(envio[cont].Departamento) + 1
+		var prod_real []AV.Producto
+		for cont2 < len(elemento) {
+			fmt.Println("Entro al segundo for")
+			find = prob_exist_avl(envio[cont].Departamento, envio[cont].Tienda, envio[cont].Calificacion, elemento[cont2].Codigo)
+			if find == 1 {
+				prod_real = append(prod_real, elemento[cont2])
+				fmt.Println(err)
+				//matriz.Insert(elemento[cont2],dia,index_dep)
+			} else {
+				fmt.Println("Tu chingadera no existe")
+			}
+			cont2++
+		}
+		fmt.Println(err, "Salió del for")
+		if len(prod_real) > 0 {
+			meses.Insercion(prod_real, index_dep, mes, dia)
+			var year pedidos.Year
+			year.Año = año
+			year.List = *meses
+			AVL_Pedidos.Insertar(year, prod_real, index_dep, mes, dia)
+		}
+		cont++
+	}
+	AVL_Pedidos.Print()
+}
+
+func prob_exist_avl(Departamento, Nombre string, Calificacion, Codigo int) int {
+	find := 0
+	fmt.Println("Entro al prob")
+	index_dep := dev_depto(Departamento)
+	fmt.Println(index_dep)
+	index_ind := dev_indice(Nombre)
+	fmt.Println(index_ind)
+	_index := (Calificacion) + 5*(index_dep+len(depto)*index_ind) - 1
+	t := rowmajor[_index].Get(Nombre)
+	fmt.Println(t.Nombre)
+	tmp := rowmajor[_index].Get(Nombre).Inventario
+	find = tmp.Buscar(Codigo)
+	fmt.Println("No paso por el find")
+	return find
+}
+
+//func index_rowmajor(Departamento, Tienda string, Calificacion int){}
+
 func main() {
-	graficar()
 	router := mux.NewRouter()
 	//endpoint-rutas
 	router.HandleFunc("/TiendaEspecifica", GetStore).Methods("POST") //LISTO
 	router.HandleFunc("/id/{numero}", GetList).Methods("GET")        //LISTO
 	router.HandleFunc("/cargartienda", readBody).Methods("POST")     //LISTO
-	router.HandleFunc("/Eliminar", DeleteStore).Methods("POST")
 	router.HandleFunc("/Inventarios", l_inventario).Methods("POST")
 	router.HandleFunc("/guardar", Save).Methods("GET")
 	router.HandleFunc("/Tiendas", give_tiendas).Methods("GET")
@@ -544,6 +593,6 @@ func main() {
 	router.HandleFunc("/offProduct", offProduct).Methods("POST")
 	router.HandleFunc("/addProducto/{id}", addProduct).Methods("POST")
 	router.HandleFunc("/getCart", getCart).Methods("GET")
+	router.HandleFunc("/Pedido", addPedido).Methods("POST")
 	log.Fatal(http.ListenAndServe(":3000", router))
-
 }

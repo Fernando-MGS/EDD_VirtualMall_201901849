@@ -43,4 +43,9 @@ export class TiendaService {
   GetCart():Observable <any>{
     console.log("hOLA6")
     return this.http.get<any>('/getCart')
-  }}
+  }
+  addPedido(pedido:any):Observable<any>{
+    console.log("hOLA7")
+    return this.http.post<any>('/Pedido',pedido)
+  }
+}

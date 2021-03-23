@@ -44,3 +44,14 @@ type Producto struct {
 	Imagen      string  `json:"Imagen,omitempty"`
 	Cant        []int
 }
+type Pedidos struct {
+	Pedidos []Pedido `json:"Pedidos,omitempty"`
+}
+
+type Pedido struct {
+	Fecha        string        `json:"Fecha,omitempty"`
+	Tienda       string        `json:"Tienda,omitempty"`
+	Departamento string        `json:"Departamento,omitempty"`
+	Calificacion int           `json:"Calificacion,omitempty"`
+	Producto     []AV.Producto `json:"Productos,omitempty"`
+}

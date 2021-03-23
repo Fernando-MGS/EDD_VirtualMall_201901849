@@ -1,28 +1,35 @@
-package AV
+package pedidos
 
 import (
 	"fmt"
+
+	"github.com/Fernando-MGS/TEST/AV"
 )
 
+type Year struct {
+	Año  int
+	List Lista
+}
+
 type Producto struct {
-	Nombre      string
-	Codigo      int
-	Descripcion string
-	Precio      float64
-	Cantidad    int
-	Imagen      string
+	Nombre      string  `json:"Nombre,omitempty"`
+	Codigo      int     `json:"Codigo,omitempty"`
+	Descripcion string  `json:"Descripcion,omitempty"`
+	Precio      float64 `json:"Precio,omitempty"`
+	Cantidad    int     `json:"Cantidad,omitempty"`
+	Imagen      string  `json:"Imagen,omitempty"`
 	Cant        []int
 }
 
 var Listado []Producto
 
 type nodo_m struct {
-	indice   Producto
+	indice   Year
 	altura   int
 	izq, der *nodo_m
 }
 
-func newnodo_m(indice Producto) *nodo_m {
+func newnodo_m(indice Year) *nodo_m {
 	return &nodo_m{indice, 0, nil, nil}
 }
 
@@ -76,67 +83,41 @@ func rotacionDobleDerecha(temp **nodo_m) {
 	rotacionDerecha(temp)
 }
 
-func (avl *AVL) Buscar(indice int) int {
-	fmt.Println("Llego a buscar")
-	return _prob_exist(indice, &avl.raiz)
-}
-
-func (avl *AVL) Comp() int {
-	if &avl.raiz != nil {
-		return 1
-	}
-	return 0
-}
-
-func _prob_exist(indice int, root **nodo_m) int {
-	if (*root) == nil {
-		return 0
-	}
-	if indice < (*root).indice.Codigo {
-		prob_exist(indice, &(*root).izq)
-	} else if indice > (*root).indice.Codigo {
-		prob_exist(indice, &(*root).der)
-	} else {
-		return 1
-	}
-	return 0
-}
-
-func insert(indice Producto, root **nodo_m) {
+func insert(indice Year, root **nodo_m) {
 	if (*root) == nil {
 		*root = newnodo_m(indice)
 		return
 	}
-	if indice.Codigo < (*root).indice.Codigo {
+	if indice.Año < (*root).indice.Año {
 		insert(indice, &(*root).izq)
 		if (altura((*root).izq) - altura((*root).der)) == -2 {
-			if indice.Codigo < (*root).izq.indice.Codigo {
+			if indice.Año < (*root).izq.indice.Año {
 				rotacionIzquierda(root)
 			} else {
 				rotacionDobleIzquierda(root)
 			}
 		}
-	} else if indice.Codigo > (*root).indice.Codigo {
+	} else if indice.Año > (*root).indice.Año {
 		insert(indice, &(*root).der)
 		if (altura((*root).der) - altura((*root).izq)) == 2 {
-			if indice.Codigo > (*root).der.indice.Codigo {
+			if indice.Año > (*root).der.indice.Año {
 				rotacionDerecha(root)
 			} else {
 				rotacionDobleDerecha(root)
 			}
 		}
 	} else {
-		(*root).indice.Cantidad = (*root).indice.Cantidad + indice.Cantidad
+		//(*root).indice.Cantidad = (*root).indice.Cantidad + indice.Cantidad
 	}
 
 	(*root).altura = max(altura((*root).izq), altura((*root).der)) + 1
 }
 
-func (avl *AVL) Insertar(indice Producto) {
-	if prob_exist(indice.Codigo, &avl.raiz) == 0 || prob_exist(indice.Codigo, &avl.raiz) == 2 {
+func (avl *AVL) Insertar(indice Year, l_prod []AV.Producto, depto, mes, dia int) {
+	if prob_exist(indice.Año, &avl.raiz) == 0 || prob_exist(indice.Año, &avl.raiz) == 2 {
 		insert(indice, &avl.raiz)
 	} else {
-		agregar_cant(indice.Codigo, &avl.raiz, indice)
+		agregar_toList(&avl.raiz, l_prod, indice.Año, depto, mes, dia)
 	}
 }
 
@@ -155,9 +136,9 @@ func prob_exist(indice int, root **nodo_m) int { //0 no existe, 1 si existe
 	if (*root) == nil {
 		return 0
 	}
-	if indice < (*root).indice.Codigo {
+	if indice < (*root).indice.Año {
 		prob_exist(indice, &(*root).izq)
-	} else if indice > (*root).indice.Codigo {
+	} else if indice > (*root).indice.Año {
 		prob_exist(indice, &(*root).der)
 	} else {
 		return 1
@@ -166,22 +147,41 @@ func prob_exist(indice int, root **nodo_m) int { //0 no existe, 1 si existe
 	return 2
 }
 
-func agregar_cant(indice int, root **nodo_m, prod Producto) { //0 no existe, 1 si existe
+/*func (avl *AVL) Buscar(indice int) int {
+	return _prob_exist(indice, &avl.raiz)
+}*/
+
+/*func _prob_exist(indice int, root **nodo_m) int {
+	if (*root) == nil {
+		return 0
+	}
 	if indice < (*root).indice.Codigo {
-		agregar_cant(indice, &(*root).izq, prod)
+		prob_exist(indice, &(*root).izq)
 	} else if indice > (*root).indice.Codigo {
-		agregar_cant(indice, &(*root).der, prod)
+		prob_exist(indice, &(*root).der)
 	} else {
-		(*root).indice.Cantidad = (*root).indice.Cantidad + prod.Cantidad
+		return 1
+	}
+	return 0
+}*/
+
+func agregar_toList(root **nodo_m, l_prod []AV.Producto, año, depto, mes, dia int) { //0 no existe, 1 si existe
+	if año < (*root).indice.Año {
+		agregar_toList(&(*root).izq, l_prod, año, depto, mes, dia)
+	} else if año > (*root).indice.Año {
+		agregar_toList(&(*root).der, l_prod, año, depto, mes, dia)
+	} else {
+		(*root).indice.List.Insercion(l_prod, depto, mes, dia)
 	}
 	return
 }
-func (avl *AVL) Quitar(cant int, prod Producto) {
+
+/*func (avl *AVL) Quitar(cant int, prod Producto) {
 	fmt.Println("Llego avl prim", cant, "--", prod.Codigo, "--", prod.Cantidad)
 	avl.Quitar_cant(cant, &avl.raiz, prod)
-}
+}*/
 
-func (avl *AVL) Quitar_cant(indice int, root **nodo_m, prod Producto) { //0 no existe, 1 si existe
+/*func (avl *AVL) Quitar_cant(indice int, root **nodo_m, prod Producto) { //0 no existe, 1 si existe
 	fmt.Println("Llego al quitar", (*root).indice.Codigo)
 	if prod.Codigo < (*root).indice.Codigo {
 		fmt.Println("Llego al quitar 1<", prod.Codigo, "--", (*root).indice.Codigo)
@@ -195,17 +195,19 @@ func (avl *AVL) Quitar_cant(indice int, root **nodo_m, prod Producto) { //0 no e
 		(*root).indice.Cantidad = (*root).indice.Cantidad - indice
 	}
 	return
-}
+}*/
 
 func inOrden(temp *nodo_m) {
 	if temp != nil {
 		inOrden(temp.izq)
 		fmt.Println("Index: ", temp.indice)
+		fmt.Print("Lista: ")
+		temp.indice.List.Imprimir()
 		inOrden(temp.der)
 	}
 }
 
-func InOrden_prod(temp *nodo_m) {
+/*func InOrden_prod(temp *nodo_m) {
 	if temp != nil {
 		InOrden_prod(temp.izq)
 		var array []int
@@ -218,11 +220,11 @@ func InOrden_prod(temp *nodo_m) {
 		Listado = append(Listado, temp.indice)
 		InOrden_prod(temp.der)
 	}
-}
+}*/
 
-func (avl *AVL) Get_Inventario() []Producto {
+/*func (avl *AVL) Get_Inventario() []Producto {
 	var Nuevo []Producto
 	Listado = Nuevo
 	InOrden_prod(avl.raiz)
 	return Listado
-}
+}*/

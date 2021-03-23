@@ -268,7 +268,46 @@
                     ]
                 }
             ]
+        },
+        {
+            "Indice": "Z",
+            "Departamentos": [
+                {
+                    "Nombre": "Amazon Coins",
+                    "Tiendas": [
+                        
+                    ]
+                },{
+                    "Nombre": "Deporte",
+                    "Tiendas": [
+                    ]
+                },{
+                    "Nombre": "Lectura",
+                    "Tiendas": [
+                    ]
+                },
+                {
+                    "Nombre": "Sensores",
+                    "Tiendas": [
+                        
+                    ]
+                },{
+                    "Nombre": "Tecnologia",
+                    "Tiendas": [
+                    ]
+                },{
+                    "Nombre": "Videojuegos",
+                    "Tiendas": [
+                        {
+                            "Nombre": "Zona Gamer",
+                            "Descripcion": "Minus esse nemo eveniet sapiente iste sapiente repudiandae sapiente.",
+                            "Contacto": "918-764-088",
+                            "Calificacion": 4,
+                            "Logo":"http://misimagenesde.com/wp-content/uploads/2017/04/samsung-logo-3.png"
+                        }
+                    ]
+                }
+            ]
         }
-        
     ]
 }

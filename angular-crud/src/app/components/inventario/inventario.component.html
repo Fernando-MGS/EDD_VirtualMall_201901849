@@ -12,18 +12,20 @@
               <br>
               <br>
               <br>
-              <a href="inventario/{{id}}" class="btn btn-primary" (click)="addProd(producto,Cant.value)" value={{producto}}  style="background-color:rgb(165, 111, 216);border-color: darkmagenta;">Agregar</a>
+              <div *ngIf="producto.Cantidad>0">
+                <a href="inventario/{{id}}" class="btn btn-primary" (click)="addProd(producto,Cant.value)" value={{producto}}  style="background-color:rgb(165, 111, 216);border-color: darkmagenta;">Agregar</a>
+                <textarea class="ml-4 mt-4" #Cant style="width: 100px; height: 30px;"></textarea>
+              </div>
               </div>
             </div>
         </div>
         <div class="col-xs-6">
           <span #Ca value={{producto.Cantidad}} class="badge badge-primary badge-pill" style="background-color: rgb(165, 111, 216);;">Stock:{{producto.Cantidad}}</span>
-          
           <p class="card-text" style="font-weight: bolder; color:rgb(53, 53, 53)">Q{{producto.Precio}}</p> 
           <br>
           <br>
           <br>
-          <textarea class="ml-4 mt-3" #Cant style="width: 100px; height: 30px;"></textarea>
+          
         </div>
       </div>
           </div>

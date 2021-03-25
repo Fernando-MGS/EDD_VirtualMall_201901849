@@ -2,6 +2,11 @@ package pedidos
 
 import (
 	"fmt"
+	"io/ioutil"
+	"log"
+	"os"
+	"os/exec"
+	"strconv"
 
 	"github.com/Fernando-MGS/TEST/AV"
 )
@@ -37,8 +42,10 @@ type Tienda struct {
 func (m *Lista) Insertar(mes, depto, dia int, l_prod []AV.Producto) { //insertar un nodo_m
 	matriz := NewMatriz()
 	cont := 0
+	fmt.Println("List insertar---------------")
 	for cont < len(l_prod) {
 		matriz.Insert(l_prod[cont], dia, depto)
+		fmt.Println("For de list-------------")
 		cont++
 	}
 	nuevo := &nodo_l{nil, nil, mes, *matriz}
@@ -145,18 +152,39 @@ func (m *Lista) Insercion(l_prod []AV.Producto, depto, mes, dia int) {
 	}
 }
 
-/*func (m *Lista) Get(nombre string) Tienda { //Devuelve una tienda en especifico
-	aux := m.inicio
-	for nombre != aux.dato.Nombre {
-		aux = aux.siguiente
+func (elist *Lista) GraphData(año string) {
+	auxiliar := elist.inicio
+	Meses := []string{"ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"}
+	//la variable graph me ayudara a guardar toda el codigo del grafico.
+	var graph string = "digraph List {\n" //Este es el encabezado no debe cambiar nada solo se puede cambiar el nombre List por el de
+	// de su preferencia lo demás se queda así.
+	graph += "rankdir=TB;" //Esto es solo para que la grafica se ordene en modo horizontal, puede cambiar si es necesario si se quiere
+	//vertical se cambia LR por TB.
+	//Esta linea es para modificar como se ve el nodo tanto el color interno como los bordes.
+	graph += "node [shape = circle, color=greenyellow , style=filled, fillcolor=darkgreen];"
+	var nodes string = ""    //Manejara todos los nodos la declaracion
+	var pointers string = "" //Manejara todos los punteros y conexiones, es mejor separarlo para que no haya conflicto luego.
+	for auxiliar != nil {
+		//Como los nodos deben tener un nombre unico entonces le concatene su valor, entonces si un nodo tiene dentro un 5 entonces
+		//se llamaria node5 y ahora bien el label es lo que tendra dentro del nodo aqui puede ir el nombre de la tienda.
+		nodes += "Node" + strconv.Itoa(auxiliar.Mes) + "[label=\"" + Meses[auxiliar.Mes-1] + "\"]\n"
+		if auxiliar.siguiente != nil {
+			//Aqui se almacenan los punteros permite apuntar del actual al siguiente
+			pointers += "Node" + strconv.Itoa(auxiliar.Mes) + "->Node" + strconv.Itoa(auxiliar.siguiente.Mes) + ";\n"
+		}
+		auxiliar = auxiliar.siguiente
 	}
-	return aux.dato
-}*/
-
-/*func (m *Lista) Set_Inventario(tmp Tienda) { //Devuelve un dato de la lista
-	aux := m.inicio
-	for tmp.Nombre != aux.dato.Nombre {
-		aux = aux.siguiente
+	graph += nodes + "\n" + pointers
+	graph += "\n}"
+	data := []byte(graph)                            //Almacenar el codigo en el formato adecuado
+	err := ioutil.WriteFile("graph.dot", data, 0644) //Crear el archivo .dot necesario para la imagen
+	if err != nil {
+		log.Fatal(err)
 	}
-	aux.dato = tmp
-}*/
+	//Creación de la imagen
+	path, _ := exec.LookPath("dot") //Para que funcione bien solo asegurate de tener todas las herramientas para
+	// Graphviz en tu compu, si no descargalas osea el Graphviz
+	cmd, _ := exec.Command(path, "-Tpng", "graph.dot").Output()           //En esta parte en lugar de graph va el nombre de tu grafica
+	mode := int(0777)                                                     //Se mantiene igual
+	ioutil.WriteFile("Pedidos-meses-"+año+".png", cmd, os.FileMode(mode)) //Creacion de la imagen
+}

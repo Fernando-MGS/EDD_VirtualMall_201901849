@@ -48,4 +48,12 @@ export class TiendaService {
     console.log("hOLA7")
     return this.http.post<any>('/Pedido',pedido)
   }
+  pedido_Cart(pedido:any):Observable<any>{
+    console.log("hOLA8")
+    return this.http.post<any>('/PedidoCart',pedido)
+  }
+  off_Cart(pedido:any, url:any):Observable<any>{
+    console.log("hOLA9")
+    return this.http.post<any>('/offProduct/'+url,pedido)
+  }
 }

@@ -24,6 +24,7 @@ type Tienda struct {
 	Contacto     string `json:"Contacto,omitempty"`
 	Calificacion int    `json:"Calificacion,omitempty"`
 	Logo         string `json:"Logo,omitempty"`
+	Departamento string
 	ID           string
 	Inventario   AV.AVL
 }
@@ -42,6 +43,7 @@ type Producto struct {
 	Precio      float64 `json:"Precio,omitempty"`
 	Cantidad    int     `json:"Cantidad,omitempty"`
 	Imagen      string  `json:"Imagen,omitempty"`
+	ID          int
 	Cant        []int
 }
 type Pedidos struct {

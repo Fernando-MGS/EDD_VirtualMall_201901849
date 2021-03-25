@@ -7,6 +7,7 @@ import { CargaComponent } from './components/carga/carga.component';
 import { TiendasComponent } from './components/tiendas/tiendas.component';
 import { InventarioComponent } from './components/inventario/inventario.component';
 import { CarritoComponent } from './components/carrito/carrito.component';
+import { PedidosComponent } from './components/pedidos/pedidos.component';
 const routes: Routes = [
   
   { path:'', component: CargaComponent},
@@ -15,7 +16,8 @@ const routes: Routes = [
   { path:'carga', component: CargaComponent},
   { path:'tiendas', component: TiendasComponent},
   {path:'inventario/:id', component: InventarioComponent},
-  {path:'carrito', component: CarritoComponent}
+  {path:'carrito', component: CarritoComponent},
+  {path:'pedidos', component: PedidosComponent}
   
 ];
 

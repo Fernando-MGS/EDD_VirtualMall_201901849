@@ -12,7 +12,18 @@
         <th scope="row">{{producto.Codigo}}</th>
         <td>{{producto.Nombre}}</td>
         <td><span class="badge badge-primary badge-pill" style="background-color: rgb(165, 111, 216);;">{{producto.Cantidad}}</span></td>
-        <td>Q{{producto.Precio}}</td>
+        <td>
+          <div class="row">
+            <div class="col">
+              Q{{producto.Precio}} 
+            </div>  
+            <div class="col">
+              <a href="/carrito" (click)="offProd(producto,Cant.value)" value={{producto}}  style="width: 100px; height: 20px; background-color:rgb(165, 111, 216);border-color: darkmagenta;">🗑️</a>
+              <textarea class="ml-4 mt-4" #Cant style="width: 100px; height: 25px;"></textarea>
+            </div>
+          </div>
+          
+        </td>
       </tr>
       <tr>
         <th>Totales</th>
@@ -22,3 +33,7 @@
       </tr>
     </tbody>
   </table>
+  <div class="float-right mr-4 ">
+    <button class="dropbtn" (click)="carrito()" href="/carrito"  style="background-color: rgb(165, 111, 216); border-radius: 20px;">GUARDAR PEDIDO</button>
+  </div>
+  

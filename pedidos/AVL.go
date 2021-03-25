@@ -2,6 +2,11 @@ package pedidos
 
 import (
 	"fmt"
+	"io/ioutil"
+	"log"
+	"os"
+	"os/exec"
+	"strconv"
 
 	"github.com/Fernando-MGS/TEST/AV"
 )
@@ -28,6 +33,10 @@ type nodo_m struct {
 	altura   int
 	izq, der *nodo_m
 }
+
+var nodes string
+var graph string
+var pointers string
 
 func newnodo_m(indice Year) *nodo_m {
 	return &nodo_m{indice, 0, nil, nil}
@@ -176,26 +185,43 @@ func agregar_toList(root **nodo_m, l_prod []AV.Producto, año, depto, mes, dia i
 	return
 }
 
-/*func (avl *AVL) Quitar(cant int, prod Producto) {
-	fmt.Println("Llego avl prim", cant, "--", prod.Codigo, "--", prod.Cantidad)
-	avl.Quitar_cant(cant, &avl.raiz, prod)
-}*/
-
-/*func (avl *AVL) Quitar_cant(indice int, root **nodo_m, prod Producto) { //0 no existe, 1 si existe
-	fmt.Println("Llego al quitar", (*root).indice.Codigo)
-	if prod.Codigo < (*root).indice.Codigo {
-		fmt.Println("Llego al quitar 1<", prod.Codigo, "--", (*root).indice.Codigo)
-		avl.Quitar_cant(indice, &(*root).izq, prod)
-	} else if prod.Codigo > (*root).indice.Codigo {
-		fmt.Println("Llego al quitar 2>", prod.Codigo, "--", (*root).indice.Codigo)
-		fmt.Println("")
-		avl.Quitar_cant(indice, &(*root).der, prod)
-	} else {
-		fmt.Println("Llego al AVL", (*root).indice.Cantidad)
-		(*root).indice.Cantidad = (*root).indice.Cantidad - indice
+func graph_inOrden(temp *nodo_m) {
+	if temp != nil {
+		graph_inOrden(temp.izq)
+		nodes += "Node" + strconv.Itoa(temp.indice.Año) + "[label=\"" + strconv.Itoa(temp.indice.Año) + "\"]\n"
+		if temp.izq != nil {
+			pointers += "Node" + strconv.Itoa(temp.indice.Año) + "->Node" + strconv.Itoa(temp.izq.indice.Año) + ";\n"
+		}
+		if temp.der != nil {
+			pointers += "Node" + strconv.Itoa(temp.indice.Año) + "->Node" + strconv.Itoa(temp.der.indice.Año) + ";\n"
+		}
+		graph_inOrden(temp.der)
 	}
-	return
-}*/
+}
+
+func (avl *AVL) Grap() {
+	graph = "digraph List {\n"
+	graph += "rankdir=TB;"
+	graph += "node [shape = circle, color=greenyellow , style=filled, fillcolor=darkgreen];"
+	graph_inOrden(avl.raiz)
+	fmt.Println("El root es ", avl.raiz.indice.Año)
+	graph += nodes + "\n" + pointers
+	graph += "\n}"
+	data := []byte(graph)                            //Almacenar el codigo en el formato adecuado
+	err := ioutil.WriteFile("graph.dot", data, 0644) //Crear el archivo .dot necesario para la imagen
+	if err != nil {
+		log.Fatal(err)
+	}
+	//Creación de la imagen
+	path, _ := exec.LookPath("dot") //Para que funcione bien solo asegurate de tener todas las herramientas para
+	// Graphviz en tu compu, si no descargalas osea el Graphviz
+	cmd, _ := exec.Command(path, "-Tpng", "graph.dot").Output()  //En esta parte en lugar de graph va el nombre de tu grafica
+	mode := int(0777)                                            //Se mantiene igual
+	ioutil.WriteFile("Pedidos-años.png", cmd, os.FileMode(mode)) //Creacion de la imagen
+	pointers = ""
+	nodes = ""
+	graph = ""
+}
 
 func inOrden(temp *nodo_m) {
 	if temp != nil {
@@ -207,24 +233,13 @@ func inOrden(temp *nodo_m) {
 	}
 }
 
-/*func InOrden_prod(temp *nodo_m) {
-	if temp != nil {
-		InOrden_prod(temp.izq)
-		var array []int
-		sum := 1
-		for sum <= temp.indice.Cantidad {
-			array = append(array, sum)
-			sum++
+func (avl *AVL) Graph_lista(año, mes int) {
+	temp := avl.raiz
+	for temp != nil {
+		if temp.indice.Año == año {
+			y := strconv.Itoa(año)
+			temp.indice.List.GraphData(y)
+			break
 		}
-		temp.indice.Cant = array
-		Listado = append(Listado, temp.indice)
-		InOrden_prod(temp.der)
 	}
-}*/
-
-/*func (avl *AVL) Get_Inventario() []Producto {
-	var Nuevo []Producto
-	Listado = Nuevo
-	InOrden_prod(avl.raiz)
-	return Listado
-}*/
+}

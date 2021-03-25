@@ -11,6 +11,7 @@ type Producto struct {
 	Precio      float64
 	Cantidad    int
 	Imagen      string
+	ID          string
 	Cant        []int
 }
 
@@ -77,7 +78,7 @@ func rotacionDobleDerecha(temp **nodo_m) {
 }
 
 func (avl *AVL) Buscar(indice int) int {
-	fmt.Println("Llego a buscar")
+	fmt.Println("Llego a buscar ", indice)
 	return _prob_exist(indice, &avl.raiz)
 }
 
@@ -93,8 +94,10 @@ func _prob_exist(indice int, root **nodo_m) int {
 		return 0
 	}
 	if indice < (*root).indice.Codigo {
+		fmt.Println(indice, "--", (*root).indice.Codigo)
 		prob_exist(indice, &(*root).izq)
 	} else if indice > (*root).indice.Codigo {
+		fmt.Println(indice, "--", (*root).indice.Codigo)
 		prob_exist(indice, &(*root).der)
 	} else {
 		return 1
@@ -177,22 +180,36 @@ func agregar_cant(indice int, root **nodo_m, prod Producto) { //0 no existe, 1 s
 	return
 }
 func (avl *AVL) Quitar(cant int, prod Producto) {
-	fmt.Println("Llego avl prim", cant, "--", prod.Codigo, "--", prod.Cantidad)
 	avl.Quitar_cant(cant, &avl.raiz, prod)
 }
 
 func (avl *AVL) Quitar_cant(indice int, root **nodo_m, prod Producto) { //0 no existe, 1 si existe
+	if prod.Codigo < (*root).indice.Codigo {
+		avl.Quitar_cant(indice, &(*root).izq, prod)
+	} else if prod.Codigo > (*root).indice.Codigo {
+		avl.Quitar_cant(indice, &(*root).der, prod)
+	} else {
+		(*root).indice.Cantidad = (*root).indice.Cantidad - indice
+	}
+	return
+}
+
+func (avl *AVL) Add(cant int, prod Producto) {
+	avl.add_cant(cant, &avl.raiz, prod)
+}
+
+func (avl *AVL) add_cant(indice int, root **nodo_m, prod Producto) { //0 no existe, 1 si existe
 	fmt.Println("Llego al quitar", (*root).indice.Codigo)
 	if prod.Codigo < (*root).indice.Codigo {
 		fmt.Println("Llego al quitar 1<", prod.Codigo, "--", (*root).indice.Codigo)
-		avl.Quitar_cant(indice, &(*root).izq, prod)
+		avl.add_cant(indice, &(*root).izq, prod)
 	} else if prod.Codigo > (*root).indice.Codigo {
 		fmt.Println("Llego al quitar 2>", prod.Codigo, "--", (*root).indice.Codigo)
 		fmt.Println("")
-		avl.Quitar_cant(indice, &(*root).der, prod)
+		avl.add_cant(indice, &(*root).der, prod)
 	} else {
 		fmt.Println("Llego al AVL", (*root).indice.Cantidad)
-		(*root).indice.Cantidad = (*root).indice.Cantidad - indice
+		(*root).indice.Cantidad = (*root).indice.Cantidad + indice
 	}
 	return
 }
@@ -220,9 +237,14 @@ func InOrden_prod(temp *nodo_m) {
 	}
 }
 
-func (avl *AVL) Get_Inventario() []Producto {
+func (avl *AVL) Get_Inventario(id string) []Producto {
 	var Nuevo []Producto
 	Listado = Nuevo
 	InOrden_prod(avl.raiz)
+	sum := 0
+	for sum < len(Listado) {
+		Listado[sum].ID = id
+		sum++
+	}
 	return Listado
 }

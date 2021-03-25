@@ -29,6 +29,7 @@ type Tienda struct {
 	Contacto     string `json:"Contacto,omitempty"`
 	Calificacion int    `json:"Calificacion,omitempty"`
 	Logo         string `json:"Logo,omitempty"`
+	Departamento string
 	ID           string
 	Inventario   AV.AVL
 }

@@ -139,7 +139,7 @@ func (l *lista) buscar(x, y int, producto AV.Producto) int {
 
 			t = t.derecha
 		}
-		fmt.Println()
+		fmt.Println("-")
 		temp = temp.siguiente
 	}
 	temp = l.first
@@ -154,11 +154,12 @@ func (l *lista) buscar(x, y int, producto AV.Producto) int {
 				find = 1
 			}
 			t = t.abajo
-
 		}
 		fmt.Println()
 		temp = temp.siguiente
 	}
+
+	fmt.Println("Salió del For de buscar matrix")
 	return find
 }
 
@@ -188,7 +189,9 @@ func (m *matriz) Insert(producto AV.Producto, x int, y int) {
 	fmt.Println("bUSCANDO V")
 	v := m.lst_v.search(y)
 	find := m.lst_v.buscar(x, y, producto)
+	fmt.Println("El find es ", find)
 	if find == 0 {
+		fmt.Println("Entro al find 0")
 		if h == nil && v == nil {
 			fmt.Println("h y  v nill")
 			m.noExisten(producto, x, y)
@@ -202,6 +205,7 @@ func (m *matriz) Insert(producto AV.Producto, x int, y int) {
 			m.existen(producto, x, y)
 		}
 	}
+	fmt.Println("Fin del buscar")
 }
 
 func (m *matriz) noExisten(producto AV.Producto, x int, y int) {

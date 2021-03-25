@@ -33,7 +33,6 @@ func (l *List) Precio() float64 {
 
 func (l *List) Add(data AV.Producto) {
 	if l.prob_exist(data.Codigo) == 0 {
-		fmt.Println("iNSERTAR en carro")
 		if l.head == nil {
 			tmp := &Node{data: data, next: l.head}
 			l.tamaño = l.tamaño + data.Cantidad
@@ -55,7 +54,6 @@ func (l *List) Add(data AV.Producto) {
 }
 
 func (l *List) add_prod(codigo int, cantidad int) {
-	fmt.Println("Agregar prod")
 	tmp := l.head
 	for tmp.next != nil {
 		if tmp.data.Codigo == codigo {
@@ -70,20 +68,26 @@ func (l *List) add_prod(codigo int, cantidad int) {
 	}
 }
 
-func (l *List) Putoff_car(prod AV.Producto) {
+func (l *List) Putoff_car(prod AV.Producto, cantidad int) {
 	tmp := l.head
 	for tmp.next != nil {
 		if tmp.data.Codigo == prod.Codigo {
-			tmp.data.Cantidad = tmp.data.Cantidad - prod.Cantidad
+			tmp.data.Cantidad = tmp.data.Cantidad - cantidad
 			if tmp.data.Cantidad == 0 {
 				l.delete(tmp.data.Codigo)
-				l.tamaño = l.tamaño - prod.Cantidad
+				l.tamaño = l.tamaño - cantidad
+				l.precio = l.precio - float64(cantidad)*prod.Precio
 			}
 		}
 		tmp = tmp.next
 	}
 	if tmp.data.Codigo == prod.Codigo {
-		tmp.data.Cantidad = tmp.data.Cantidad - prod.Cantidad
+		tmp.data.Cantidad = tmp.data.Cantidad - cantidad
+		if tmp.data.Cantidad == 0 {
+			l.delete(tmp.data.Codigo)
+			l.tamaño = l.tamaño - cantidad
+			l.precio = l.precio - float64(cantidad)*prod.Precio
+		}
 	}
 }
 
@@ -94,15 +98,12 @@ func (l *List) prob_exist(codigo int) int { // revisa si un producto ya fue ingr
 		return 0
 	}
 	for tmp.next != nil {
-		fmt.Println("Tmp: ", tmp.data, " COD ES: ", codigo)
 		if tmp.data.Codigo == codigo {
-			fmt.Println("Encontrado")
 			conf = 1
 		}
 		tmp = tmp.next
 	}
 	if tmp.data.Codigo == codigo {
-		fmt.Println("Encontrado")
 		conf = 1
 	}
 	return conf
@@ -126,7 +127,6 @@ func (l *List) delete(data int) {
 }
 
 func (l *List) GetProducts() []AV.Producto {
-	fmt.Println("Llega al get")
 	var carr []AV.Producto
 	tmp := l.head
 	for tmp.next != nil {
@@ -134,9 +134,18 @@ func (l *List) GetProducts() []AV.Producto {
 		tmp = tmp.next
 	}
 	carr = append(carr, tmp.data)
-	fmt.Println(carrito)
 	carrito = carr
 	return carrito
+}
+
+func (l *List) GetItem(index int) AV.Producto {
+	sum := 1
+	temp := l.head
+	for sum <= index {
+		temp = temp.next
+		sum++
+	}
+	return temp.data
 }
 
 func (l *List) Show() {

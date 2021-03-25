@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 
 	//"github.com/Fernando-MGS/TEST/pedidos"
 	"github.com/Fernando-MGS/TEST/AV"
@@ -118,7 +119,7 @@ func llenar_matriz(info entrada) {
 	for contador <= len(inf)-1 {
 		var i = inf[contador]
 		var j = i.Departamentos
-		fmt.Println("tOTAL", len(inf))
+
 		var suma = 0
 		for suma <= len(j)-1 { //sa
 			var k = j[suma].Tiendas
@@ -132,6 +133,7 @@ func llenar_matriz(info entrada) {
 						var store list.Tienda
 						id := strconv.Itoa(a)
 						k[cont].ID = id + "-" + k[cont].Nombre
+						k[cont].Departamento = b[suma].Nombre
 						store = k[cont]
 						lis.Insertar(store)
 					}
@@ -145,6 +147,7 @@ func llenar_matriz(info entrada) {
 		}
 		contador++
 	}
+	fmt.Println("tOTAL", len(inf))
 	llenar_lista(prelista)
 }
 
@@ -191,7 +194,7 @@ func getProduct(w http.ResponseWriter, r *http.Request) {
 	i, err := strconv.Atoi(index[0])
 	str := rowmajor[i].Get(index[1])
 	var j Products
-	j.Array = str.Inventario.Get_Inventario()
+	j.Array = str.Inventario.Get_Inventario(conv)
 	json.NewEncoder(w).Encode(j)
 	fmt.Println(0, err)
 }
@@ -391,9 +394,7 @@ func give_tiendas(w http.ResponseWriter, r *http.Request) {
 
 func getCart(w http.ResponseWriter, r *http.Request) {
 	var j Products
-	fmt.Println(carrito.GetProducts())
 	j.Array = carrito.GetProducts()
-	fmt.Println(j.Array)
 	j.Tamaño = carrito.Tamaño()
 	j.Precio = carrito.Precio()
 	json.NewEncoder(w).Encode(j)
@@ -447,20 +448,14 @@ func addProduct(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	conv := params["id"]
 	index := strings.Split(conv, "-") //El index[0] tiene el indice en el array y el [1] tiene el nombre
-	fmt.Println(index)
 	i, err := strconv.Atoi(index[0])
 	str := rowmajor[i].Get(index[1])
 	j, er := strconv.Atoi(index[2])
-	str.Inventario.Print()
 	str.Inventario.Quitar(j, e)
-	fmt.Println("fallo")
-	fmt.Println(er, "   ", j)
+	fmt.Println(er)
 	e.Cantidad = j
-	fmt.Println("fallo")
 	errorResponse(w, "Archivo Recibido", http.StatusOK)
 	carrito.Add(e)
-	fmt.Println("Show")
-	carrito.Show()
 	return
 }
 
@@ -469,6 +464,7 @@ func resetCart(w http.ResponseWriter, r *http.Request) {
 	carrito = reset
 }
 func offProduct(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Vamos a agregar")
 	headerContentTtype := r.Header.Get("Content-Type")
 	if headerContentTtype != "application/json" {
 		errorResponse(w, "Content Type is not application/json", http.StatusUnsupportedMediaType)
@@ -489,7 +485,18 @@ func offProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	errorResponse(w, "Archivo Recibido", http.StatusOK)
-	carrito.Putoff_car(e)
+	params := mux.Vars(r)
+	conv := params["num"]
+	num, err := strconv.Atoi(conv)
+
+	con := strings.Split(e.ID, "-")
+	fmt.Println("_________________________")
+	fmt.Println(conv, e.Nombre)
+	ID, err := strconv.Atoi(con[0])
+	t := rowmajor[ID].Get(con[1]).Inventario
+	carrito.Putoff_car(e, num)
+	fmt.Println(err)
+	t.Add(num, e)
 	carrito.Show()
 	return
 }
@@ -560,6 +567,44 @@ func pedido_json(pedido Pedidos) {
 	AVL_Pedidos.Print()
 }
 
+func pedido_carrito(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Llegoo a pedido carrito")
+	sum := 0
+	t := time.Now()
+	año := t.Year()
+	mes := t.String()
+	num_mes := strings.Split(mes, "-")
+	_mes, err := strconv.Atoi(num_mes[1])
+	dia := t.Day()
+	fmt.Println(err)
+	meses := pedidos.NewLista()
+	for sum < carrito.Tamaño()-1 {
+		prod := carrito.GetItem(sum)
+		fmt.Println(prod.ID)
+		index := strings.Split(prod.ID, "-")
+		ID, err := strconv.Atoi(index[0])
+		fmt.Println("Entro al segundo for", err)
+		t := rowmajor[ID].Get(index[1])
+		fmt.Println(t.Nombre)
+		index_dep := dev_depto(t.Departamento)
+		/*tmp := rowmajor[ID].Get(index[1]).Inventario
+		tmp.Print()
+		fmt.Println("El arbol")*/
+		var prod_real []AV.Producto
+		prod_real = append(prod_real, prod)
+		meses.Insercion(prod_real, index_dep, _mes, dia)
+		var year pedidos.Year
+		year.Año = año
+		year.List = *meses
+		fmt.Println("/---------------------------------/")
+		fmt.Println("Preparandose para insertar en avl pedidos", prod.Nombre)
+		AVL_Pedidos.Insertar(year, prod_real, index_dep, _mes, dia)
+		sum++
+	}
+	var new lista.List
+	carrito = new
+}
+
 func prob_exist_avl(Departamento, Nombre string, Calificacion, Codigo int) int {
 	find := 0
 	fmt.Println("Entro al prob")
@@ -577,6 +622,20 @@ func prob_exist_avl(Departamento, Nombre string, Calificacion, Codigo int) int {
 }
 
 //func index_rowmajor(Departamento, Tienda string, Calificacion int){}
+func graph_año(w http.ResponseWriter, r *http.Request) {
+	AVL_Pedidos.Print()
+	AVL_Pedidos.Grap()
+}
+
+func graph_month(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	conv := params["id"]
+	index := strings.Split(conv, "-") //El index[0] tiene el año y el [1] tiene el mes
+	i, err := strconv.Atoi(index[0])
+	j, err := strconv.Atoi(index[1])
+	AVL_Pedidos.Graph_lista(i, j)
+	fmt.Println(err)
+}
 
 func main() {
 	router := mux.NewRouter()
@@ -590,9 +649,12 @@ func main() {
 	router.HandleFunc("/products/{numero}", getProduct).Methods("GET")
 	router.HandleFunc("/addProduct", addProd).Methods("POST")
 	router.HandleFunc("/resetCart", resetCart).Methods("GET")
-	router.HandleFunc("/offProduct", offProduct).Methods("POST")
+	router.HandleFunc("/offProduct/{num}", offProduct).Methods("POST")
 	router.HandleFunc("/addProducto/{id}", addProduct).Methods("POST")
 	router.HandleFunc("/getCart", getCart).Methods("GET")
 	router.HandleFunc("/Pedido", addPedido).Methods("POST")
+	router.HandleFunc("/PedidoCart", pedido_carrito).Methods("POST")
+	router.HandleFunc("/year", graph_año).Methods("GET")
+	router.HandleFunc("/month/{id}", graph_month).Methods("GET")
 	log.Fatal(http.ListenAndServe(":3000", router))
 }

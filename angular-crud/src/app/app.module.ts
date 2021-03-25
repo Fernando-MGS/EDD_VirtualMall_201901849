@@ -11,7 +11,8 @@ import { TiendasComponent } from './components/tiendas/tiendas.component';
 import { CargaComponent } from './components/carga/carga.component';
 import { InventarioComponent } from './components/inventario/inventario.component';
 import { CarritoComponent } from './components/carrito/carrito.component';
-import { NavbarComponent } from './components/navbar/navbar.component'
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { PedidosComponent } from './components/pedidos/pedidos.component'
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { NavbarComponent } from './components/navbar/navbar.component'
   CargaComponent,
   InventarioComponent,
   CarritoComponent,
-  NavbarComponent],
+  NavbarComponent,
+  PedidosComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

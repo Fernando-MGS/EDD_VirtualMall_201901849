@@ -1,0 +1,11 @@
+digraph List {
+rankdir=TB;node [shape = circle, color=greenyellow , style=filled, fillcolor=darkgreen];Node1[label="ENERO"]
+Node11[label="NOVIEMBRE"]
+Node10[label="OCTUBRE"]
+Node3[label="MARZO"]
+
+Node1->Node11;
+Node11->Node10;
+Node10->Node3;
+
+}

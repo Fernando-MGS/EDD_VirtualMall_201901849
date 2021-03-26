@@ -56,4 +56,8 @@ export class TiendaService {
     console.log("hOLA9")
     return this.http.post<any>('/offProduct/'+url,pedido)
   }
+  dev_pedido(index:any):Observable<any>{
+    console.log("hOLA10")
+    return this.http.get<any>('/pedidos/'+index)
+  }
 }

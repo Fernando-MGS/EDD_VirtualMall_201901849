@@ -23,6 +23,7 @@ import (
 type entrada struct {
 	Datos []estructura.Data `json:"Datos,omitempty"`
 }
+
 type Stores struct {
 	Array []list.Tienda
 }
@@ -39,6 +40,18 @@ type Inventarios struct {
 }
 
 type especifica []list.Tienda
+
+type Años struct {
+	Datos  []pedidos.Meses
+	indice int
+	large  int
+}
+type Months struct {
+	Año    int
+	Large  int
+	Indice int
+	Mes    []string
+}
 
 type especifica_listado []AV.Producto
 
@@ -57,6 +70,7 @@ var index []string
 var e entrada
 var carrito lista.List
 var AVL_Pedidos pedidos.AVL
+var index_pedido int
 
 func tienda_especifica(info entrada) {}
 
@@ -104,7 +118,6 @@ func llenar_index(e entrada) {
 		index = append(index, inf[sum].Indice)
 		sum++
 	}
-	fmt.Println(index)
 }
 
 func llenar_matriz(info entrada) {
@@ -179,7 +192,6 @@ func GetList(w http.ResponseWriter, r *http.Request) {
 		salida = append(salida, rowmajor[i].GetItem(j))
 		j++
 	}
-	fmt.Println("El invt es")
 	salida[0].Inventario.Print()
 	var exit especifica
 	exit = salida
@@ -213,10 +225,7 @@ func borrar(store busqueda) {
 		sum++
 
 	}
-	fmt.Println("coor ", coordenada, " indice ", indice, " dept ", no_dept, " sum ", sum)
-	fmt.Println("Final 1")
 	rowmajor[coordenada].Borrar(sum)
-	fmt.Println("Final 2")
 }
 
 func dev_indice(indice string) int { //devuelve el indice del alfabeto
@@ -274,19 +283,14 @@ func give_tienda(store busqueda) list.Tienda {
 	indice := dev_indice(store.Nombre)
 	no_dept := dev_depto(store.Departamento)
 	coordenada := store.Calificacion + 5*(no_dept+len(depto)*indice) - 1
-	fmt.Println(store.Nombre, "nombre-coor", coordenada)
-	fmt.Println(depto)
 	tes := rowmajor[coordenada]
 	sum := 0
 	for sum < tes.Tamaño() {
 		if tes.GetItem(sum).Nombre == store.Nombre {
-			fmt.Println(tes.GetItem(sum).Nombre, "SUM ES", sum)
 			break
 		}
 		sum++
 	}
-	fmt.Println(tes.GetItem(sum).Nombre, "SUM ES", sum)
-	fmt.Println(tes.GetItem(sum - 1).Nombre)
 	return (tes.GetItem(sum))
 }
 
@@ -464,7 +468,6 @@ func resetCart(w http.ResponseWriter, r *http.Request) {
 	carrito = reset
 }
 func offProduct(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Vamos a agregar")
 	headerContentTtype := r.Header.Get("Content-Type")
 	if headerContentTtype != "application/json" {
 		errorResponse(w, "Content Type is not application/json", http.StatusUnsupportedMediaType)
@@ -490,14 +493,11 @@ func offProduct(w http.ResponseWriter, r *http.Request) {
 	num, err := strconv.Atoi(conv)
 
 	con := strings.Split(e.ID, "-")
-	fmt.Println("_________________________")
-	fmt.Println(conv, e.Nombre)
 	ID, err := strconv.Atoi(con[0])
 	t := rowmajor[ID].Get(con[1]).Inventario
 	carrito.Putoff_car(e, num)
 	fmt.Println(err)
 	t.Add(num, e)
-	carrito.Show()
 	return
 }
 
@@ -532,7 +532,6 @@ func pedido_json(pedido Pedidos) {
 	find := 0
 	cont := 0
 	for cont < len(envio) {
-		fmt.Println("Entro al for")
 		fecha := strings.Split(envio[cont].Fecha, "-") //dd-mm-aa
 		dia, err := strconv.Atoi(fecha[0])
 		mes, err := strconv.Atoi(fecha[1])
@@ -543,18 +542,14 @@ func pedido_json(pedido Pedidos) {
 		index_dep := dev_depto(envio[cont].Departamento) + 1
 		var prod_real []AV.Producto
 		for cont2 < len(elemento) {
-			fmt.Println("Entro al segundo for")
 			find = prob_exist_avl(envio[cont].Departamento, envio[cont].Tienda, envio[cont].Calificacion, elemento[cont2].Codigo)
 			if find == 1 {
 				prod_real = append(prod_real, elemento[cont2])
 				fmt.Println(err)
 				//matriz.Insert(elemento[cont2],dia,index_dep)
-			} else {
-				fmt.Println("Tu chingadera no existe")
 			}
 			cont2++
 		}
-		fmt.Println(err, "Salió del for")
 		if len(prod_real) > 0 {
 			meses.Insercion(prod_real, index_dep, mes, dia)
 			var year pedidos.Year
@@ -568,7 +563,6 @@ func pedido_json(pedido Pedidos) {
 }
 
 func pedido_carrito(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Llegoo a pedido carrito")
 	sum := 0
 	t := time.Now()
 	año := t.Year()
@@ -607,23 +601,17 @@ func pedido_carrito(w http.ResponseWriter, r *http.Request) {
 
 func prob_exist_avl(Departamento, Nombre string, Calificacion, Codigo int) int {
 	find := 0
-	fmt.Println("Entro al prob")
 	index_dep := dev_depto(Departamento)
-	fmt.Println(index_dep)
 	index_ind := dev_indice(Nombre)
-	fmt.Println(index_ind)
 	_index := (Calificacion) + 5*(index_dep+len(depto)*index_ind) - 1
-	t := rowmajor[_index].Get(Nombre)
-	fmt.Println(t.Nombre)
 	tmp := rowmajor[_index].Get(Nombre).Inventario
 	find = tmp.Buscar(Codigo)
-	fmt.Println("No paso por el find")
 	return find
 }
 
 //func index_rowmajor(Departamento, Tienda string, Calificacion int){}
 func graph_año(w http.ResponseWriter, r *http.Request) {
-	AVL_Pedidos.Print()
+	//AVL_Pedidos.Print()
 	AVL_Pedidos.Grap()
 }
 
@@ -631,10 +619,40 @@ func graph_month(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	conv := params["id"]
 	index := strings.Split(conv, "-") //El index[0] tiene el año y el [1] tiene el mes
+
 	i, err := strconv.Atoi(index[0])
 	j, err := strconv.Atoi(index[1])
+	fmt.Println("Año es ", i)
 	AVL_Pedidos.Graph_lista(i, j)
 	fmt.Println(err)
+}
+
+func dev_pedidos(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	conv := params["id"]
+	var resp Months
+	y := AVL_Pedidos.Dev_year(conv)
+	if conv == "0" {
+		index_pedido = 0
+	} else if conv == "1" { //sube uno
+		index_pedido = index_pedido + 1
+		if index_pedido == AVL_Pedidos.Dev_year(conv).Large {
+			index_pedido = index_pedido - 1
+		}
+	} else { //baja otro
+		index_pedido = index_pedido - 1
+		if index_pedido < 0 {
+			index_pedido = index_pedido + 1
+		}
+	}
+	y.Indice = index_pedido
+	y.Large = AVL_Pedidos.Dev_year(conv).Large
+	resp.Mes = y.Datos[index_pedido].Mes
+	resp.Indice = index_pedido
+	resp.Año = y.Datos[index_pedido].Año
+	resp.Large = y.Large
+	json.NewEncoder(w).Encode(resp)
+	return
 }
 
 func main() {
@@ -656,5 +674,7 @@ func main() {
 	router.HandleFunc("/PedidoCart", pedido_carrito).Methods("POST")
 	router.HandleFunc("/year", graph_año).Methods("GET")
 	router.HandleFunc("/month/{id}", graph_month).Methods("GET")
+	router.HandleFunc("/pedidos/{id}", dev_pedidos).Methods("GET")
+
 	log.Fatal(http.ListenAndServe(":3000", router))
 }

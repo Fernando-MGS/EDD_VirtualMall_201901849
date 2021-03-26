@@ -50,9 +50,11 @@ func (m *Lista) Insertar(mes, depto, dia int, l_prod []AV.Producto) { //insertar
 	}
 	nuevo := &nodo_l{nil, nil, mes, *matriz}
 	if m.inicio == nil {
+		fmt.Println("!!!!!!!")
 		m.inicio = nuevo
 		m.ultimo = nuevo
 	} else {
+		fmt.Println("????????")
 		m.ultimo.siguiente = nuevo
 		nuevo.anterior = m.ultimo
 		m.ultimo = nuevo
@@ -64,11 +66,11 @@ func (m *Lista) Imprimir() { //IMPRIMIR
 	aux := m.inicio
 	for aux != nil {
 		fmt.Println(aux.Mes)
-		aux.pedidos.lst_h.print_h()
-		aux.pedidos.lst_v.print()
+		/*aux.pedidos.lst_h.print_h()
+		aux.pedidos.lst_v.print()*/
 		aux = aux.siguiente
 	}
-	fmt.Print(m.tam)
+	//fmt.Print("El tamaño es", m.tam)
 }
 
 func (m *Lista) Tamaño() int { //IMPRIMIR TAMAÑO DE LISTA
@@ -130,6 +132,7 @@ func (m *Lista) buscar(mes, dia, depto int, l_prod []AV.Producto) int {
 	aux := m.inicio
 	ind := 1
 	find := 0
+	fmt.Println("LLLLLLLL")
 	for ind <= m.tam {
 		if aux.Mes == mes {
 			find = 1
@@ -140,6 +143,7 @@ func (m *Lista) buscar(mes, dia, depto int, l_prod []AV.Producto) int {
 			}
 			break
 		}
+		aux = aux.siguiente
 		ind++
 	}
 	return find
@@ -147,9 +151,20 @@ func (m *Lista) buscar(mes, dia, depto int, l_prod []AV.Producto) int {
 
 func (m *Lista) Insercion(l_prod []AV.Producto, depto, mes, dia int) {
 	find := m.buscar(mes, dia, depto, l_prod)
-	if find == 0 {
+	if find >= 0 {
 		m.Insertar(mes, depto, dia, l_prod)
 	}
+}
+
+func (m *Lista) Dev_array() []string {
+	var month []string
+	Meses := []string{"ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"}
+	aux := m.inicio
+	for aux != nil {
+		month = append(month, Meses[aux.Mes-1])
+		aux = aux.siguiente
+	}
+	return month
 }
 
 func (elist *Lista) GraphData(año string) {

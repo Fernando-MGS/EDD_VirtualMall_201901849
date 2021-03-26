@@ -17,7 +17,6 @@ export class InventarioComponent implements OnInit {
   constructor(private rutaActiva: ActivatedRoute, private storeServices: TiendaService) {}
   Prodc: Prod[]
   Cantidad : FormGroup;
-
   opcionSeleccionado: string  = '0';
   verSeleccion: string        = '';
 
@@ -38,7 +37,7 @@ export class InventarioComponent implements OnInit {
     this.id=this.rutaActiva.snapshot.params.id
     this.storeServices.getProd(this.id).subscribe((res)=>{
       this.Prodc=res.Array
-      console.log(this.Prodc)
+      console.log(this.Prodc[0])
     })
   }
 

@@ -16,6 +16,8 @@ type Year struct {
 	List Lista
 }
 
+var años []string
+
 type Producto struct {
 	Nombre      string  `json:"Nombre,omitempty"`
 	Codigo      int     `json:"Codigo,omitempty"`
@@ -24,6 +26,19 @@ type Producto struct {
 	Cantidad    int     `json:"Cantidad,omitempty"`
 	Imagen      string  `json:"Imagen,omitempty"`
 	Cant        []int
+}
+
+type Años struct {
+	Datos  []Meses
+	Indice int
+	Large  int
+}
+
+var mes []Meses
+
+type Meses struct {
+	Año int
+	Mes []string
 }
 
 var Listado []Producto
@@ -230,6 +245,28 @@ func inOrden(temp *nodo_m) {
 		fmt.Print("Lista: ")
 		temp.indice.List.Imprimir()
 		inOrden(temp.der)
+	}
+}
+
+func (avl *AVL) Dev_year(ind string) Años {
+	in_Orden(avl.raiz)
+	var year Años
+	year.Datos = mes
+	//year.Indice = 0
+	year.Large = len(mes)
+	var niu []Meses
+	mes = niu
+	return year
+}
+
+func in_Orden(t *nodo_m) {
+	if t != nil {
+		in_Orden(t.izq)
+		var month Meses
+		month.Año = t.indice.Año
+		month.Mes = t.indice.List.Dev_array()
+		mes = append(mes, month)
+		in_Orden(t.der)
 	}
 }
 

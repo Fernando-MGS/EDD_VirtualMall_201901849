@@ -1,11 +1,9 @@
 digraph List {
-rankdir=TB;node [shape = circle, color=greenyellow , style=filled, fillcolor=darkgreen];Node1[label="ENERO"]
-Node11[label="NOVIEMBRE"]
-Node10[label="OCTUBRE"]
-Node3[label="MARZO"]
+rankdir=TB;node [shape = circle, color=greenyellow , style=filled, fillcolor=darkgreen];Node2016[label="2016"]
+Node2017[label="2017"]
+Node2018[label="2018"]
 
-Node1->Node11;
-Node11->Node10;
-Node10->Node3;
+Node2016->Node2017;
+Node2018->Node2016;
 
 }

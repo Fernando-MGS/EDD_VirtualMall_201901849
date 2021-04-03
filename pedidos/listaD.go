@@ -8,7 +8,8 @@ import (
 	"os/exec"
 	"strconv"
 
-	"github.com/Fernando-MGS/TEST/AV"
+	//"github.com/Fernando-MGS/TEST/AV"
+	"github.com/Fernando-MGS/TEST/Tipos"
 )
 
 //a ver si se subio
@@ -29,7 +30,7 @@ func NewLista() *Lista { //crea una lista
 	return &Lista{nil, nil, 0} //el inicio es null, final null, y el tamaño es 0
 }
 
-type Tienda struct {
+/*type Tienda struct {
 	Nombre       string `json:"Nombre,omitempty"`
 	Descripcion  string `json:"Descripcion,omitempty"`
 	Contacto     string `json:"Contacto,omitempty"`
@@ -37,9 +38,9 @@ type Tienda struct {
 	Logo         string `json:"Logo,omitempty"`
 	ID           string
 	Inventario   AV.AVL
-}
+}*/
 
-func (m *Lista) buscar(mes, dia, depto int, l_prod []AV.Producto) int {
+func (m *Lista) buscar(mes, dia, depto int, l_prod []Tipos.Producto) int {
 	aux := m.inicio
 	ind := 1
 	find := 0
@@ -61,7 +62,7 @@ func (m *Lista) buscar(mes, dia, depto int, l_prod []AV.Producto) int {
 	return find
 }
 
-func (m *Lista) Insercion(l_prod []AV.Producto, depto, mes, dia int) {
+func (m *Lista) Insercion(l_prod []Tipos.Producto, depto, mes, dia int) {
 	find := m.buscar(mes, dia, depto, l_prod)
 	if find == 0 {
 		m.Insertar(mes, depto, dia, l_prod) //si es un mes nuevo
@@ -69,7 +70,7 @@ func (m *Lista) Insercion(l_prod []AV.Producto, depto, mes, dia int) {
 	}
 }
 
-func (m *Lista) Insertar(mes, depto, dia int, l_prod []AV.Producto) { //insertar un nodo_m
+func (m *Lista) Insertar(mes, depto, dia int, l_prod []Tipos.Producto) { //insertar un nodo_m
 	matriz := NewMatriz()
 	cont := 0
 	//fmt.Println("List insertar---------------")

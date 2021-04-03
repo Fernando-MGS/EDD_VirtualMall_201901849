@@ -3,14 +3,14 @@ package list
 import (
 	"fmt"
 
-	"github.com/Fernando-MGS/TEST/AV"
+	"github.com/Fernando-MGS/TEST/Tipos"
 )
 
 //a ver si se subio
 type nodo_m struct { //lugar donde se almacena, tipo tienda del package empresa
 	anterior  *nodo_m
 	siguiente *nodo_m
-	dato      Tienda
+	dato      Tipos.Tienda
 }
 
 type Lista struct { //apuntadores
@@ -23,18 +23,7 @@ func NewLista() *Lista { //crea una lista
 	return &Lista{nil, nil, 0} //el inicio es null, final null, y el tamaño es 0
 }
 
-type Tienda struct {
-	Nombre       string `json:"Nombre,omitempty"`
-	Descripcion  string `json:"Descripcion,omitempty"`
-	Contacto     string `json:"Contacto,omitempty"`
-	Calificacion int    `json:"Calificacion,omitempty"`
-	Logo         string `json:"Logo,omitempty"`
-	Departamento string
-	ID           string
-	Inventario   AV.AVL
-}
-
-func (m *Lista) Insertar(valor Tienda) { //insertar un nodo_m
+func (m *Lista) Insertar(valor Tipos.Tienda) { //insertar un nodo_m
 	nuevo := &nodo_m{nil, nil, valor}
 	if m.inicio == nil {
 		m.inicio = nuevo
@@ -101,7 +90,7 @@ func (m *Lista) Borrar(pos int) {
 
 }
 
-func (m *Lista) GetItem(index int) Tienda { //Devuelve un dato de la lista
+func (m *Lista) GetItem(index int) Tipos.Tienda { //Devuelve un dato de la lista
 	ind := 1
 	aux := m.inicio
 	if index <= m.tam {
@@ -114,7 +103,7 @@ func (m *Lista) GetItem(index int) Tienda { //Devuelve un dato de la lista
 	return aux.dato
 }
 
-func (m *Lista) Get(nombre string) Tienda { //Devuelve una tienda en especifico
+func (m *Lista) Get(nombre string) Tipos.Tienda { //Devuelve una tienda en especifico
 	aux := m.inicio
 	for nombre != aux.dato.Nombre {
 		aux = aux.siguiente
@@ -122,7 +111,7 @@ func (m *Lista) Get(nombre string) Tienda { //Devuelve una tienda en especifico
 	return aux.dato
 }
 
-func (m *Lista) Set_Inventario(tmp Tienda) { //Devuelve un dato de la lista
+func (m *Lista) Set_Inventario(tmp Tipos.Tienda) { //Devuelve un dato de la lista
 	aux := m.inicio
 	for tmp.Nombre != aux.dato.Nombre {
 		aux = aux.siguiente

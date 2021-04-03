@@ -1,9 +1,0 @@
-digraph List {
-rankdir=TB;node [shape = circle, color=greenyellow , style=filled, fillcolor=darkgreen];Node2016[label="2016"]
-Node2017[label="2017"]
-Node2018[label="2018"]
-
-Node2016->Node2017;
-Node2018->Node2016;
-
-}

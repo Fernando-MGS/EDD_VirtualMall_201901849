@@ -3,7 +3,7 @@ package lista
 import (
 	"fmt"
 
-	"github.com/Fernando-MGS/TEST/AV"
+	"github.com/Fernando-MGS/TEST/Tipos"
 )
 
 /*type Producto struct {
@@ -11,7 +11,7 @@ import (
 	Cantidad int
 }*/
 type Node struct {
-	data AV.Producto
+	data Tipos.Producto
 	next *Node
 }
 
@@ -22,7 +22,7 @@ type List struct {
 	Cantidad int
 }
 
-var carrito []AV.Producto
+var carrito []Tipos.Producto
 
 func (l *List) Tamaño() int {
 	return l.tamaño
@@ -32,7 +32,7 @@ func (l *List) Precio() float64 {
 	return float64(l.precio)
 }
 
-func (l *List) Add(data AV.Producto) {
+func (l *List) Add(data Tipos.Producto) {
 	if l.prob_exist(data.Codigo) == 0 {
 		if l.head == nil {
 			tmp := &Node{data: data, next: l.head}
@@ -71,12 +71,13 @@ func (l *List) add_prod(codigo int, cantidad int) {
 	}
 }
 
-func (l *List) Putoff_car(prod AV.Producto, cantidad int) {
+func (l *List) Putoff_car(prod Tipos.Producto, cantidad int) {
 	tmp := l.head
 	for tmp.next != nil {
 		if tmp.data.Codigo == prod.Codigo {
 			tmp.data.Cantidad = tmp.data.Cantidad - cantidad
 			if tmp.data.Cantidad == 0 {
+				fmt.Println("Ya no hay :v")
 				l.Cantidad = l.Cantidad - 1
 				l.delete(tmp.data.Codigo)
 				l.tamaño = l.tamaño - cantidad
@@ -130,8 +131,8 @@ func (l *List) delete(data int) {
 	}
 }
 
-func (l *List) GetProducts() []AV.Producto {
-	var carr []AV.Producto
+func (l *List) GetProducts() []Tipos.Producto {
+	var carr []Tipos.Producto
 	tmp := l.head
 	for tmp.next != nil {
 		carr = append(carr, tmp.data)
@@ -142,7 +143,7 @@ func (l *List) GetProducts() []AV.Producto {
 	return carrito
 }
 
-func (l *List) GetItem(index int) AV.Producto {
+func (l *List) GetItem(index int) Tipos.Producto {
 	sum := 1
 	temp := l.head
 	for sum <= index {

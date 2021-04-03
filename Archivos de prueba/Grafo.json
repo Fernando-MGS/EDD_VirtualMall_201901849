@@ -1,0 +1,45 @@
+{
+    "Nodos": [
+        {
+            "Nombre": "Despacho",
+            "Enlaces": [
+                {
+                    "Nombre": "Aranceles",
+                    "Distancia": 5
+                },
+                {
+                    "Nombre": "Reparaciones",
+                    "Distancia": 6
+                },
+                {
+                    "Nombre": "Textiles",
+                    "Distancia": 100
+                }
+            ]
+        },
+        {
+            "Nombre": "Aranceles",
+            "Enlaces": [
+                {
+                    "Nombre": "Textiles",
+                    "Distancia": 10
+                }
+            ]
+        },
+        {
+            "Nombre": "Textiles",
+            "Enlaces": [
+                {
+                    "Nombre": "Reparaciones",
+                    "Distancia": 7
+                }
+            ]
+        },
+        {
+            "Nombre": "Reparaciones",
+            "Enlaces": []
+        }
+    ],
+    "PosicionInicialRobot": "Textiles",
+    "Entrega": "Despacho"
+}

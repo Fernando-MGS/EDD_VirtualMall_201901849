@@ -2,7 +2,7 @@ package estructura
 
 import (
 	"github.com/Fernando-MGS/TEST/AV"
-	"github.com/Fernando-MGS/TEST/list"
+	//"github.com/Fernando-MGS/TEST/list"
 )
 
 type Archivo struct {
@@ -14,8 +14,8 @@ type Data struct {
 	Departamentos []Depto `json:"Departamentos,omitempty"`
 }
 type Depto struct {
-	Nombre  string        `json:"Nombre,omitempty"`
-	Tiendas []list.Tienda `json:"Tiendas,omitempty"`
+	Nombre string `json:"Nombre,omitempty"`
+	//Tiendas []list.Tienda `json:"Tiendas,omitempty"`
 }
 
 type Tienda struct {

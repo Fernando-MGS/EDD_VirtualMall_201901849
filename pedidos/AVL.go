@@ -8,7 +8,8 @@ import (
 	"os/exec"
 	"strconv"
 
-	"github.com/Fernando-MGS/TEST/AV"
+	//"github.com/Fernando-MGS/TEST/AV"
+	"github.com/Fernando-MGS/TEST/Tipos"
 )
 
 type Year struct {
@@ -121,7 +122,7 @@ func prob_exist(indice int, root **nodo_m) int { //0 no existe, 1 si existe
 	return 2
 }
 
-func (avl *AVL) Insertar(indice Year, l_prod []AV.Producto, depto, mes, dia int) {
+func (avl *AVL) Insertar(indice Year, l_prod []Tipos.Producto, depto, mes, dia int) {
 	fmt.Println("Llego a insertar")
 	/*if prob_exist(indice.Año, &avl.raiz) == 0 || prob_exist(indice.Año, &avl.raiz) == 2 {
 		fmt.Println()
@@ -135,7 +136,7 @@ func (avl *AVL) Insertar(indice Year, l_prod []AV.Producto, depto, mes, dia int)
 	_insert(indice, &avl.raiz, l_prod, depto, mes, dia)
 }
 
-func _insert(indice Year, root **nodo_m, l_prod []AV.Producto, depto, mes, dia int) {
+func _insert(indice Year, root **nodo_m, l_prod []Tipos.Producto, depto, mes, dia int) {
 	if (*root) == nil {
 		fmt.Println("Insertando como root ", indice.Año)
 		*root = newnodo_m(indice)
@@ -201,7 +202,7 @@ func insert(indice Year, root **nodo_m) {
 	(*root).altura = max(altura((*root).izq), altura((*root).der)) + 1
 }
 
-func agregar_toList(root **nodo_m, l_prod []AV.Producto, año, depto, mes, dia int) { //0 no existe, 1 si existe
+func agregar_toList(root **nodo_m, l_prod []Tipos.Producto, año, depto, mes, dia int) { //0 no existe, 1 si existe
 	if año < (*root).indice.Año {
 		agregar_toList(&(*root).izq, l_prod, año, depto, mes, dia)
 	} else if año > (*root).indice.Año {

@@ -3,7 +3,8 @@ package pedidos
 import (
 	"fmt"
 
-	"github.com/Fernando-MGS/TEST/AV"
+	"github.com/Fernando-MGS/TEST/Tipos"
+	//"github.com/Fernando-MGS/TEST/AV"
 )
 
 type Product struct {
@@ -15,9 +16,9 @@ type Product struct {
 
 type nodo struct {
 	//Estos atributos son especificos para la matriz
-	x, y                              int           //Saber en que cabecera estoy
-	producto                          []AV.Producto //tipo de objeto
-	izquierda, derecha, arriba, abajo *nodo         //nodos con los que nos desplazamos dentro de la matriz
+	x, y                              int              //Saber en que cabecera estoy
+	producto                          []Tipos.Producto //tipo de objeto
+	izquierda, derecha, arriba, abajo *nodo            //nodos con los que nos desplazamos dentro de la matriz
 	//Estos atributos son especificos para la lista
 	header              int   //tipo interno de la cabecera
 	siguiente, anterior *nodo // nodos con los que nos vamos a desplazar dentro de las listas
@@ -31,8 +32,8 @@ type matriz struct {
 	lst_h, lst_v *lista
 }
 
-func nodoMatriz(x int, y int, producto AV.Producto) *nodo {
-	var array []AV.Producto
+func nodoMatriz(x int, y int, producto Tipos.Producto) *nodo {
+	var array []Tipos.Producto
 	array = append(array, producto)
 	return &nodo{x, y, array, nil, nil, nil, nil, 0, nil, nil}
 
@@ -123,7 +124,7 @@ func (l *lista) print() {
 	}
 }
 
-func (l *lista) buscar(x, y int, producto AV.Producto) int {
+func (l *lista) buscar(x, y int, producto Tipos.Producto) int {
 	temp := l.first
 	find := 0
 	//fmt.Println(producto)
@@ -180,7 +181,7 @@ func (l *lista) print_h() {
 	}
 }
 
-func (m *matriz) Insert(producto AV.Producto, x int, y int) {
+func (m *matriz) Insert(producto Tipos.Producto, x int, y int) {
 	//fmt.Println("________________________________")
 	//fmt.Println("Preparandose para insertar ", producto, " en", x, ",", y)
 	//fmt.Println("bUSCANDO H")
@@ -208,7 +209,7 @@ func (m *matriz) Insert(producto AV.Producto, x int, y int) {
 	//fmt.Println("Fin del buscar")
 }
 
-func (m *matriz) noExisten(producto AV.Producto, x int, y int) {
+func (m *matriz) noExisten(producto Tipos.Producto, x int, y int) {
 	//fmt.Println("no Existen")
 	m.lst_h.insert(x) //insertamos en la lista que emula la cabecera horizontal
 	m.lst_v.insert(y) //insertamos en la lista que emula la cabecera vertical
@@ -225,7 +226,7 @@ func (m *matriz) noExisten(producto AV.Producto, x int, y int) {
 	nuevo.izquierda = v //enlazamos el nuevo nodo hacia la izquierda
 }
 
-func (m *matriz) existeVertical(producto AV.Producto, x int, y int) {
+func (m *matriz) existeVertical(producto Tipos.Producto, x int, y int) {
 	//fmt.Println("existe Vertical")
 	m.lst_h.insert(x) //insertamos en la lista que emula la cabecera horizontal
 
@@ -241,7 +242,7 @@ func (m *matriz) existeVertical(producto AV.Producto, x int, y int) {
 	nuevo.izquierda = v //enlazamos el nuevo nodo hacia la izquierda
 }
 
-func (m *matriz) existeHorizontal(producto AV.Producto, x int, y int) {
+func (m *matriz) existeHorizontal(producto Tipos.Producto, x int, y int) {
 	//fmt.Println("existe Horizontal")
 	m.lst_v.insert(y) //insertamos en la lista que emula la cabecera vertical
 
@@ -257,7 +258,7 @@ func (m *matriz) existeHorizontal(producto AV.Producto, x int, y int) {
 	nuevo.izquierda = v //enlazamos el nuevo nodo hacia la izquierda
 }
 
-func (m *matriz) existen(producto AV.Producto, x int, y int) {
+func (m *matriz) existen(producto Tipos.Producto, x int, y int) {
 	//fmt.Println("Si Existen")
 	h := m.lst_h.search(x) //vamos a buscar el n7odo que acabos de insertar para poder enlazarlo
 	v := m.lst_v.search(y) //vamos a buscar el nodo que acabos de insertar para poder enlazarlo

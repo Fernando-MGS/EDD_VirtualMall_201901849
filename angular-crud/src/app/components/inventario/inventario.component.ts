@@ -19,19 +19,29 @@ export class InventarioComponent implements OnInit {
   Cantidad : FormGroup;
   opcionSeleccionado: string  = '0';
   verSeleccion: string        = '';
-
+  mensaje: string
   capturar(file:any) {
     // Pasamos el valor seleccionado a la variable verSeleccion
     console.log(file)
 
 }
 
-  addProd(file:any, num:any){
-    this.url=this.id.concat("-")
-    this.url=this.url.concat(num)
-    console.log("Hola")
-    this.storeServices.addProd(file,this.url).subscribe(data=>console.log(data),err=>console.log(err),()=>console.log("Finish"));
-    console.log(file);
+  addProd(file:any, num:any, stock:any){
+    var cantidad: number=+num
+    var _stock: number=+stock
+    if (_stock>=cantidad){
+      this.mensaje="Si hay stock"
+      this.url=this.id.concat("-")
+      this.url=this.url.concat(num)
+      console.log("Hola add")
+      this.storeServices.addProd(file,this.url).subscribe(data=>console.log(data),err=>console.log(err),()=>console.log("Finish"));
+      console.log(file);
+    }else{
+      this.mensaje="No hay stock"
+    }
+    
+    
+   
   }
   ngOnInit(): void {
     this.id=this.rutaActiva.snapshot.params.id

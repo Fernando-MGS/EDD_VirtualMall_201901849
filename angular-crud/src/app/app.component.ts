@@ -21,7 +21,7 @@ export class AppComponent implements OnInit{
     {Nombre:"Gatorade",Descripcion:"Soy otra descripción no yei",Contacto:"4554545",Calificacion:5, Logo:"https://logos-marcas.com/wp-content/uploads/2020/05/Gatorade-Logo.png"},
     {Nombre:"PlayStation",Descripcion:"Meh, que ves",Contacto:"4554545",Calificacion:5, Logo:"https://logos-marcas.com/wp-content/uploads/2020/11/PlayStation-Logotipo1994-2009.jpg"}*/
   ];
-  
+  carrito: string="test"
   Prueba: string="Hola string";
   Stores: Store[]=[];
   constructor(private storeServices: TiendaService){ }
@@ -38,7 +38,12 @@ getInvent(file:any){
   console.log(this.inv);
 }
   ngOnInit(){
-    console.log("Jola");
+    this.storeServices.Cart_Size().subscribe((res) =>{
+      this.carrito=res;
+    });
+      let rootVar = window['hola'];
+      rootVar += 1;
+      window['hola'] = rootVar;
    /* this.storeServices.getStore().subscribe((res) =>{
       this.storearray=res.Array;
       console.log(res);

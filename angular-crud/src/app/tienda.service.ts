@@ -60,4 +60,8 @@ export class TiendaService {
     console.log("hOLA10")
     return this.http.get<any>('/pedidos/'+index)
   }
+  Cart_Size():Observable<any>{
+    console.log("Hola 10")
+    return this.http.get<any>('/CartSize')
+  }
 }

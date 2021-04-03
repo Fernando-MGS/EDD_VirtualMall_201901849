@@ -16,9 +16,10 @@ type Node struct {
 }
 
 type List struct {
-	head   *Node
-	tamaño int
-	precio float64
+	head     *Node
+	tamaño   int
+	precio   float64
+	Cantidad int
 }
 
 var carrito []AV.Producto
@@ -38,6 +39,7 @@ func (l *List) Add(data AV.Producto) {
 			l.tamaño = l.tamaño + data.Cantidad
 			l.precio = l.precio + float64(data.Cantidad)*data.Precio
 			l.head = tmp
+			l.Cantidad = l.Cantidad + 1
 		} else {
 			tmp := l.head
 			for tmp.next != nil {
@@ -46,6 +48,7 @@ func (l *List) Add(data AV.Producto) {
 			tmp.next = &Node{data: data, next: nil}
 			l.tamaño = l.tamaño + data.Cantidad
 			l.precio = l.precio + float64(data.Cantidad)*data.Precio
+			l.Cantidad = l.Cantidad + 1
 		}
 	} else {
 		l.add_prod(data.Codigo, data.Cantidad)
@@ -74,6 +77,7 @@ func (l *List) Putoff_car(prod AV.Producto, cantidad int) {
 		if tmp.data.Codigo == prod.Codigo {
 			tmp.data.Cantidad = tmp.data.Cantidad - cantidad
 			if tmp.data.Cantidad == 0 {
+				l.Cantidad = l.Cantidad - 1
 				l.delete(tmp.data.Codigo)
 				l.tamaño = l.tamaño - cantidad
 				l.precio = l.precio - float64(cantidad)*prod.Precio

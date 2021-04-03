@@ -12,8 +12,9 @@
               <br>
               <br>
               <br>
+              <p>{{mensaje}}</p>
               <div *ngIf="producto.Cantidad>0">
-                <a href="inventario/{{id}}" class="btn btn-primary" (click)="addProd(producto,Cant.value)" value={{producto}}  style="background-color:rgb(165, 111, 216);border-color: darkmagenta;">Agregar</a>
+                <a href="inventario/{{id}}" class="btn btn-primary" (click)="addProd(producto,Cant.value,producto.Cantidad)" value={{producto}}  style="background-color:rgb(165, 111, 216);border-color: darkmagenta;">Agregar</a>
                 <textarea class="ml-4 mt-4" #Cant style="width: 100px; height: 30px;"></textarea>
               </div>
               </div>

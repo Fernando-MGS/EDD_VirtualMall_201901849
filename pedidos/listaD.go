@@ -39,22 +39,52 @@ type Tienda struct {
 	Inventario   AV.AVL
 }
 
+func (m *Lista) buscar(mes, dia, depto int, l_prod []AV.Producto) int {
+	aux := m.inicio
+	ind := 1
+	find := 0
+	fmt.Print("Buscando ", mes)
+	for ind <= m.tam {
+		if aux.Mes == mes {
+			find = 1
+			cont := 0
+			fmt.Print(", ha sido encontrado")
+			for cont < len(l_prod) {
+				aux.pedidos.Insert(l_prod[cont], dia, depto)
+				cont++
+			}
+			break
+		}
+		aux = aux.siguiente
+		ind++
+	}
+	return find
+}
+
+func (m *Lista) Insercion(l_prod []AV.Producto, depto, mes, dia int) {
+	find := m.buscar(mes, dia, depto, l_prod)
+	if find == 0 {
+		m.Insertar(mes, depto, dia, l_prod) //si es un mes nuevo
+		//fmt.Println("Insertando nuevo mes")
+	}
+}
+
 func (m *Lista) Insertar(mes, depto, dia int, l_prod []AV.Producto) { //insertar un nodo_m
 	matriz := NewMatriz()
 	cont := 0
-	fmt.Println("List insertar---------------")
+	//fmt.Println("List insertar---------------")
 	for cont < len(l_prod) {
 		matriz.Insert(l_prod[cont], dia, depto)
-		fmt.Println("For de list-------------")
+		//fmt.Println("For de list-------------")
 		cont++
 	}
 	nuevo := &nodo_l{nil, nil, mes, *matriz}
 	if m.inicio == nil {
-		fmt.Println("!!!!!!!")
+		//fmt.Println("!!!!!!!")
 		m.inicio = nuevo
 		m.ultimo = nuevo
 	} else {
-		fmt.Println("????????")
+		//fmt.Println("????????")
 		m.ultimo.siguiente = nuevo
 		nuevo.anterior = m.ultimo
 		m.ultimo = nuevo
@@ -77,46 +107,6 @@ func (m *Lista) Tamaño() int { //IMPRIMIR TAMAÑO DE LISTA
 	return m.tam
 }
 
-func (m *Lista) Borrar(pos int) {
-	aux := m.inicio
-	sum := 0
-	for sum < pos {
-		aux = aux.siguiente
-		sum++
-	}
-	fmt.Println("Llegom", sum)
-	if m.inicio == aux {
-		fmt.Println("inicio", m.tam)
-		//i := m.tam - 1
-		m.inicio = m.inicio.siguiente
-		m.inicio.anterior = nil
-		/*if i > 0 {
-			fmt.Println("Llego 1.", i)
-			m.inicio = aux.siguiente
-			aux.siguiente.anterior = nil
-			aux.siguiente = nil
-		} else {
-			fmt.Println("Llego 2", aux.dato.Nombre, " ", i)
-			aux = nil
-			m.inicio = aux
-			m.inicio.siguiente = nil
-			m.inicio.anterior = nil
-		}*/
-
-	} else if m.ultimo == aux {
-		fmt.Println("adios1")
-		m.ultimo = aux.anterior
-		aux.anterior.siguiente = nil
-	} else {
-		fmt.Println("adios2")
-		aux.anterior.siguiente = aux.siguiente
-		aux.siguiente.anterior = aux.anterior
-		aux.anterior = nil
-		aux.siguiente = nil
-	}
-
-}
-
 func (m *Lista) GetItem(index int) matriz { //Devuelve un dato de la lista
 	ind := 1
 	aux := m.inicio
@@ -127,33 +117,6 @@ func (m *Lista) GetItem(index int) matriz { //Devuelve un dato de la lista
 		}
 	}
 	return aux.pedidos
-}
-func (m *Lista) buscar(mes, dia, depto int, l_prod []AV.Producto) int {
-	aux := m.inicio
-	ind := 1
-	find := 0
-	fmt.Println("LLLLLLLL")
-	for ind <= m.tam {
-		if aux.Mes == mes {
-			find = 1
-			cont := 0
-			for cont < len(l_prod) {
-				aux.pedidos.Insert(l_prod[cont], dia, depto)
-				cont++
-			}
-			break
-		}
-		aux = aux.siguiente
-		ind++
-	}
-	return find
-}
-
-func (m *Lista) Insercion(l_prod []AV.Producto, depto, mes, dia int) {
-	find := m.buscar(mes, dia, depto, l_prod)
-	if find >= 0 {
-		m.Insertar(mes, depto, dia, l_prod)
-	}
 }
 
 func (m *Lista) Dev_array() []string {

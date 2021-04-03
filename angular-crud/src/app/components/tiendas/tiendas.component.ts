@@ -21,6 +21,9 @@ export class TiendasComponent implements OnInit {
   constructor(public storeServices: TiendaService){ }
 
   ngOnInit() {
+    let rootVar = window['hola'];
+      rootVar += 1;
+      window['hola'] = rootVar;
     this.storeServices.getStore().subscribe((res) =>{
       this.storearray=res.Array;
       console.log(res);

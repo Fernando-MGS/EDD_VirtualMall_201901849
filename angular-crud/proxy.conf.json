@@ -53,5 +53,10 @@
         "target": "http://localhost:3000",
         "secure": false,
         "loglevel": "debug"
+    },
+    "/CartSize":{
+        "target": "http://localhost:3000",
+        "secure": false,
+        "loglevel": "debug"
     }
 }

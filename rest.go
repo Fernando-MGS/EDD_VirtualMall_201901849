@@ -555,11 +555,12 @@ func pedido_json(pedido Pedidos) {
 			var year pedidos.Year
 			year.Año = año
 			year.List = *meses
+			fmt.Println("Preparandose para año ", año)
 			AVL_Pedidos.Insertar(year, prod_real, index_dep, mes, dia)
 		}
 		cont++
 	}
-	AVL_Pedidos.Print()
+	//AVL_Pedidos.Print()
 }
 
 func pedido_carrito(w http.ResponseWriter, r *http.Request) {
@@ -572,7 +573,9 @@ func pedido_carrito(w http.ResponseWriter, r *http.Request) {
 	dia := t.Day()
 	fmt.Println(err)
 	meses := pedidos.NewLista()
-	for sum < carrito.Tamaño()-1 {
+
+	fmt.Println("El tamaño del carrito es ", carrito.Cantidad)
+	for sum < carrito.Cantidad {
 		prod := carrito.GetItem(sum)
 		fmt.Println(prod.ID)
 		index := strings.Split(prod.ID, "-")
@@ -597,6 +600,7 @@ func pedido_carrito(w http.ResponseWriter, r *http.Request) {
 	}
 	var new lista.List
 	carrito = new
+	fmt.Println("Vacío el carrito")
 }
 
 func prob_exist_avl(Departamento, Nombre string, Calificacion, Codigo int) int {
@@ -655,6 +659,12 @@ func dev_pedidos(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
+func CartSize(w http.ResponseWriter, r *http.Request) {
+	tamaño := carrito.Tamaño()
+	json.NewEncoder(w).Encode(tamaño)
+	return
+}
+
 func main() {
 	router := mux.NewRouter()
 	//endpoint-rutas
@@ -675,6 +685,6 @@ func main() {
 	router.HandleFunc("/year", graph_año).Methods("GET")
 	router.HandleFunc("/month/{id}", graph_month).Methods("GET")
 	router.HandleFunc("/pedidos/{id}", dev_pedidos).Methods("GET")
-
+	router.HandleFunc("/CartSize", CartSize).Methods("GET")
 	log.Fatal(http.ListenAndServe(":3000", router))
 }

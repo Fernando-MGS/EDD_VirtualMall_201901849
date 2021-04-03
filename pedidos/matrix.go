@@ -59,7 +59,7 @@ func (n *nodo) headerY() int { return n.y }
 }*/
 
 func (l *lista) ordenar(nuevo *nodo) {
-	fmt.Println("A ordenar: ", nuevo)
+	//fmt.Println("A ordenar: ", nuevo)
 	aux := l.first
 	for aux != nil {
 		if nuevo.header > aux.header {
@@ -84,10 +84,10 @@ func (l *lista) ordenar(nuevo *nodo) {
 }
 
 func (l *lista) insert(header int) {
-	fmt.Println("En insert, ", header)
+	//fmt.Println("En insert, ", header)
 	nuevo := nodoLista(header)
 	if l.first == nil {
-		fmt.Println("first is nil ", header)
+		//fmt.Println("first is nil ", header)
 		l.first = nuevo
 		l.last = nuevo
 	} else {
@@ -96,10 +96,10 @@ func (l *lista) insert(header int) {
 }
 
 func (l *lista) search(header int) *nodo {
-	fmt.Println("Buscando a header :", header)
+	//fmt.Println("Buscando a header :", header)
 	temp := l.first
 	for temp != nil {
-		fmt.Println(temp.header, "vs", header)
+		//fmt.Println(temp.header, "vs", header)
 		if temp.header == header {
 			return temp
 		}
@@ -126,20 +126,20 @@ func (l *lista) print() {
 func (l *lista) buscar(x, y int, producto AV.Producto) int {
 	temp := l.first
 	find := 0
-	fmt.Println(producto)
+	//fmt.Println(producto)
 	for temp != nil {
 		t := temp
 
 		for t != nil {
 			if t.x == x && t.y == y {
-				fmt.Println("Producto ya existe")
+				//fmt.Println("Producto ya existe")
 				t.producto = append(t.producto, producto)
 				find = 1
 			}
 
 			t = t.derecha
 		}
-		fmt.Println("-")
+		//fmt.Println("-")
 		temp = temp.siguiente
 	}
 	temp = l.first
@@ -147,7 +147,7 @@ func (l *lista) buscar(x, y int, producto AV.Producto) int {
 		t := temp
 		for t != nil {
 			if t.x == x && t.y == y {
-				fmt.Println("Producto ya existe")
+				//fmt.Println("Producto ya existe")
 				if find == 0 {
 					t.producto = append(t.producto, producto)
 				}
@@ -155,11 +155,11 @@ func (l *lista) buscar(x, y int, producto AV.Producto) int {
 			}
 			t = t.abajo
 		}
-		fmt.Println()
+		//fmt.Println()
 		temp = temp.siguiente
 	}
 
-	fmt.Println("Salió del For de buscar matrix")
+	//fmt.Println("Salió del For de buscar matrix")
 	return find
 }
 
@@ -181,35 +181,35 @@ func (l *lista) print_h() {
 }
 
 func (m *matriz) Insert(producto AV.Producto, x int, y int) {
-	fmt.Println("________________________________")
-	fmt.Println("Preparandose para insertar ", producto, " en", x, ",", y)
-	fmt.Println("bUSCANDO H")
+	//fmt.Println("________________________________")
+	//fmt.Println("Preparandose para insertar ", producto, " en", x, ",", y)
+	//fmt.Println("bUSCANDO H")
 	h := m.lst_h.search(x)
-	fmt.Println("h es ", h)
-	fmt.Println("bUSCANDO V")
+	//fmt.Println("h es ", h)
+	//fmt.Println("bUSCANDO V")
 	v := m.lst_v.search(y)
 	find := m.lst_v.buscar(x, y, producto)
-	fmt.Println("El find es ", find)
+	//fmt.Println("El find es ", find)
 	if find == 0 {
-		fmt.Println("Entro al find 0")
+		//fmt.Println("Entro al find 0")
 		if h == nil && v == nil {
-			fmt.Println("h y  v nill")
+			//fmt.Println("h y  v nill")
 			m.noExisten(producto, x, y)
 		} else if h == nil && v != nil {
-			fmt.Println("h nil, v no")
+			//fmt.Println("h nil, v no")
 			m.existeVertical(producto, x, y)
 		} else if h != nil && v == nil {
-			fmt.Println("h, v nill")
+			//fmt.Println("h, v nill")
 			m.existeHorizontal(producto, x, y)
 		} else {
 			m.existen(producto, x, y)
 		}
 	}
-	fmt.Println("Fin del buscar")
+	//fmt.Println("Fin del buscar")
 }
 
 func (m *matriz) noExisten(producto AV.Producto, x int, y int) {
-	fmt.Println("no Existen")
+	//fmt.Println("no Existen")
 	m.lst_h.insert(x) //insertamos en la lista que emula la cabecera horizontal
 	m.lst_v.insert(y) //insertamos en la lista que emula la cabecera vertical
 
@@ -226,12 +226,12 @@ func (m *matriz) noExisten(producto AV.Producto, x int, y int) {
 }
 
 func (m *matriz) existeVertical(producto AV.Producto, x int, y int) {
-	fmt.Println("existe Vertical")
+	//fmt.Println("existe Vertical")
 	m.lst_h.insert(x) //insertamos en la lista que emula la cabecera horizontal
 
 	h := m.lst_h.search(x) //vamos a buscar el n7odo que acabos de insertar para poder enlazarlo
 	v := m.lst_v.search(y) //vamos a buscar el nodo que acabos de insertar para poder enlazarlo
-	fmt.Println("h.x es ", h.x, "  vy es:", v.y)
+	//fmt.Println("h.x es ", h.x, "  vy es:", v.y)
 	nuevo := nodoMatriz(x, y, producto) //creamos nuevo nodo tipo matriz
 
 	h.abajo = nuevo  //enlazamos el nodo horizontal hacia abajo
@@ -242,12 +242,12 @@ func (m *matriz) existeVertical(producto AV.Producto, x int, y int) {
 }
 
 func (m *matriz) existeHorizontal(producto AV.Producto, x int, y int) {
-	fmt.Println("existe Horizontal")
+	//fmt.Println("existe Horizontal")
 	m.lst_v.insert(y) //insertamos en la lista que emula la cabecera vertical
 
 	h := m.lst_h.search(x) //vamos a buscar el n7odo que acabos de insertar para poder enlazarlo
 	v := m.lst_v.search(y) //vamos a buscar el nodo que acabos de insertar para poder enlazarlo
-	fmt.Println("h.x es ", h.x, "  vy es:", v.y)
+	//fmt.Println("h.x es ", h.x, "  vy es:", v.y)
 	nuevo := nodoMatriz(x, y, producto) //creamos nuevo nodo tipo matriz
 
 	h.abajo = nuevo  //enlazamos el nodo horizontal hacia abajo
@@ -258,10 +258,10 @@ func (m *matriz) existeHorizontal(producto AV.Producto, x int, y int) {
 }
 
 func (m *matriz) existen(producto AV.Producto, x int, y int) {
-	fmt.Println("Si Existen")
+	//fmt.Println("Si Existen")
 	h := m.lst_h.search(x) //vamos a buscar el n7odo que acabos de insertar para poder enlazarlo
 	v := m.lst_v.search(y) //vamos a buscar el nodo que acabos de insertar para poder enlazarlo
-	fmt.Println("h.x es ", h.x, "  vy es:", v.y)
+	//fmt.Println("h.x es ", h.x, "  vy es:", v.y)
 	nuevo := nodoMatriz(x, y, producto) //creamos nuevo nodo tipo matriz
 	h.abajo = nuevo                     //enlazamos el nodo horizontal hacia abajo
 	nuevo.arriba = h                    //enlazmos el nuevo nodo hacia arriba

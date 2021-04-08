@@ -3,6 +3,13 @@ body{
   background-color: #1B5364;  /* fallback for old browsers */
 
 }
+#login{
+  background: #8E2DE2;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to top, #4A00E0, #8E2DE2);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to top, #4A00E0, #8E2DE2); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  /*height: 100vh;*/
+}
+
 .link { color:#FFFB89;
     text-decoration:none;
 } /* CSS link color (red) */

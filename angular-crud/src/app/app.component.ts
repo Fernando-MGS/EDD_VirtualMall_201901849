@@ -16,6 +16,7 @@ export class AppComponent implements OnInit{
   tiendas: any[]=[];
   test: any;
   inv:any;
+  user_tipo:any;
   storearray: Data[]=[
     /*{Nombre:"Walmart",Descripcion:"Soy una descripción yei",Contacto:"4554545",Calificacion:5,Logo:"https://www.braindw.com/wp-content/uploads/2018/05/logo-walmart.jpg"},     
     {Nombre:"Gatorade",Descripcion:"Soy otra descripción no yei",Contacto:"4554545",Calificacion:5, Logo:"https://logos-marcas.com/wp-content/uploads/2020/05/Gatorade-Logo.png"},
@@ -40,6 +41,10 @@ getInvent(file:any){
   ngOnInit(){
     this.storeServices.Cart_Size().subscribe((res) =>{
       this.carrito=res;
+    });
+    this.storeServices.Tipo_User().subscribe((resp) =>{
+      this.user_tipo=1;
+      console.log(this.user_tipo)
     });
       let rootVar = window['hola'];
       rootVar += 1;

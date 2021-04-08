@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/sha256"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -10,16 +11,14 @@ import (
 	"strings"
 	"time"
 
-	//"github.com/Fernando-MGS/TEST/pedidos"
-	//"github.com/Fernando-MGS/TEST/AV"
-	//"github.com/Fernando-MGS/TEST/estructura"
 	"github.com/Fernando-MGS/TEST/Tipos"
 	"github.com/Fernando-MGS/TEST/list"
 	"github.com/Fernando-MGS/TEST/lista"
 	"github.com/Fernando-MGS/TEST/pedidos"
 	"github.com/gorilla/mux"
-	//"github.com/Fernando-MGS/TEST/list"
 )
+
+//VARIABLES GLOBALES
 
 var a Tipos.AVL
 var rowmajor []list.Lista
@@ -27,10 +26,11 @@ var depto []string
 var index []string
 var AVL_Pedidos pedidos.AVL
 var carrito lista.List
-var index_pedido int //
+var index_pedido int
+var user_tipo int //0 no hay sesión, 1 admin, 2 cliente
 //F U N C I O N E S
 
-//Llenar arreglo rowmajor
+//LLENAR ARREGLO ROWMAJOR
 func readBody(w http.ResponseWriter, r *http.Request) {
 	headerContentTtype := r.Header.Get("Content-Type")
 	if headerContentTtype != "application/json" {
@@ -132,7 +132,6 @@ func llenar_index(e Tipos.Archivo) {
 func dev_indice(indice string) int { //devuelve el indice del alfabeto
 	sum := 0
 	nombre := strings.Split(indice, "")
-
 	//alfabeto := []string{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"}
 	for sum < len(index) {
 		if index[sum] == nombre[0] {
@@ -167,7 +166,6 @@ func GetList(w http.ResponseWriter, r *http.Request) {
 		salida = append(salida, rowmajor[i].GetItem(j))
 		j++
 	}
-	//salida[0].Inventario.Print()
 	var exit Tipos.T_especifica
 	exit = salida
 	json.NewEncoder(w).Encode(exit)
@@ -271,13 +269,6 @@ func llenar_avl(e Tipos.Inventarios) {
 		sum := 0
 		for sum < len(e.Inventario[cont].Productos) {
 			prod := e.Inventario[cont].Productos[sum]
-			/*var prod Tipos.Producto
-			prod.Nombre = e.Inventario[cont].Productos[sum].Nombre
-			prod.Cantidad = e.Inventario[cont].Productos[sum].Cantidad
-			prod.Codigo = e.Inventario[cont].Productos[sum].Codigo
-			prod.Descripcion = e.Inventario[cont].Productos[sum].Descripcion
-			prod.Precio = e.Inventario[cont].Productos[sum].Precio
-			prod.Imagen = e.Inventario[cont].Productos[sum].Imagen*/
 			tmp.Inventario.Insertar(prod)
 			sum++
 			rowmajor[_index].Set_Inventario(tmp)
@@ -573,6 +564,118 @@ func graph_month(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(err)
 }
 
+//SESIONES
+
+func devolver_t_user(w http.ResponseWriter, r *http.Request) {
+	json.NewEncoder(w).Encode(user_tipo)
+}
+
+func cargar_users(w http.ResponseWriter, r *http.Request) {
+	headerContentTtype := r.Header.Get("Content-Type")
+	if headerContentTtype != "application/json" {
+		errorResponse(w, "Content Type is not application/json", http.StatusUnsupportedMediaType)
+		return
+	}
+	var e Tipos.Cuentas
+	var unmarshalErr *json.UnmarshalTypeError
+
+	decoder := json.NewDecoder(r.Body)
+	decoder.DisallowUnknownFields()
+	err := decoder.Decode(&e)
+	if err != nil {
+		if errors.As(err, &unmarshalErr) {
+			errorResponse(w, "Bad Request. Wrong Type provided for field "+unmarshalErr.Field, http.StatusBadRequest)
+		} else {
+			errorResponse(w, "Bad Request "+err.Error(), http.StatusBadRequest)
+		}
+		return
+	}
+	errorResponse(w, "Archivo Recibido", http.StatusOK)
+	llenar_users(e)
+	return
+	//json.NewEncoder(w).Encode(user_tipo)
+}
+
+func llenar_users(e Tipos.Cuentas) {
+	array_users := e.Usuarios
+
+	sum := 0
+	for sum < len(array_users) {
+		if array_users[sum].Cuenta == "Admin" {
+			array_users[sum].Tipo = 1
+		} else {
+			array_users[sum].Tipo = 2
+		}
+		sum++
+	}
+	fmt.Println(array_users)
+}
+
+func setupCorsResponse(w *http.ResponseWriter, req *http.Request) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "")
+	(*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	(*w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Authorization")
+}
+func regisUser(w http.ResponseWriter, r *http.Request) {
+	setupCorsResponse(&w, r)
+	headerContentTtype := r.Header.Get("Content-Type")
+	if headerContentTtype != "application/json" {
+		errorResponse(w, "Content Type is not application/json", http.StatusUnsupportedMediaType)
+		return
+	}
+	var e Tipos.Usuario
+
+	var unmarshalErr *json.UnmarshalTypeError
+
+	decoder := json.NewDecoder(r.Body)
+	decoder.DisallowUnknownFields()
+	err := decoder.Decode(&e)
+	if err != nil {
+		if errors.As(err, &unmarshalErr) {
+			errorResponse(w, "Bad Request. Wrong Type provided for field "+unmarshalErr.Field, http.StatusBadRequest)
+		} else {
+			errorResponse(w, "Bad Request "+err.Error(), http.StatusBadRequest)
+		}
+		return
+	}
+	errorResponse(w, "Archivo Recibido", http.StatusOK)
+	sum := sha256.Sum256([]byte(e.Password))
+	str2 := string(e.SHA_pass[:])
+	fmt.Println("-------")
+	fmt.Println(str2)
+	//str3 := bytes.NewBuffer(e.SHA_pass[]).String()
+	e.SHA_pass = sum
+	fmt.Println(e)
+	fmt.Printf("%x", e.SHA_pass)
+}
+
+func loginUser(w http.ResponseWriter, r *http.Request) {
+	setupCorsResponse(&w, r)
+	headerContentTtype := r.Header.Get("Content-Type")
+	if headerContentTtype != "application/json" {
+		errorResponse(w, "Content Type is not application/json", http.StatusUnsupportedMediaType)
+		return
+	}
+	var e Tipos.Consulta
+
+	var unmarshalErr *json.UnmarshalTypeError
+
+	decoder := json.NewDecoder(r.Body)
+	decoder.DisallowUnknownFields()
+	err := decoder.Decode(&e)
+	if err != nil {
+		if errors.As(err, &unmarshalErr) {
+			errorResponse(w, "Bad Request. Wrong Type provided for field "+unmarshalErr.Field, http.StatusBadRequest)
+		} else {
+			errorResponse(w, "Bad Request "+err.Error(), http.StatusBadRequest)
+		}
+		return
+	}
+	errorResponse(w, "Archivo Recibido", http.StatusOK)
+	fmt.Println(e)
+}
+
+//ERRORES DE RESPONSE
 func errorResponse(w http.ResponseWriter, message string, httpStatusCode int) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(httpStatusCode)
@@ -585,6 +688,7 @@ func errorResponse(w http.ResponseWriter, message string, httpStatusCode int) {
 func main() {
 	router := mux.NewRouter()
 	//endpoint-rutas
+	fmt.Println(user_tipo)
 	router.HandleFunc("/TiendaEspecifica", GetStore).Methods("POST") //LISTO
 	router.HandleFunc("/id/{numero}", GetList).Methods("GET")        //LISTO
 	router.HandleFunc("/cargartienda", readBody).Methods("POST")     //LISTO
@@ -592,7 +696,6 @@ func main() {
 	router.HandleFunc("/Tiendas", give_tiendas).Methods("GET")
 	router.HandleFunc("/products/{numero}", getProduct).Methods("GET")
 	router.HandleFunc("/addProduct", addProd).Methods("POST")
-	//router.HandleFunc("/resetCart", resetCart).Methods("GET")
 	router.HandleFunc("/offProduct/{num}", offProduct).Methods("POST")
 	router.HandleFunc("/addProducto/{id}", addProduct).Methods("POST")
 	router.HandleFunc("/getCart", getCart).Methods("GET")
@@ -602,5 +705,9 @@ func main() {
 	router.HandleFunc("/month/{id}", graph_month).Methods("GET")
 	router.HandleFunc("/pedidos/{id}", dev_pedidos).Methods("GET")
 	router.HandleFunc("/CartSize", CartSize).Methods("GET")
+	router.HandleFunc("/user", devolver_t_user).Methods("GET")
+	router.HandleFunc("/LoadUsers", cargar_users).Methods("POST")
+	router.HandleFunc("/regisUser", regisUser).Methods("POST")
+	router.HandleFunc("/loginUser", loginUser).Methods("POST")
 	log.Fatal(http.ListenAndServe(":3000", router))
 }

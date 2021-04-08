@@ -87,6 +87,28 @@ type Months struct {
 	Mes    []string
 }
 
+type Cuentas struct {
+	Usuarios []Usuario `json:"Usuarios,omitempty"`
+}
+
+type Usuario struct {
+	DPI      string `json:"Dpi,omitempty"`
+	Nombre   string `json:"Nombre,omitempty"`
+	Correo   string `json:"Correo,omitempty"`
+	Password string `json:"Password,omitempty"`
+	Pass     string
+	Cuenta   string `json:"Cuenta,omitempty"`
+	SHA_pass [32]byte
+	Tipo     int //1 admin, 2 user
+}
+
+type Consulta struct {
+	Nombre   string `json:"Nombre,omitempty"`
+	Password string `json:"Password,omitempty"`
+}
+type Nodo_G struct {
+}
+
 /*type Años struct {
 	Datos  []pedidos.Meses
 	indice int

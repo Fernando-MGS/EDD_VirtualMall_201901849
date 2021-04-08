@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from "@angular/common/http";
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-
+import {ReactiveFormsModule} from '@angular/forms';
 //servicios
 import {  TiendaService} from './tienda.service';
 import { ProductsComponent } from './components/products/products.component';
@@ -13,7 +13,8 @@ import { InventarioComponent } from './components/inventario/inventario.componen
 import { CarritoComponent } from './components/carrito/carrito.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { PedidosComponent } from './components/pedidos/pedidos.component';
-import { LoginComponent } from './components/login/login.component'
+import { LoginComponent } from './components/login/login.component';
+import { UserComponent } from './components/user/user.component'
 
 @NgModule({
   declarations: [
@@ -23,11 +24,13 @@ import { LoginComponent } from './components/login/login.component'
   CarritoComponent,
   NavbarComponent,
   PedidosComponent,
-  LoginComponent],
+  LoginComponent,
+  UserComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    ReactiveFormsModule
   ],
   providers: [
     TiendaService

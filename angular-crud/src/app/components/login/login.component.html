@@ -1,1 +1,39 @@
-<p>login works!</p>
+<div id="login">
+    <br>
+    <br>
+    <br>
+    <h1 align="center" style="font-size:80px; color:white;"> EDD MALL</h1> 
+    <br>
+    <br>
+    <div class="row">
+        <div class="col ml-4">
+            <h4 style="color: white;">Registrarse</h4>
+            <form [formGroup]="Register">
+                <p style="color: white;">Usuario:</p> <input style="width: 400px;" type="text" 
+                [class.is-invalid]="Register.get('Nombre').touched && Register.get('Nombre').invalid"
+                class="form-control" formControlName="Nombre">
+                <p class="mt-1" style="color:white">Password:</p> 
+                <input type="password" style="width: 400px;" class="form-control" formControlName="Password">
+                <p class="mt-1" style="color:white">DPI:</p> 
+                <input type="text" style="width: 400px;" class="form-control" formControlName="Dpi">
+                <p class="mt-1" style="color:white">Email:</p> 
+                <input type="email" style="width: 400px;" class="form-control" formControlName="Correo">
+                <br>
+                <button class="button btn-primary" (click)="registrar()"  type="submit">Enviar</button>
+            </form>
+        </div>
+        <div class="col">
+            <h4  style="color: white;">Iniciar Sesión</h4>
+            <form [formGroup]="Login_form">
+                <p style="color: white;">Usuario:</p> <input type="text" style="width: 400px;" 
+                [class.is-invalid]="Login_form.get('Nombre').touched && Login_form.get('Nombre').invalid"
+                class="form-control" formControlName="Nombre">
+                <p class="mt-1" style="color:white">Password:</p> <input type="password" style="width: 400px;"
+                class="form-control" formControlName="Password"><br>
+                <button class="button btn-primary" (click)="logear()" type="submit">Enviar</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+

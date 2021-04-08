@@ -58,5 +58,25 @@
         "target": "http://localhost:3000",
         "secure": false,
         "loglevel": "debug"
+    },
+    "/user":{
+        "target": "http://localhost:3000",
+        "secure": false,
+        "loglevel": "debug"
+    },
+    "/LoadUsers":{
+        "target": "http://localhost:3000",
+        "secure": false,
+        "loglevel": "debug"
+    },
+    "/regisUser":{
+        "target": "http://localhost:3000",
+        "secure": false,
+        "loglevel": "debug"
+    },
+    "/loginUser":{
+        "target": "http://localhost:3000",
+        "secure": false,
+        "loglevel": "debug"
     }
 }

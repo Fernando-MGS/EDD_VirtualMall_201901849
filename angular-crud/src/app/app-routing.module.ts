@@ -8,11 +8,14 @@ import { TiendasComponent } from './components/tiendas/tiendas.component';
 import { InventarioComponent } from './components/inventario/inventario.component';
 import { CarritoComponent } from './components/carrito/carrito.component';
 import { PedidosComponent } from './components/pedidos/pedidos.component';
+import {LoginComponent} from './components/login/login.component';
+import {UserComponent} from './components/user/user.component'
 const routes: Routes = [
   
   { path:'', component: CargaComponent},
   { path:'', component: AppComponent},
-  { path:'products', component: ProductsComponent},
+  { path:'login', component: LoginComponent},
+  { path:'profile', component: UserComponent},
   { path:'carga', component: CargaComponent},
   { path:'tiendas', component: TiendasComponent},
   {path:'inventario/:id', component: InventarioComponent},

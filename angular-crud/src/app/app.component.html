@@ -1,3 +1,4 @@
+<div *ngIf="user_tipo>0">
 <nav class="navbar navbar-expand-lg navbar-light navbar-fixed-top " style="background-color: rgb(165, 111, 216);">
     <div class="container-fluid">
       <a class="navbar-brand"style="color: cornsilk;" href="/">EDD MALL</a>
@@ -10,7 +11,7 @@
             <a class="nav-link active" aria-current="page" href="/tiendas" style="color: cornsilk;">TIENDAS</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link"style="color: cornsilk;" href="/inventario">PRODUCTOS</a>
+            <a class="nav-link"style="color: cornsilk;" href="/login">PRODUCTOS</a>
           </li>
           <li class="nav-item">
             <a class="nav-link"style="color: cornsilk;" href="/pedido/0">PEDIDOS</a>
@@ -23,8 +24,12 @@
           <li class="nav-item">
             <a  class="nav-link"style="color: cornsilk; font-size:20px" href="/carrito">🛒<span class="badge badge-primary badge-pill" id="test" style="background-color: rgb(47, 47, 48); color:white">{{carrito}}</span></a>
           </li>
+          <li class="nav-item">
+            <a  class="nav-link"style="color: cornsilk; font-size:20px" href="/profile"><img src="https://www.freeiconspng.com/thumbs/login-icon/user-login-icon-14.png" width="30px" height="30px"></a>
+          </li>
       </ul>
       </div>
     </div>
   </nav>
+</div>
 <router-outlet></router-outlet>

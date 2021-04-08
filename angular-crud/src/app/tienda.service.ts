@@ -64,4 +64,20 @@ export class TiendaService {
     console.log("Hola 10")
     return this.http.get<any>('/CartSize')
   }
+  Tipo_User():Observable<any>{
+    console.log("Hola 11")
+    return this.http.get<any>('/user')
+  }
+  LoadUser(users:any):Observable<any>{
+    console.log("hOLA12");
+    return this.http.post<any>('/LoadUsers',users,)
+  }
+  RegisUser(user:any):Observable<any>{
+    console.log("hOLA13");
+    return this.http.post<any>('/regisUser',user,)
+  }
+  LoginUser(user:any):Observable<any>{
+    console.log("hOLA14");
+    return this.http.post<any>('/loginUser',user,)
+  }
 }

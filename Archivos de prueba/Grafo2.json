@@ -1,0 +1,80 @@
+{
+    "Nodos": [
+        {
+            "Nombre": "a",
+            "Enlaces": [
+                {
+                    "Nombre": "b",
+                    "Distancia": 3
+                },
+                {
+                    "Nombre": "f",
+                    "Distancia": 7
+                }
+            ]
+        },
+        {
+            "Nombre": "b",
+            "Enlaces": [
+                {
+                    "Nombre": "c",
+                    "Distancia": 5
+                },
+                {
+                    "Nombre": "g",
+                    "Distancia": 2
+                }
+            ]
+        },
+        {
+            "Nombre": "f",
+            "Enlaces": [
+                {
+                    "Nombre": "e",
+                    "Distancia": 4
+                },
+                {
+                    "Nombre": "g",
+                    "Distancia": 1
+                }
+            ]
+        },
+        {
+            "Nombre": "g",
+            "Enlaces": [
+                {
+                    "Nombre": "c",
+                    "Distancia": 1
+                }
+            ]
+        },
+        {
+            "Nombre": "c",
+            "Enlaces": [
+                {
+                    "Nombre": "d",
+                    "Distancia": 1
+                },
+                {
+                    "Nombre": "e",
+                    "Distancia": 8
+                }
+            ]
+        },
+        {
+            "Nombre": "e",
+            "Enlaces": [
+                {
+                    "Nombre": "d",
+                    "Distancia": 2
+                }
+            ]
+        },
+        {
+            "Nombre": "d",
+            "Enlaces": []
+        }
+    ],
+    "PosicionInicialRobot": "a",
+    "Entrega": "d"
+}

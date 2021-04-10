@@ -1,0 +1,21 @@
+digraph List {
+rankdir=LR;node [shape = circle, color=greenyellow , style=filled, fillcolor=darkgreen];Nodea[label="a"]
+Nodeb[label="b"]
+Nodef[label="f"]
+Nodeg[label="g"]
+Nodec[label="c"]
+Nodee[label="e"]
+Noded[label="d"]
+
+Nodea->Nodeb [arrowhead=none label=3];
+Nodea->Nodef [arrowhead=none label=7];
+Nodeb->Nodec [arrowhead=none label=5];
+Nodeb->Nodeg [arrowhead=none label=2];
+Nodef->Nodee [arrowhead=none label=4];
+Nodef->Nodeg [arrowhead=none label=1];
+Nodeg->Nodec [arrowhead=none label=1];
+Nodec->Noded [arrowhead=none label=1];
+Nodec->Nodee [arrowhead=none label=8];
+Nodee->Noded [arrowhead=none label=2];
+
+}

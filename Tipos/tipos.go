@@ -106,7 +106,33 @@ type Consulta struct {
 	Nombre   string `json:"Nombre,omitempty"`
 	Password string `json:"Password,omitempty"`
 }
-type Nodo_G struct {
+
+type Clave struct {
+	Clave string `json:"Clave,omitempty"`
+}
+type File_grafo struct {
+	Nodos    []_NodoG `json:"Nodos,omitempty"`
+	Pos_init string   `json:"PosicionInicialRobot,omitempty"`
+	Entrega  string   `json:"Entrega,omitempty"`
+}
+
+type _NodoG struct {
+	Nombre  string   `json:"Nombre,omitempty"`
+	Enlaces []Enlace `json:"Enlaces,omitempty"`
+}
+type Arista struct {
+	Destino *Nodo_G
+	Peso    int
+}
+type Almacen struct {
+	Estructura []*Nodo_G
+	Pos_Robot  string
+	Entrega    string
+}
+
+type Enlace struct {
+	Nombre    string `json:"Nombre,omitempty"`
+	Distancia int    `json:"Distancia,omitempty"`
 }
 
 /*type Años struct {

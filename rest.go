@@ -28,6 +28,9 @@ var AVL_Pedidos pedidos.AVL
 var carrito lista.List
 var index_pedido int
 var user_tipo int //0 no hay sesión, 1 admin, 2 cliente
+var m_key string
+var storage Tipos.Almacen
+
 //F U N C I O N E S
 
 //LLENAR ARREGLO ROWMAJOR
@@ -675,6 +678,108 @@ func loginUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(e)
 }
 
+//CODIFICACION FERNET
+func Key(w http.ResponseWriter, r *http.Request) {
+	m_key = ""
+}
+
+//GRAFOS
+func loadGrafo(w http.ResponseWriter, r *http.Request) {
+	setupCorsResponse(&w, r)
+	headerContentTtype := r.Header.Get("Content-Type")
+	if headerContentTtype != "application/json" {
+		errorResponse(w, "Content Type is not application/json", http.StatusUnsupportedMediaType)
+		return
+	}
+	var e Tipos.File_grafo
+	var unmarshalErr *json.UnmarshalTypeError
+	decoder := json.NewDecoder(r.Body)
+	decoder.DisallowUnknownFields()
+	err := decoder.Decode(&e)
+	if err != nil {
+		if errors.As(err, &unmarshalErr) {
+			errorResponse(w, "Bad Request. Wrong Type provided for field "+unmarshalErr.Field, http.StatusBadRequest)
+		} else {
+			errorResponse(w, "Bad Request "+err.Error(), http.StatusBadRequest)
+		}
+		return
+	}
+	errorResponse(w, "Archivo Recibido", http.StatusOK)
+	//fmt.Println(e)
+	crear_grafo(e)
+}
+
+func crear_grafo(e Tipos.File_grafo) {
+	//long := len(e.Nodos)
+	//var lista_grafo []*Tipos.Nodo_G
+	storage.Pos_Robot = e.Pos_init
+	cont := 0
+	for cont < len(e.Nodos) {
+		var a Tipos.Nodo_G
+		a.Nombre = e.Nodos[cont].Nombre
+		storage.Estructura = append(storage.Estructura, &a)
+		//	lista_grafo=append(lista_grafo, &a)
+		cont++
+	}
+	cont = 0
+	for cont < len(storage.Estructura) {
+		//	lista_grafo=append(lista_grafo, &a)
+		sum := 0
+		for sum < len(e.Nodos[cont].Enlaces) {
+			sum2 := 0
+			for sum2 < len(storage.Estructura) {
+				var arista Tipos.Arista
+				if e.Nodos[cont].Enlaces[sum].Nombre == storage.Estructura[sum2].Nombre {
+					arista.Destino = storage.Estructura[sum2]
+					arista.Peso = e.Nodos[cont].Enlaces[sum].Distancia
+					/*cont2:=0
+					for cont2<len(e.Nodos[cont].Enlaces){
+						if storage.Estructura[cont2].Nombre==e.Nodos[cont].Enlaces[sum].Nombre{
+							storage.Estructura[cont2].Arista=append(storage.Estructura[cont2].Arista, storage.Estructura[sum2])
+						}
+						cont2++
+					}*/
+					storage.Estructura[cont].Enlaces = append(storage.Estructura[cont].Enlaces, storage.Estructura[sum2])
+					storage.Estructura[cont].Arista = append(storage.Estructura[cont].Arista, arista)
+					break
+				}
+				sum2++
+			}
+			sum++
+		}
+		cont++
+	}
+	fmt.Println(len(e.Nodos), "-", len(storage.Estructura))
+	fmt.Println(len(e.Nodos[0].Enlaces), "-", len(storage.Estructura[0].Enlaces), "-", len(storage.Estructura[0].Arista))
+	c := 0
+	for c < len(storage.Estructura) {
+		cont := 0
+		for cont < len(storage.Estructura[c].Arista) {
+			sum := 0
+			for sum < len(storage.Estructura) {
+				if storage.Estructura[sum].Nombre == storage.Estructura[c].Arista[cont].Destino.Nombre {
+					if storage.Prob_exist(sum, storage.Estructura[c].Nombre) == 0 {
+
+						fmt.Println(storage.Estructura[sum].Nombre, "-", storage.Estructura[c].Arista[cont].Destino.Nombre)
+						var arista Tipos.Arista
+						arista.Peso = storage.Estructura[c].Arista[cont].Peso
+						arista.Destino = storage.Estructura[c]
+						storage.Estructura[sum].Arista = append(storage.Estructura[sum].Arista, arista)
+						fmt.Println(storage.Estructura[sum].Nombre, "se le agrego como arista ", arista.Destino.Nombre)
+					}
+				}
+				sum++
+			}
+			cont++
+		}
+		c++
+	}
+	fmt.Println("--------")
+	//storage.Aristas()
+	storage.Graficar()
+	storage.Grafos()
+}
+
 //ERRORES DE RESPONSE
 func errorResponse(w http.ResponseWriter, message string, httpStatusCode int) {
 	w.Header().Set("Content-Type", "application/json")
@@ -688,7 +793,6 @@ func errorResponse(w http.ResponseWriter, message string, httpStatusCode int) {
 func main() {
 	router := mux.NewRouter()
 	//endpoint-rutas
-	fmt.Println(user_tipo)
 	router.HandleFunc("/TiendaEspecifica", GetStore).Methods("POST") //LISTO
 	router.HandleFunc("/id/{numero}", GetList).Methods("GET")        //LISTO
 	router.HandleFunc("/cargartienda", readBody).Methods("POST")     //LISTO
@@ -709,5 +813,7 @@ func main() {
 	router.HandleFunc("/LoadUsers", cargar_users).Methods("POST")
 	router.HandleFunc("/regisUser", regisUser).Methods("POST")
 	router.HandleFunc("/loginUser", loginUser).Methods("POST")
+	router.HandleFunc("/masterKey", Key).Methods("POST")
+	router.HandleFunc("/Loadgrafo", loadGrafo).Methods("POST")
 	log.Fatal(http.ListenAndServe(":3000", router))
 }

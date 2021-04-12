@@ -749,8 +749,8 @@ func crear_grafo(e Tipos.File_grafo) {
 		}
 		cont++
 	}
-	fmt.Println(len(e.Nodos), "-", len(storage.Estructura))
-	fmt.Println(len(e.Nodos[0].Enlaces), "-", len(storage.Estructura[0].Enlaces), "-", len(storage.Estructura[0].Arista))
+	//fmt.Println(len(e.Nodos), "-", len(storage.Estructura))
+	//fmt.Println(len(e.Nodos[0].Enlaces), "-", len(storage.Estructura[0].Enlaces), "-", len(storage.Estructura[0].Arista))
 	c := 0
 	for c < len(storage.Estructura) {
 		cont := 0
@@ -760,12 +760,12 @@ func crear_grafo(e Tipos.File_grafo) {
 				if storage.Estructura[sum].Nombre == storage.Estructura[c].Arista[cont].Destino.Nombre {
 					if storage.Prob_exist(sum, storage.Estructura[c].Nombre) == 0 {
 
-						fmt.Println(storage.Estructura[sum].Nombre, "-", storage.Estructura[c].Arista[cont].Destino.Nombre)
+						//fmt.Println(storage.Estructura[sum].Nombre, "-", storage.Estructura[c].Arista[cont].Destino.Nombre)
 						var arista Tipos.Arista
 						arista.Peso = storage.Estructura[c].Arista[cont].Peso
 						arista.Destino = storage.Estructura[c]
 						storage.Estructura[sum].Arista = append(storage.Estructura[sum].Arista, arista)
-						fmt.Println(storage.Estructura[sum].Nombre, "se le agrego como arista ", arista.Destino.Nombre)
+						//fmt.Println(storage.Estructura[sum].Nombre, "se le agrego como arista ", arista.Destino.Nombre)
 					}
 				}
 				sum++
@@ -778,6 +778,7 @@ func crear_grafo(e Tipos.File_grafo) {
 	//storage.Aristas()
 	storage.Graficar()
 	storage.Grafos()
+	storage.Camino_corto("a", "d")
 }
 
 //ERRORES DE RESPONSE

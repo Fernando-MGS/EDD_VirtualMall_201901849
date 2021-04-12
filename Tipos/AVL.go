@@ -4,17 +4,6 @@ import (
 	"fmt"
 )
 
-/*type Producto struct {
-	Nombre      string
-	Codigo      int
-	Descripcion string
-	Precio      float64
-	Cantidad    int
-	Imagen      string
-	ID          string
-	Cant        []int
-}*/
-
 var Listado []Producto
 
 type nodo_m struct {

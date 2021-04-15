@@ -11,6 +11,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/Fernando-MGS/TEST/Seguridad"
 	"github.com/Fernando-MGS/TEST/Tipos"
 	"github.com/Fernando-MGS/TEST/list"
 	"github.com/Fernando-MGS/TEST/lista"
@@ -30,6 +31,7 @@ var index_pedido int
 var user_tipo int //0 no hay sesión, 1 admin, 2 cliente
 var m_key string
 var storage Tipos.Almacen
+var usuarios Seguridad.B_Tree
 
 //F U N C I O N E S
 
@@ -599,6 +601,19 @@ func cargar_users(w http.ResponseWriter, r *http.Request) {
 	//json.NewEncoder(w).Encode(user_tipo)
 }
 
+func test_b() {
+	cont := 0
+	users := []int{13, 21, 1, 25, 89}
+	for cont < len(users) {
+		var a Tipos.Usuario
+		a.DPI = strconv.Itoa(users[cont])
+		usuarios.Insertar(a)
+		cont++
+	}
+	//fmt.Println("Va mo a imprimir")
+	usuarios.Print()
+}
+
 func llenar_users(e Tipos.Cuentas) {
 	array_users := e.Usuarios
 
@@ -793,6 +808,7 @@ func errorResponse(w http.ResponseWriter, message string, httpStatusCode int) {
 
 func main() {
 	router := mux.NewRouter()
+	test_b()
 	//endpoint-rutas
 	router.HandleFunc("/TiendaEspecifica", GetStore).Methods("POST") //LISTO
 	router.HandleFunc("/id/{numero}", GetList).Methods("GET")        //LISTO

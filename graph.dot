@@ -1,13 +1,9 @@
 digraph List {
-rankdir=LR;node [shape = circle, color=greenyellow , style=filled, fillcolor=darkgreen];Nodea[label="a"]
-Nodeb[label="b"]
-Nodeg[label="g"]
-Nodec[label="c"]
-Noded[label="d"]
+rankdir=TB;node [shape = record];Node21[label="<f0>21"]
+Node1[label="<f0>1|<f1>13"]
+Node25[label="<f0>25|<f1>89"]
 
-Nodea->Nodeb [arrowhead=none label=3];
-Nodeb->Nodeg [arrowhead=none label=2];
-Nodeg->Nodec [arrowhead=none label=1];
-Nodec->Noded [arrowhead=none label=1];
+"Node21":f0->"Node1":f0;
+"Node21":f0->"Node25":f0;
 
 }

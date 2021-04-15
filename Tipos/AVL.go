@@ -188,16 +188,16 @@ func (avl *AVL) Add(cant int, prod Producto) {
 }
 
 func (avl *AVL) add_cant(indice int, root **nodo_m, prod Producto) { //0 no existe, 1 si existe
-	fmt.Println("Llego al quitar", (*root).indice.Codigo)
+	//fmt.Println("Llego al quitar", (*root).indice.Codigo)
 	if prod.Codigo < (*root).indice.Codigo {
-		fmt.Println("Llego al quitar 1<", prod.Codigo, "--", (*root).indice.Codigo)
+		//fmt.Println("Llego al quitar 1<", prod.Codigo, "--", (*root).indice.Codigo)
 		avl.add_cant(indice, &(*root).izq, prod)
 	} else if prod.Codigo > (*root).indice.Codigo {
-		fmt.Println("Llego al quitar 2>", prod.Codigo, "--", (*root).indice.Codigo)
-		fmt.Println("")
+		//fmt.Println("Llego al quitar 2>", prod.Codigo, "--", (*root).indice.Codigo)
+		//fmt.Println("")
 		avl.add_cant(indice, &(*root).der, prod)
 	} else {
-		fmt.Println("Llego al AVL", (*root).indice.Cantidad)
+		//fmt.Println("Llego al AVL", (*root).indice.Cantidad)
 		(*root).indice.Cantidad = (*root).indice.Cantidad + indice
 	}
 	return

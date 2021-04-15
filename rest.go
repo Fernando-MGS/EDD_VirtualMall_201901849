@@ -603,14 +603,14 @@ func cargar_users(w http.ResponseWriter, r *http.Request) {
 
 func test_b() {
 	cont := 0
-	users := []int{13, 21, 1, 25, 89}
+	users := []int{13, 21, 1, 25, 89, 14, 15, 23, 67, 88, 90, 24, 26, 91, 93, 94, 95, 96, 97, 98, 99, 81}
 	for cont < len(users) {
 		var a Tipos.Usuario
 		a.DPI = strconv.Itoa(users[cont])
 		usuarios.Insertar(a)
 		cont++
 	}
-	//fmt.Println("Va mo a imprimir")
+	//fmt.Println("Va mo a imprimir") Solo quitar el 88 y ya correra
 	usuarios.Print()
 }
 

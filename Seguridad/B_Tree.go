@@ -49,23 +49,63 @@ func (a *B_Tree) Insertar(user Tipos.Usuario) {
 		n = append(n, user_b)
 		a.raiz = &Pagina{0, n}
 	} else {
-		Busqueda_Inser(a, user_b, a.raiz, a.raiz, a.raiz.altura)
+		Busqueda_Inser(a, user_b, &a.raiz, a.raiz, a.raiz.altura)
+		rompimiento(a.raiz, &a.raiz)
 	}
 }
 
-func Busqueda_Inser(arbol *B_Tree, user *Nodo_B, anterior, pag *Pagina, alt int) {
-	//_pag:=pag
-	/*orden:=ordenar_slice(pag.users)
-	pag.users=orden
-	fmt.Println(pag.users)*/
+func rompimiento(actual *Pagina, anterior **Pagina) {
+	if len(actual.users) == 5 {
+		var n []*Nodo_B
+		n = append(n, actual.users[0])
+		n = append(n, actual.users[1])
+		var m []*Nodo_B
+		m = append(m, actual.users[3])
+		m = append(m, actual.users[4])
+		prim := &Pagina{actual.altura + 1, n}
+		sec := &Pagina{actual.altura + 1, m}
+		var l []*Nodo_B
+		l = append(l, actual.users[2])
+		uniq := &Pagina{actual.altura, l}
+		uniq.users[0].izquierda = prim
+		uniq.users[0].derecha = sec
+		if actual == (*anterior) {
+			(*anterior) = uniq
+			fmt.Println("Reset Rompi")
+		} else {
+			ind := 0
+			fmt.Println("Reset alae2")
+			for ind < len(uniq.users) {
+				(*anterior).users = append((*anterior).users, uniq.users[ind])
+				slice := ordenar_slice((*anterior).users)
+				(*anterior).users = slice
+				ind++
+			}
+			b := len((*anterior).users) - 1
+			for i := 0; i < len((*anterior).users); i++ {
+				if i != b {
+					(*anterior).users[i].derecha = nil
+				}
+			}
+			impr((*anterior).users)
+		}
+	} else {
+		for i := 0; i < len(actual.users); i++ {
+			if actual.users[i].izquierda != nil {
+				rompimiento(actual.users[i].izquierda, &actual)
+			}
+			if actual.users[i].derecha != nil {
+				rompimiento(actual.users[i].derecha, &actual)
+			}
+		}
+	}
+}
+func Busqueda_Inser(arbol *B_Tree, user *Nodo_B, anterior **Pagina, pag *Pagina, alt int) {
 	conf := 0
 	cont := 0
 	index := 0
-	//imprimir(arbol.raiz)
-	impr(arbol.raiz.users)
-	fmt.Println("La raíz fue")
 	for cont < len(pag.users) {
-		fmt.Println(len(pag.users))
+		//fmt.Println(len(pag.users))
 		j, err := strconv.Atoi(pag.users[cont].User.DPI)
 		i, err := strconv.Atoi(user.User.DPI)
 		inutil(err)
@@ -78,33 +118,17 @@ func Busqueda_Inser(arbol *B_Tree, user *Nodo_B, anterior, pag *Pagina, alt int)
 		}
 		cont++
 	}
+	impr(pag.users)
+	fmt.Println("--------")
 	if conf == 2 {
 		if pag.users[index].izquierda == nil {
 			user.altura = alt
 			pag.users = append(pag.users, user)
 			slice := ordenar_slice(pag.users)
 			pag.users = slice
-			if len(pag.users) == 5 {
-				var n []*Nodo_B
-				n = append(n, pag.users[0])
-				n = append(n, pag.users[1])
-				var m []*Nodo_B
-				m = append(m, pag.users[3])
-				m = append(m, pag.users[4])
-				prim := &Pagina{alt + 1, n}
-				sec := &Pagina{alt + 1, m}
-				var l []*Nodo_B
-				l = append(l, pag.users[2])
-				uniq := &Pagina{alt, l}
-				uniq.users[0].izquierda = prim
-				uniq.users[0].derecha = sec
-				if pag == anterior && len(anterior.users) == 5 {
-					arbol.raiz = uniq
-					fmt.Println("Raiz 0")
-				}
-			}
 		} else {
-			Busqueda_Inser(arbol, user, pag.users[index].izquierda, anterior, alt+1)
+			Busqueda_Inser(arbol, user, &pag, pag.users[index].izquierda, alt+1)
+			fmt.Println("B_izq")
 		}
 	} else if conf == 3 {
 		if pag.users[index].derecha == nil {
@@ -112,7 +136,9 @@ func Busqueda_Inser(arbol *B_Tree, user *Nodo_B, anterior, pag *Pagina, alt int)
 			pag.users = append(pag.users, user)
 			slice := ordenar_slice(pag.users)
 			pag.users = slice
-			if len(pag.users) == 5 {
+			/*if len(pag.users) == 5 {
+				impr(pag.users)
+				fmt.Println("-/////")
 				var n []*Nodo_B
 				n = append(n, pag.users[0])
 				n = append(n, pag.users[1])
@@ -126,22 +152,24 @@ func Busqueda_Inser(arbol *B_Tree, user *Nodo_B, anterior, pag *Pagina, alt int)
 				uniq := &Pagina{alt, l}
 				uniq.users[0].izquierda = prim
 				uniq.users[0].derecha = sec
-				if pag == anterior {
-					arbol.raiz = uniq
+				if pag == (*anterior) {
+					(*anterior) = uniq
 					conf_b = 1
 					fmt.Println("Resetear raíz 1")
 				} else {
 					ind := 0
+					fmt.Println("Reseteo ale")
 					for ind < len(uniq.users) {
-						anterior.users = append(anterior.users, uniq.users[ind])
-						slice := ordenar_slice(anterior.users)
-						anterior.users = slice
+						(*anterior).users = append((*anterior).users, uniq.users[ind])
+						slice := ordenar_slice((*anterior).users)
+						(*anterior).users = slice
 						ind++
 					}
 				}
-			}
+			}*/
 		} else {
-			Busqueda_Inser(arbol, user, pag.users[index].derecha, anterior, alt+1)
+			Busqueda_Inser(arbol, user, &pag, pag.users[index].derecha, alt+1)
+			fmt.Println("B_der")
 		}
 	}
 }
@@ -149,12 +177,13 @@ func Busqueda_Inser(arbol *B_Tree, user *Nodo_B, anterior, pag *Pagina, alt int)
 func impr(a []*Nodo_B) {
 	cont := 0
 	for cont < len(a) {
-		fmt.Print(a[cont].User.DPI)
+		fmt.Print(a[cont].User.DPI, "-")
 		cont++
 	}
 }
 
 func (m *B_Tree) Print() {
+	rompimiento(m.raiz, &m.raiz)
 	fmt.Println("Vamo a graficar")
 	graph = "digraph List {\n"
 	graph += "rankdir=TB;"
@@ -211,6 +240,10 @@ func imprimir(pag *Pagina) {
 					pointers += "\"Node" + pag.users[0].User.DPI + "\":f" + strconv.Itoa(cont) + "->\"Node" + pag.users[cont].derecha.users[0].User.DPI + "\":f0;\n"
 				}
 			}
+			cont++
+		}
+		cont = 0
+		for cont < len(pag.users) {
 			imprimir(pag.users[cont].izquierda)
 			imprimir(pag.users[cont].derecha)
 			cont++
@@ -224,7 +257,6 @@ func ordenar_slice(array []*Nodo_B) []*Nodo_B {
 			n, err := strconv.Atoi(array[j].User.DPI)
 			inutil(err)
 			if m < n {
-				fmt.Println(m, "<", n)
 				aux := array[i]
 				array[i] = array[j]
 				array[j] = aux
@@ -235,10 +267,6 @@ func ordenar_slice(array []*Nodo_B) []*Nodo_B {
 	/*for i := len(array) - 1; i >= 0; i-- {
 		a = append(a, array[i])
 	}*/
-	for k := 0; k < len(array); k++ {
-		fmt.Print(array[k].User.DPI)
-	}
-	fmt.Println("---------------")
 	return array
 }
 

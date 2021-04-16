@@ -23,7 +23,8 @@ export class LoginComponent implements OnInit {
   })
   Login_form= new FormGroup({
     Nombre:new FormControl('',Validators.required),
-    Password:new FormControl('',Validators.required)
+    Password:new FormControl('',Validators.required),
+    dpi:new FormControl('',Validators.required)
   })
 
   log(){

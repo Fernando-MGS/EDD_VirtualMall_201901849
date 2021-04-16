@@ -106,6 +106,7 @@ type Usuario struct {
 type Consulta struct {
 	Nombre   string `json:"Nombre,omitempty"`
 	Password string `json:"Password,omitempty"`
+	DPI      string `json:"dpi,omitempty"`
 }
 
 type Clave struct {

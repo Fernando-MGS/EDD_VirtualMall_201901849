@@ -49,7 +49,7 @@ func (a *B_Tree) Insertar(user Tipos.Usuario, num int) {
 		n = append(n, user_b)
 		a.raiz = &Pagina{0, n}
 	} else {
-		fmt.Println("Preparando para insertar ", user.DPI)
+		//fmt.Println("Preparando para insertar ", user.DPI)
 		Busqueda_Inser(a, user_b, &a.raiz, a.raiz, a.raiz.altura)
 		rompimiento(a.raiz, &a.raiz)
 	}
@@ -57,7 +57,7 @@ func (a *B_Tree) Insertar(user Tipos.Usuario, num int) {
 
 func rompimiento(actual *Pagina, anterior **Pagina) {
 	//fmt.Println("Vamo a romprer")
-	root(actual.users)
+	//root(actual.users)
 	if len(actual.users) == 5 {
 		var n []*Nodo_B
 		n = append(n, actual.users[0])
@@ -78,10 +78,10 @@ func rompimiento(actual *Pagina, anterior **Pagina) {
 		uniq.users[0].altura = aux*/
 		if actual == (*anterior) {
 			(*anterior) = uniq
-			fmt.Println("Reset Rompi")
+			//fmt.Println("Reset Rompi")
 		} else {
 			ind := 0
-			fmt.Println("Reset alae2")
+			//fmt.Println("Reset alae2")
 			for ind < len(uniq.users) {
 				(*anterior).users = append((*anterior).users, uniq.users[ind])
 				slice := ordenar_slice((*anterior).users)
@@ -101,14 +101,14 @@ func rompimiento(actual *Pagina, anterior **Pagina) {
 		for i := 0; i < len(actual.users); i++ {
 			if actual.users[i].izquierda != nil && i == len(actual.users)-1 {
 				rompimiento(actual.users[i].izquierda, &actual)
-				fmt.Print("Romp-izq")
+				//fmt.Print("Romp-izq")
 			}
 			/*if i == 0 && i == len(actual.users) && actual.users[i].derecha != nil {
 				rompimiento(actual.users[i].derecha, &actual)
 			}*/
 			if actual.users[i].derecha != nil && i == len(actual.users)-1 {
 				rompimiento(actual.users[i].derecha, &actual)
-				fmt.Print("Romp-der")
+				//fmt.Print("Romp-der")
 			}
 		}
 	}
@@ -156,6 +156,44 @@ func Busqueda_Inser(arbol *B_Tree, user *Nodo_B, anterior **Pagina, pag *Pagina,
 			//fmt.Println("B_der")
 		}
 	}
+}
+func (m *B_Tree) Buscar(user Tipos.Usuario) Tipos.Usuario {
+	return m.Busqueda(user, m.raiz)
+}
+
+func (m *B_Tree) Busqueda(user Tipos.Usuario, pagina *Pagina) Tipos.Usuario {
+	fmt.Println("--")
+	conf := 0
+	index := 0
+	for i := 0; i < len(pagina.users); i++ {
+		fmt.Println(user.Dpi_, "--/", pagina.users[i].User.Dpi_)
+		if user.Dpi_ == pagina.users[i].User.Dpi_ {
+			index = i
+			conf = 1
+			break
+		} else if user.Dpi_ < pagina.users[i].User.Dpi_ && conf != 2 && conf != 1 {
+			conf = 2
+			index = i
+			//fmt.Println(i, "<", j, "-", conf)
+		} else if user.Dpi_ > pagina.users[i].User.Dpi_ && conf != 2 && conf != 1 {
+			conf = 3
+			index = i
+			//fmt.Println(i, ">", j)
+		}
+	}
+	fmt.Println("conf es ", conf)
+	if conf == 1 {
+		/*fmt.Print(pagina.users[index].User.Dpi_, "-")
+		fmt.Print(pagina.users[index].User.Nombre)
+		fmt.Println()*/
+		return pagina.users[index].User
+	} else if conf == 2 {
+		return m.Busqueda(user, pagina.users[index].izquierda)
+	} else if conf == 3 {
+		return m.Busqueda(user, pagina.users[index].derecha)
+	}
+	var a Tipos.Usuario
+	return a
 }
 
 func impr(a []*Nodo_B) {

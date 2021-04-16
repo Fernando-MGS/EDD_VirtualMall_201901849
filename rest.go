@@ -689,11 +689,13 @@ func llenar_users(e Tipos.Cuentas) {
 		} else {
 			array[sum].Tipo = 2
 		}
+		array[sum].DPI = strconv.Itoa(array[sum].Dpi_)
 		usuarios.Insertar(array[sum], sum)
 		sum++
 	}
 	usuarios.Print(sum)
-	fmt.Println(array)
+	//fmt.Println(array)
+	fmt.Println(usuarios.Buscar(array[0]))
 
 }
 
@@ -758,7 +760,19 @@ func loginUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	errorResponse(w, "Archivo Recibido", http.StatusOK)
-	fmt.Println(e)
+	dev_user(e)
+}
+
+func dev_user(e Tipos.Consulta) {
+	var buscar_user Tipos.Usuario
+	buscar_user.DPI = e.DPI
+	//i, err := strconv.Atoi(conv)
+	r, err := strconv.Atoi(buscar_user.DPI)
+	inutil(err)
+	buscar_user.Dpi_ = r
+	resultado := usuarios.Buscar(buscar_user)
+	fmt.Println(resultado.DPI, "-", resultado.Dpi_)
+
 }
 
 //CODIFICACION FERNET
@@ -874,9 +888,13 @@ func errorResponse(w http.ResponseWriter, message string, httpStatusCode int) {
 	w.Write(jsonResp)
 }
 
+func inutil(a error) {
+
+}
+
 func main() {
 	router := mux.NewRouter()
-	//test_b()
+	test_b()
 	//endpoint-rutas
 	default_admin()
 	router.HandleFunc("/TiendaEspecifica", GetStore).Methods("POST") //LISTO

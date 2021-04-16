@@ -6,6 +6,8 @@ import (
 	"errors"
 	"fmt"
 	"log"
+
+	//"math/rand"
 	"net/http"
 	"strconv"
 	"strings"
@@ -32,6 +34,7 @@ var user_tipo int //0 no hay sesión, 1 admin, 2 cliente
 var m_key string
 var storage Tipos.Almacen
 var usuarios Seguridad.B_Tree
+var admin_def Tipos.Usuario
 
 //F U N C I O N E S
 
@@ -575,6 +578,13 @@ func devolver_t_user(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(user_tipo)
 }
 
+func default_admin() {
+	admin_def.DPI = "1234567890101"
+	admin_def.Correo = "auxiliar@edd.com"
+	admin_def.Password = "1234"
+	admin_def.Nombre = "EDD2021"
+}
+
 func cargar_users(w http.ResponseWriter, r *http.Request) {
 	headerContentTtype := r.Header.Get("Content-Type")
 	if headerContentTtype != "application/json" {
@@ -596,37 +606,95 @@ func cargar_users(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	errorResponse(w, "Archivo Recibido", http.StatusOK)
+	fmt.Println("LLego 1")
 	llenar_users(e)
 	return
 	//json.NewEncoder(w).Encode(user_tipo)
 }
 
 func test_b() {
-	cont := 0
-	users := []int{13, 21, 1, 25, 89, 14, 15, 23, 67, 88, 90, 24, 26, 91, 93, 94, 95, 96, 97, 98, 99, 81}
-	for cont < len(users) {
+	cont := 160
+	//users := []int{34, 16, 13, 21, 1, 25, 89, 14, 15, 23, 94, 67, 88, 90, 24, 91, 93, 95, 96, 97, 98, 99, 212, 26, 27, 20, 214, 215, 216, 217, 218, 219, 2}
+	var b []Tipos.Usuario
+	for cont > 0 {
 		var a Tipos.Usuario
-		a.DPI = strconv.Itoa(users[cont])
-		usuarios.Insertar(a)
-		cont++
+		//c := rand.Intn(10000)
+		a.DPI = strconv.Itoa(cont)
+		a.Dpi_ = cont
+		b = append(b, a)
+		/*usuarios.Insertar(a, cont)
+		usuarios.Print(cont)*/
+		cont--
 	}
+	var a Tipos.Usuario
+	a.DPI = strconv.Itoa(3031970130108)
+	//usuarios.Insertar(a, cont)
+
+	/*
+		i := 0
+		for i < len(b) {
+			fmt.Println(b[i].DPI)
+			i++
+		}*/
+	//fmt.Println(b)
 	//fmt.Println("Va mo a imprimir") Solo quitar el 88 y ya correra
-	usuarios.Print()
+	final := len(b) - 1
+	r := ordenar_users(b, 0, final)
+	t := 0
+	for t < len(r) {
+		usuarios.Insertar(r[t], t)
+		t++
+	}
+	usuarios.Print(t)
+}
+
+func ordenar_users(slice []Tipos.Usuario, left int, right int) []Tipos.Usuario {
+	pivote := slice[left]
+	i := left
+	j := right
+	var aux Tipos.Usuario
+	for i < j {
+		for slice[i].Dpi_ <= pivote.Dpi_ && i < j {
+			i++
+		}
+		for slice[j].Dpi_ > pivote.Dpi_ {
+			j--
+		}
+		if i < j {
+			aux = slice[i]
+			slice[i] = slice[j]
+			slice[j] = aux
+		}
+	}
+	slice[left] = slice[j]
+	slice[j] = pivote
+	if left < j-1 {
+		ordenar_users(slice, left, j-1)
+	}
+	if j+1 < right {
+		ordenar_users(slice, j+1, right)
+	}
+	return slice
 }
 
 func llenar_users(e Tipos.Cuentas) {
+	fmt.Println("LLego 2")
 	array_users := e.Usuarios
-
 	sum := 0
-	for sum < len(array_users) {
+	c := len(array_users) - 1
+	array := ordenar_users(array_users, 0, c)
+	for sum < len(array) {
 		if array_users[sum].Cuenta == "Admin" {
-			array_users[sum].Tipo = 1
+			array[sum].Tipo = 1
 		} else {
-			array_users[sum].Tipo = 2
+			array[sum].Tipo = 2
 		}
+		usuarios.Insertar(array[sum], sum)
 		sum++
 	}
-	fmt.Println(array_users)
+	usuarios.Print(sum)
+	fmt.Println(array)
+
 }
 
 func setupCorsResponse(w *http.ResponseWriter, req *http.Request) {
@@ -808,8 +876,9 @@ func errorResponse(w http.ResponseWriter, message string, httpStatusCode int) {
 
 func main() {
 	router := mux.NewRouter()
-	test_b()
+	//test_b()
 	//endpoint-rutas
+	default_admin()
 	router.HandleFunc("/TiendaEspecifica", GetStore).Methods("POST") //LISTO
 	router.HandleFunc("/id/{numero}", GetList).Methods("GET")        //LISTO
 	router.HandleFunc("/cargartienda", readBody).Methods("POST")     //LISTO

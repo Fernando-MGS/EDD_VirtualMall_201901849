@@ -41,7 +41,7 @@ func New_B() *B_Tree {
 }
 
 //INSERCION
-func (a *B_Tree) Insertar(user Tipos.Usuario) {
+func (a *B_Tree) Insertar(user Tipos.Usuario, num int) {
 	user_b := newnodo_b(user, 0)
 	//fmt.Println("Vamo a insertar")
 	if a.raiz == nil {
@@ -49,12 +49,15 @@ func (a *B_Tree) Insertar(user Tipos.Usuario) {
 		n = append(n, user_b)
 		a.raiz = &Pagina{0, n}
 	} else {
+		fmt.Println("Preparando para insertar ", user.DPI)
 		Busqueda_Inser(a, user_b, &a.raiz, a.raiz, a.raiz.altura)
 		rompimiento(a.raiz, &a.raiz)
 	}
 }
 
 func rompimiento(actual *Pagina, anterior **Pagina) {
+	//fmt.Println("Vamo a romprer")
+	root(actual.users)
 	if len(actual.users) == 5 {
 		var n []*Nodo_B
 		n = append(n, actual.users[0])
@@ -66,9 +69,13 @@ func rompimiento(actual *Pagina, anterior **Pagina) {
 		sec := &Pagina{actual.altura + 1, m}
 		var l []*Nodo_B
 		l = append(l, actual.users[2])
-		uniq := &Pagina{actual.altura, l}
+		uniq := &Pagina{actual.altura - 1, l}
 		uniq.users[0].izquierda = prim
 		uniq.users[0].derecha = sec
+		uniq.users[0].altura = actual.users[2].altura - 1
+		/*aux := prim.altura
+		prim.altura = uniq.users[0].altura
+		uniq.users[0].altura = aux*/
 		if actual == (*anterior) {
 			(*anterior) = uniq
 			fmt.Println("Reset Rompi")
@@ -82,20 +89,26 @@ func rompimiento(actual *Pagina, anterior **Pagina) {
 				ind++
 			}
 			b := len((*anterior).users) - 1
-			for i := 0; i < len((*anterior).users); i++ {
+			for i := 0; i < len((*anterior).users)-1; i++ {
 				if i != b {
 					(*anterior).users[i].derecha = nil
 				}
 			}
-			impr((*anterior).users)
+			//impr((*anterior).users)
 		}
 	} else {
+
 		for i := 0; i < len(actual.users); i++ {
-			if actual.users[i].izquierda != nil {
+			if actual.users[i].izquierda != nil && i == len(actual.users)-1 {
 				rompimiento(actual.users[i].izquierda, &actual)
+				fmt.Print("Romp-izq")
 			}
-			if actual.users[i].derecha != nil {
+			/*if i == 0 && i == len(actual.users) && actual.users[i].derecha != nil {
 				rompimiento(actual.users[i].derecha, &actual)
+			}*/
+			if actual.users[i].derecha != nil && i == len(actual.users)-1 {
+				rompimiento(actual.users[i].derecha, &actual)
+				fmt.Print("Romp-der")
 			}
 		}
 	}
@@ -112,14 +125,16 @@ func Busqueda_Inser(arbol *B_Tree, user *Nodo_B, anterior **Pagina, pag *Pagina,
 		if i < j && conf != 2 {
 			conf = 2
 			index = cont
-		} else {
+			//fmt.Println(i, "<", j, "-", conf)
+		} else if i > j && conf != 2 {
 			conf = 3
 			index = cont
+			//fmt.Println(i, ">", j)
 		}
 		cont++
 	}
-	impr(pag.users)
-	fmt.Println("--------")
+	//impr(pag.users)
+	//fmt.Println("--------")
 	if conf == 2 {
 		if pag.users[index].izquierda == nil {
 			user.altura = alt
@@ -128,7 +143,7 @@ func Busqueda_Inser(arbol *B_Tree, user *Nodo_B, anterior **Pagina, pag *Pagina,
 			pag.users = slice
 		} else {
 			Busqueda_Inser(arbol, user, &pag, pag.users[index].izquierda, alt+1)
-			fmt.Println("B_izq")
+			//fmt.Println("B_izq")
 		}
 	} else if conf == 3 {
 		if pag.users[index].derecha == nil {
@@ -136,40 +151,9 @@ func Busqueda_Inser(arbol *B_Tree, user *Nodo_B, anterior **Pagina, pag *Pagina,
 			pag.users = append(pag.users, user)
 			slice := ordenar_slice(pag.users)
 			pag.users = slice
-			/*if len(pag.users) == 5 {
-				impr(pag.users)
-				fmt.Println("-/////")
-				var n []*Nodo_B
-				n = append(n, pag.users[0])
-				n = append(n, pag.users[1])
-				var m []*Nodo_B
-				m = append(m, pag.users[3])
-				m = append(m, pag.users[4])
-				prim := &Pagina{alt + 1, n}
-				sec := &Pagina{alt + 1, m}
-				var l []*Nodo_B
-				l = append(l, pag.users[2])
-				uniq := &Pagina{alt, l}
-				uniq.users[0].izquierda = prim
-				uniq.users[0].derecha = sec
-				if pag == (*anterior) {
-					(*anterior) = uniq
-					conf_b = 1
-					fmt.Println("Resetear raíz 1")
-				} else {
-					ind := 0
-					fmt.Println("Reseteo ale")
-					for ind < len(uniq.users) {
-						(*anterior).users = append((*anterior).users, uniq.users[ind])
-						slice := ordenar_slice((*anterior).users)
-						(*anterior).users = slice
-						ind++
-					}
-				}
-			}*/
 		} else {
 			Busqueda_Inser(arbol, user, &pag, pag.users[index].derecha, alt+1)
-			fmt.Println("B_der")
+			//fmt.Println("B_der")
 		}
 	}
 }
@@ -182,7 +166,8 @@ func impr(a []*Nodo_B) {
 	}
 }
 
-func (m *B_Tree) Print() {
+func (m *B_Tree) Print(num int) {
+	rompimiento(m.raiz, &m.raiz)
 	rompimiento(m.raiz, &m.raiz)
 	fmt.Println("Vamo a graficar")
 	graph = "digraph List {\n"
@@ -198,12 +183,12 @@ func (m *B_Tree) Print() {
 		log.Fatal(err)
 	}
 	//Creación de la imagen
-	fmt.Println(graph)
+	//fmt.Println(graph)
 	path, _ := exec.LookPath("dot") //Para que funcione bien solo asegurate de tener todas las herramientas para
 	// Graphviz en tu compu, si no descargalas osea el Graphviz
-	cmd, _ := exec.Command(path, "-Tpng", "graph.dot").Output() //En esta parte en lugar de graph va el nombre de tu grafica
-	mode := int(0777)                                           //Se mantiene igual
-	ioutil.WriteFile("Usuarios.png", cmd, os.FileMode(mode))    //Creacion de la imagen
+	cmd, _ := exec.Command(path, "-Tpng", "graph.dot").Output()                   //En esta parte en lugar de graph va el nombre de tu grafica
+	mode := int(0777)                                                             //Se mantiene igual
+	ioutil.WriteFile("Usuarios"+strconv.Itoa(num)+".png", cmd, os.FileMode(mode)) //Creacion de la imagen
 	pointers = ""
 	nodes = ""
 	graph = ""
@@ -213,6 +198,23 @@ func (m *B_Tree) Print() {
 func inutil(a error) {
 
 }
+
+func root(user []*Nodo_B) {
+	for i := 0; i < len(user); i++ {
+		fmt.Print(user[i].User.DPI, "--")
+		if user[i].derecha != nil {
+			fmt.Print("YD")
+		} else {
+			fmt.Print("ND")
+		}
+		if user[i].izquierda != nil {
+			fmt.Print("YI|")
+		} else {
+			fmt.Print("NI |")
+		}
+	}
+	fmt.Println()
+}
 func imprimir(pag *Pagina) {
 	if pag != nil {
 		cont := 0
@@ -220,16 +222,16 @@ func imprimir(pag *Pagina) {
 		for cont < len(pag.users) {
 			if cont == 0 {
 				if len(pag.users) > 1 {
-					nodes += "\"<f" + strconv.Itoa(cont) + ">" + pag.users[cont].User.DPI + "|"
+					nodes += "\"<f" + strconv.Itoa(cont) + ">" + pag.users[cont].User.DPI + "-" + strconv.Itoa(pag.users[cont].altura) + "|"
 				} else {
-					nodes += "\"<f" + strconv.Itoa(cont) + ">" + pag.users[cont].User.DPI + "\"]\n"
+					nodes += "\"<f" + strconv.Itoa(cont) + ">" + pag.users[cont].User.DPI + "-" + strconv.Itoa(pag.users[cont].altura) + "\"]\n"
 				}
 			}
 			if cont < len(pag.users)-1 && cont != 0 {
-				nodes += "<f" + strconv.Itoa(cont) + ">" + pag.users[cont].User.DPI + "|"
+				nodes += "<f" + strconv.Itoa(cont) + ">" + pag.users[cont].User.DPI + "-" + strconv.Itoa(pag.users[cont].altura) + "|"
 			} else {
 				if len(pag.users) > 1 && cont != 0 {
-					nodes += "<f" + strconv.Itoa(cont) + ">" + pag.users[cont].User.DPI + "\"]\n"
+					nodes += "<f" + strconv.Itoa(cont) + ">" + pag.users[cont].User.DPI + "-" + strconv.Itoa(pag.users[cont].altura) + "\"]\n"
 				}
 			}
 			if pag.users[cont].izquierda != nil {

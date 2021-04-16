@@ -92,7 +92,8 @@ type Cuentas struct {
 }
 
 type Usuario struct {
-	DPI      string `json:"Dpi,omitempty"`
+	DPI      string
+	Dpi_     int    `json:"Dpi,omitempty"`
 	Nombre   string `json:"Nombre,omitempty"`
 	Correo   string `json:"Correo,omitempty"`
 	Password string `json:"Password,omitempty"`

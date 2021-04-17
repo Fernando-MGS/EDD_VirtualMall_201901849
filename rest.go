@@ -5,7 +5,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"log"
+	"os"
+	"os/exec"
 
 	//"math/rand"
 	"net/http"
@@ -35,6 +38,7 @@ var m_key string
 var storage Tipos.Almacen
 var usuarios Seguridad.B_Tree
 var admin_def Tipos.Usuario
+var user_actual Tipos.Usuario
 
 //F U N C I O N E S
 
@@ -237,6 +241,71 @@ func give_tiendas(w http.ResponseWriter, r *http.Request) {
 	}
 	json.NewEncoder(w).Encode(i)
 	return
+}
+
+func graph_(w http.ResponseWriter, r *http.Request) {
+	var graph string
+	var pointers string
+	var nodes string
+	par := 0
+	//aux := 0
+	graph = "digraph List {\n"
+	graph += "rankdir=LR;"
+	graph += "node [shape = record];"
+	for cont := 0; cont < len(rowmajor); cont++ {
+		list := rowmajor[cont]
+		if list.Tamaño() > 0 {
+			nodes += "node" + strconv.Itoa(cont) + "[label="
+		}
+		for i := 0; i < list.Tamaño(); i++ {
+			if i == 0 {
+				if list.Tamaño() > 1 {
+					nodes += "\"<f" + strconv.Itoa(i) + ">" + list.GetItem(i+1).Nombre + "|"
+				} else {
+					nodes += "\"<f" + strconv.Itoa(i) + ">" + list.GetItem(i+1).Nombre + "\"]\n"
+				}
+			}
+			if i < list.Tamaño()-1 && i != 0 {
+				nodes += "<f" + strconv.Itoa(i) + ">" + list.GetItem(i+1).Nombre + "|"
+			} else {
+				if list.Tamaño() > 1 && i != 0 {
+					nodes += "<f" + strconv.Itoa(i) + ">" + list.GetItem(i+1).Nombre + "\"]\n"
+				}
+			}
+
+			//list.GetItem(i+1).
+		}
+
+		if list.Tamaño() > 0 {
+			if par == 1 {
+				pointers += "->\"node" + strconv.Itoa(cont) + "\":f0"
+				par = 0
+			} else {
+				pointers += "\"node" + strconv.Itoa(cont) + "\":f0"
+			}
+			par = 1
+			//aux = cont
+		}
+
+	}
+
+	pointers += ";\n"
+	graph += nodes + "\n" + pointers
+	graph += "\n}"
+	//fmt.Println(graph)
+	data := []byte(graph)                            //Almacenar el codigo en el formato adecuado
+	err := ioutil.WriteFile("graph.dot", data, 0644) //Crear el archivo .dot necesario para la imagen
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	//Creación de la imagen
+	//fmt.Println(graph)
+	path, _ := exec.LookPath("dot") //Para que funcione bien solo asegurate de tener todas las herramientas para
+	// Graphviz en tu compu, si no descargalas osea el Graphviz
+	cmd, _ := exec.Command(path, "-Tpng", "graph.dot").Output() //En esta parte en lugar de graph va el nombre de tu grafica
+	mode := int(0777)                                           //Se mantiene igual
+	ioutil.WriteFile("Tiendas.png", cmd, os.FileMode(mode))     //Creacion de la imagen
 }
 
 //Funciones  de inventario
@@ -468,11 +537,12 @@ func pedido_json(pedido Tipos.Pedidos) {
 			var year pedidos.Year
 			year.Año = año
 			year.List = *meses
-			fmt.Println("Preparandose para año ", año)
+			//fmt.Println("Preparandose para año ", año)
 			AVL_Pedidos.Insertar(year, prod_real, index_dep, mes, dia)
 		}
 		cont++
 	}
+	AVL_Pedidos.Dev()
 	//AVL_Pedidos.Print()
 }
 
@@ -522,18 +592,20 @@ func pedido_carrito(w http.ResponseWriter, r *http.Request) {
 	num_mes := strings.Split(mes, "-")
 	_mes, err := strconv.Atoi(num_mes[1])
 	dia := t.Day()
-	fmt.Println(err)
+	inutil(err)
+	//fmt.Println(err)
 	meses := pedidos.NewLista()
 
-	fmt.Println("El tamaño del carrito es ", carrito.Cantidad)
+	//fmt.Println("El tamaño del carrito es ", carrito.Cantidad)
 	for sum < carrito.Cantidad {
 		prod := carrito.GetItem(sum)
-		fmt.Println(prod.ID)
+		//fmt.Println(prod.ID)
 		index := strings.Split(prod.ID, "-")
 		ID, err := strconv.Atoi(index[0])
-		fmt.Println("Entro al segundo for", err)
+		inutil(err)
+		//fmt.Println("Entro al segundo for", err)
 		t := rowmajor[ID].Get(index[1])
-		fmt.Println(t.Nombre)
+		//fmt.Println(t.Nombre)
 		index_dep := dev_depto(t.Departamento)
 		/*tmp := rowmajor[ID].Get(index[1]).Inventario
 		tmp.Print()
@@ -544,14 +616,14 @@ func pedido_carrito(w http.ResponseWriter, r *http.Request) {
 		var year pedidos.Year
 		year.Año = año
 		year.List = *meses
-		fmt.Println("/---------------------------------/")
-		fmt.Println("Preparandose para insertar en avl pedidos", prod.Nombre)
+		//fmt.Println("/---------------------------------/")
+		//fmt.Println("Preparandose para insertar en avl pedidos", prod.Nombre)
 		AVL_Pedidos.Insertar(year, prod_real, index_dep, _mes, dia)
 		sum++
 	}
 	var new lista.List
 	carrito = new
-	fmt.Println("Vacío el carrito")
+	//fmt.Println("Vacío el carrito")
 }
 
 // GRAFICAR
@@ -567,15 +639,16 @@ func graph_month(w http.ResponseWriter, r *http.Request) {
 
 	i, err := strconv.Atoi(index[0])
 	j, err := strconv.Atoi(index[1])
-	fmt.Println("Año es ", i)
+	//fmt.Println("Año es ", i)
 	AVL_Pedidos.Graph_lista(i, j)
-	fmt.Println(err)
+	inutil(err)
+	//fmt.Println(err)
 }
 
 //SESIONES
 
 func devolver_t_user(w http.ResponseWriter, r *http.Request) {
-	json.NewEncoder(w).Encode(user_tipo)
+	json.NewEncoder(w).Encode(user_actual)
 }
 
 func default_admin() {
@@ -583,6 +656,14 @@ func default_admin() {
 	admin_def.Correo = "auxiliar@edd.com"
 	admin_def.Password = "1234"
 	admin_def.Nombre = "EDD2021"
+}
+
+func default_user() {
+	var a Tipos.Usuario
+	user_actual = a
+	user_actual.Nombre = "N/A"
+	user_actual.Correo = "N/A"
+	user_actual.Tipo = 0
 }
 
 func cargar_users(w http.ResponseWriter, r *http.Request) {
@@ -606,10 +687,14 @@ func cargar_users(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	errorResponse(w, "Archivo Recibido", http.StatusOK)
-	fmt.Println("LLego 1")
+	//fmt.Println("LLego 1")
 	llenar_users(e)
 	return
 	//json.NewEncoder(w).Encode(user_tipo)
+}
+
+func logout(w http.ResponseWriter, r *http.Request) {
+	default_user()
 }
 
 func test_b() {
@@ -621,6 +706,8 @@ func test_b() {
 		//c := rand.Intn(10000)
 		a.DPI = strconv.Itoa(cont)
 		a.Dpi_ = cont
+		a.Tipo = 1
+		a.Password = "Hola"
 		b = append(b, a)
 		/*usuarios.Insertar(a, cont)
 		usuarios.Print(cont)*/
@@ -628,6 +715,9 @@ func test_b() {
 	}
 	var a Tipos.Usuario
 	a.DPI = strconv.Itoa(3031970130108)
+	a.Dpi_ = 3031970130108
+	a.Tipo = 1
+	a.Password = "test"
 	//usuarios.Insertar(a, cont)
 
 	/*
@@ -645,6 +735,7 @@ func test_b() {
 		usuarios.Insertar(r[t], t)
 		t++
 	}
+	usuarios.Insertar(a, 2)
 	usuarios.Print(t)
 }
 
@@ -678,7 +769,7 @@ func ordenar_users(slice []Tipos.Usuario, left int, right int) []Tipos.Usuario {
 }
 
 func llenar_users(e Tipos.Cuentas) {
-	fmt.Println("LLego 2")
+	//fmt.Println("LLego 2")
 	array_users := e.Usuarios
 	sum := 0
 	c := len(array_users) - 1
@@ -695,7 +786,7 @@ func llenar_users(e Tipos.Cuentas) {
 	}
 	usuarios.Print(sum)
 	//fmt.Println(array)
-	fmt.Println(usuarios.Buscar(array[0]))
+	//fmt.Println(usuarios.Buscar(array[0]))
 
 }
 
@@ -729,12 +820,14 @@ func regisUser(w http.ResponseWriter, r *http.Request) {
 	errorResponse(w, "Archivo Recibido", http.StatusOK)
 	sum := sha256.Sum256([]byte(e.Password))
 	str2 := string(e.SHA_pass[:])
-	fmt.Println("-------")
-	fmt.Println(str2)
+	//fmt.Println("-------")
+	fmt.Println(str2, "str2")
 	//str3 := bytes.NewBuffer(e.SHA_pass[]).String()
 	e.SHA_pass = sum
-	fmt.Println(e)
-	fmt.Printf("%x", e.SHA_pass)
+	usuarios.Insertar(e, 1)
+	usuarios.Print(3)
+	//fmt.Println(e)
+	//fmt.Printf("%x", e.SHA_pass)
 }
 
 func loginUser(w http.ResponseWriter, r *http.Request) {
@@ -771,8 +864,17 @@ func dev_user(e Tipos.Consulta) {
 	inutil(err)
 	buscar_user.Dpi_ = r
 	resultado := usuarios.Buscar(buscar_user)
-	fmt.Println(resultado.DPI, "-", resultado.Dpi_)
-
+	//fmt.Println(resultado.DPI, "-", resultado.Dpi_, "-", resultado.Tipo)
+	if resultado.Tipo != 0 {
+		if e.Password == resultado.Password {
+			user_actual = resultado
+		} else {
+			default_user()
+		}
+	} else {
+		default_user()
+	}
+	//fmt.Println(user_actual.Tipo)
 }
 
 //CODIFICACION FERNET
@@ -871,7 +973,7 @@ func crear_grafo(e Tipos.File_grafo) {
 		}
 		c++
 	}
-	fmt.Println("--------")
+	//fmt.Println("--------")
 	//storage.Aristas()
 	storage.Graficar()
 	storage.Grafos()
@@ -895,12 +997,14 @@ func inutil(a error) {
 func main() {
 	router := mux.NewRouter()
 	test_b()
+	default_user()
 	//endpoint-rutas
 	default_admin()
 	router.HandleFunc("/TiendaEspecifica", GetStore).Methods("POST") //LISTO
 	router.HandleFunc("/id/{numero}", GetList).Methods("GET")        //LISTO
 	router.HandleFunc("/cargartienda", readBody).Methods("POST")     //LISTO
 	router.HandleFunc("/Inventarios", l_inventario).Methods("POST")
+	router.HandleFunc("/graf_stores", graph_).Methods("GET")
 	router.HandleFunc("/Tiendas", give_tiendas).Methods("GET")
 	router.HandleFunc("/products/{numero}", getProduct).Methods("GET")
 	router.HandleFunc("/addProduct", addProd).Methods("POST")
@@ -914,6 +1018,7 @@ func main() {
 	router.HandleFunc("/pedidos/{id}", dev_pedidos).Methods("GET")
 	router.HandleFunc("/CartSize", CartSize).Methods("GET")
 	router.HandleFunc("/user", devolver_t_user).Methods("GET")
+	router.HandleFunc("/Logout", logout).Methods("GET")
 	router.HandleFunc("/LoadUsers", cargar_users).Methods("POST")
 	router.HandleFunc("/regisUser", regisUser).Methods("POST")
 	router.HandleFunc("/loginUser", loginUser).Methods("POST")

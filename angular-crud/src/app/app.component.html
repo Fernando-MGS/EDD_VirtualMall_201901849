@@ -1,7 +1,7 @@
-<div *ngIf="user_tipo>0">
+<div *ngIf="tipo>0">
 <nav class="navbar navbar-expand-lg navbar-light navbar-fixed-top " style="background-color: rgb(165, 111, 216);">
     <div class="container-fluid">
-      <a class="navbar-brand"style="color: cornsilk;" href="/">EDD MALL</a>
+      <a class="navbar-brand"style="color: cornsilk;" href="/tiendas">EDD MALL</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -13,12 +13,16 @@
           <li class="nav-item">
             <a class="nav-link"style="color: cornsilk;" href="/login">PRODUCTOS</a>
           </li>
+          <div *ngIf="tipo==1">
           <li class="nav-item">
             <a class="nav-link"style="color: cornsilk;" href="/pedido/0">PEDIDOS</a>
           </li>
+        </div>
+        <div *ngIf="tipo==1">
           <li class="nav-item">
             <a class="nav-link"style="color: cornsilk;" href="/carga" tabindex="-1" aria-disabled="true">CARGAS</a>
           </li>
+        </div>
         </ul>
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">

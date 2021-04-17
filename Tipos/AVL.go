@@ -67,7 +67,7 @@ func rotacionDobleDerecha(temp **nodo_m) {
 }
 
 func (avl *AVL) Buscar(indice int) int {
-	fmt.Println("Llego a buscar ", indice)
+	//fmt.Println("Llego a buscar ", indice)
 	return _prob_exist(indice, &avl.raiz)
 }
 
@@ -83,10 +83,10 @@ func _prob_exist(indice int, root **nodo_m) int {
 		return 0
 	}
 	if indice < (*root).indice.Codigo {
-		fmt.Println(indice, "--", (*root).indice.Codigo)
+		//fmt.Println(indice, "--", (*root).indice.Codigo)
 		prob_exist(indice, &(*root).izq)
 	} else if indice > (*root).indice.Codigo {
-		fmt.Println(indice, "--", (*root).indice.Codigo)
+		//fmt.Println(indice, "--", (*root).indice.Codigo)
 		prob_exist(indice, &(*root).der)
 	} else {
 		return 1

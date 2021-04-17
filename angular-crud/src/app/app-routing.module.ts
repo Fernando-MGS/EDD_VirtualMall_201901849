@@ -12,7 +12,7 @@ import {LoginComponent} from './components/login/login.component';
 import {UserComponent} from './components/user/user.component'
 const routes: Routes = [
   
-  { path:'', component: CargaComponent},
+  { path:'', component: LoginComponent},
   { path:'', component: AppComponent},
   { path:'login', component: LoginComponent},
   { path:'profile', component: UserComponent},

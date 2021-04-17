@@ -1,7 +1,7 @@
 package pedidos
 
 import (
-	"fmt"
+	//"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -44,12 +44,12 @@ func (m *Lista) buscar(mes, dia, depto int, l_prod []Tipos.Producto) int {
 	aux := m.inicio
 	ind := 1
 	find := 0
-	fmt.Print("Buscando ", mes)
+	//fmt.Print("Buscando ", mes)
 	for ind <= m.tam {
 		if aux.Mes == mes {
 			find = 1
 			cont := 0
-			fmt.Print(", ha sido encontrado")
+			//fmt.Print(", ha sido encontrado")
 			for cont < len(l_prod) {
 				aux.pedidos.Insert(l_prod[cont], dia, depto)
 				cont++
@@ -96,7 +96,7 @@ func (m *Lista) Insertar(mes, depto, dia int, l_prod []Tipos.Producto) { //inser
 func (m *Lista) Imprimir() { //IMPRIMIR
 	aux := m.inicio
 	for aux != nil {
-		fmt.Println(aux.Mes)
+		//fmt.Println(aux.Mes)
 		/*aux.pedidos.lst_h.print_h()
 		aux.pedidos.lst_v.print()*/
 		aux = aux.siguiente

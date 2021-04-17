@@ -15,11 +15,11 @@
                 <p class="mt-1" style="color:white">Password:</p> 
                 <input type="password" style="width: 400px;" class="form-control" formControlName="Password">
                 <p class="mt-1" style="color:white">DPI:</p> 
-                <input type="text" style="width: 400px;" class="form-control" formControlName="Dpi">
+                <input type="text" style="width: 400px;" class="form-control" formControlName="dpi">
                 <p class="mt-1" style="color:white">Email:</p> 
                 <input type="email" style="width: 400px;" class="form-control" formControlName="Correo">
                 <br>
-                <button class="button btn-primary" (click)="registrar()"  type="submit">Enviar</button>
+                <button class="button btn-primary" (click)="registrar()"  type="submit">Registrar</button>
             </form>
         </div>
         <div class="col">
@@ -29,10 +29,14 @@
                 [class.is-invalid]="Login_form.get('Nombre').touched && Login_form.get('Nombre').invalid"
                 class="form-control" formControlName="Nombre">
                 <p class="mt-1" style="color:white">Password:</p> <input type="password" style="width: 400px;"
-                class="form-control" formControlName="Password"><br>
+                class="form-control" formControlName="Password">
                 <p class="mt-1" style="color:white">DPI:</p> <input type="password" style="width: 400px;"
                 class="form-control" formControlName="dpi"><br>
-                <button class="button btn-primary" (click)="logear()" type="submit">Enviar</button>
+                <button class="button btn-primary" style="text-decoration:none;" (click)="logear()" type="submit">Ingresar</button>
+                <div *ngIf="tipo>0">
+                    <button class="button btn-primary" style="text-decoration:none;" type="submit"><a href="/profile">Enviar</a></button>
+                </div>
+                
             </form>
         </div>
     </div>

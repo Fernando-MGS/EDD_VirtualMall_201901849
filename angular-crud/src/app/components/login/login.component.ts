@@ -13,9 +13,11 @@ export class LoginComponent implements OnInit {
   
   constructor(private storeServices:TiendaService) { }
   user: User;
+  dir: string="/"
+  tipo:any
   consulta: Consulta
   Register= new FormGroup({
-    Dpi:new FormControl('',Validators.required),
+    dpi:new FormControl('',Validators.required),
     Nombre:new FormControl('',Validators.required),
     Correo:new FormControl('',Validators.required),
     Password:new FormControl('',Validators.required)
@@ -41,6 +43,18 @@ export class LoginComponent implements OnInit {
     this.consulta=this.Login_form.value
     this.storeServices.LoginUser(this.consulta).subscribe(data=>console.log(data),err=>console.log(err),()=>console.log("Finish"));
     console.log(this.consulta)
+    this.storeServices.Tipo_User().subscribe((resP) =>{
+      this.user=resP;
+      this.tipo=this.user.Tipo
+      console.log(this.user)
+      console.log(this.tipo)
+      
+    });
+    var t: number=this.tipo
+    if (t>0){
+      this.dir="/profile"
+    }
+    console.log(this.dir)
   }
   ngOnInit(){
     

@@ -109,7 +109,7 @@ func (l *lista) search(header int) *nodo {
 	return nil
 }
 
-func (l *lista) print() {
+func (l *lista) Print() {
 	temp := l.first
 	for temp != nil {
 		t := temp
@@ -164,7 +164,7 @@ func (l *lista) buscar(x, y int, producto Tipos.Producto) int {
 	return find
 }
 
-func (l *lista) print_h() {
+func (l *lista) Print_h() {
 	fmt.Println("Print de las columnas")
 	temp := l.first
 	for temp != nil {

@@ -123,7 +123,7 @@ func prob_exist(indice int, root **nodo_m) int { //0 no existe, 1 si existe
 }
 
 func (avl *AVL) Insertar(indice Year, l_prod []Tipos.Producto, depto, mes, dia int) {
-	fmt.Println("Llego a insertar")
+	//fmt.Println("Llego a insertar")
 	/*if prob_exist(indice.Año, &avl.raiz) == 0 || prob_exist(indice.Año, &avl.raiz) == 2 {
 		fmt.Println()
 		fmt.Println("---------")
@@ -138,13 +138,13 @@ func (avl *AVL) Insertar(indice Year, l_prod []Tipos.Producto, depto, mes, dia i
 
 func _insert(indice Year, root **nodo_m, l_prod []Tipos.Producto, depto, mes, dia int) {
 	if (*root) == nil {
-		fmt.Println("Insertando como root ", indice.Año)
+		//fmt.Println("Insertando como root ", indice.Año)
 		*root = newnodo_m(indice)
 		return
 	}
 	if indice.Año < (*root).indice.Año {
 		_insert(indice, &(*root).izq, l_prod, depto, mes, dia)
-		fmt.Println("Insertando izq ", indice.Año)
+		//fmt.Println("Insertando izq ", indice.Año)
 		if (altura((*root).izq) - altura((*root).der)) == -2 {
 			if indice.Año < (*root).izq.indice.Año {
 				rotacionIzquierda(root)
@@ -154,7 +154,7 @@ func _insert(indice Year, root **nodo_m, l_prod []Tipos.Producto, depto, mes, di
 		}
 	} else if indice.Año > (*root).indice.Año {
 		_insert(indice, &(*root).der, l_prod, depto, mes, dia)
-		fmt.Println("Insertando der ", indice.Año)
+		//fmt.Println("Insertando der ", indice.Año)
 		if (altura((*root).der) - altura((*root).izq)) == 2 {
 			if indice.Año > (*root).der.indice.Año {
 				rotacionDerecha(root)
@@ -288,6 +288,13 @@ func inOrden(temp *nodo_m) {
 		temp.indice.List.Imprimir()
 		inOrden(temp.der)
 	}
+}
+func (avl *AVL) Dev() {
+	a := avl.raiz.indice.List
+	b := a.inicio.pedidos
+	b.lst_h.Print_h()
+	fmt.Println("-----------")
+	b.lst_v.Print()
 }
 
 func (avl *AVL) Dev_year(ind string) Años {

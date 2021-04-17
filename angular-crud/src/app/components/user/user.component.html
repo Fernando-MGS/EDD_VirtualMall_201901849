@@ -8,7 +8,7 @@
                 <b><p>Nombre</p></b>
             </div>
             <div class="col">
-                <p class="card-text">{{a.Nombre}}</p>
+                <p class="card-text">{{user.Nombre}}</p>
             </div>
         </div>
         <div class="row">
@@ -16,7 +16,7 @@
                 <b><p>DPI:</p></b>
             </div>
             <div class="col">
-                <p class="card-text">{{a.Dpi}}</p>
+                <p class="card-text">{{user.DPI}}</p>
             </div>
         </div>
         <div class="row">
@@ -24,7 +24,7 @@
                 <b><p>Correo:</p></b>
             </div>
             <div class="col">
-                <p class="card-text">{{a.Correo}}</p>
+                <p class="card-text">{{user.Correo}}</p>
             </div>
         </div>
       
@@ -38,6 +38,9 @@
         </div>
         <div class="card-body" style="color:rgb(165, 111, 216)">
           <a href="#" class="btn btn-primary">Eliminar Usuario</a>
+          <br>
+          <br>
+          <a href="/" (click)="log_out()" class="btn btn-primary">Cerrar Sesión</a>
         </div>
       </div>
 </div>

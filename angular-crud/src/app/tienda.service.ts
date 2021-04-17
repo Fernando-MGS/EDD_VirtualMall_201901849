@@ -80,4 +80,7 @@ export class TiendaService {
     console.log("hOLA14");
     return this.http.post<any>('/loginUser',user,)
   }
+  Logout():Observable<any>{
+    return this.http.get<any>('/Logout')
+  }
 }

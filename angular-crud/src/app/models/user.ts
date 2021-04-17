@@ -1,6 +1,7 @@
 export class User {
-    Dpi: string
+    DPI: string
     Nombre: string
     Correo: string
     Password: string
+    Tipo: number
 }

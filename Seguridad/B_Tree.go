@@ -162,11 +162,11 @@ func (m *B_Tree) Buscar(user Tipos.Usuario) Tipos.Usuario {
 }
 
 func (m *B_Tree) Busqueda(user Tipos.Usuario, pagina *Pagina) Tipos.Usuario {
-	fmt.Println("--")
+	//fmt.Println("--")
 	conf := 0
 	index := 0
 	for i := 0; i < len(pagina.users); i++ {
-		fmt.Println(user.Dpi_, "--/", pagina.users[i].User.Dpi_)
+		//fmt.Println(user.Dpi_, "--/", pagina.users[i].User.Dpi_)
 		if user.Dpi_ == pagina.users[i].User.Dpi_ {
 			index = i
 			conf = 1
@@ -181,16 +181,29 @@ func (m *B_Tree) Busqueda(user Tipos.Usuario, pagina *Pagina) Tipos.Usuario {
 			//fmt.Println(i, ">", j)
 		}
 	}
-	fmt.Println("conf es ", conf)
+	//fmt.Println("conf es ", conf)
 	if conf == 1 {
 		/*fmt.Print(pagina.users[index].User.Dpi_, "-")
 		fmt.Print(pagina.users[index].User.Nombre)
 		fmt.Println()*/
 		return pagina.users[index].User
 	} else if conf == 2 {
-		return m.Busqueda(user, pagina.users[index].izquierda)
+		if pagina.users[index].izquierda != nil {
+			return m.Busqueda(user, pagina.users[index].izquierda)
+		} else {
+			var a Tipos.Usuario
+			a.Tipo = 0
+			return a
+		}
+
 	} else if conf == 3 {
-		return m.Busqueda(user, pagina.users[index].derecha)
+		if pagina.users[index].derecha != nil {
+			return m.Busqueda(user, pagina.users[index].derecha)
+		} else {
+			var a Tipos.Usuario
+			a.Tipo = 0
+			return a
+		}
 	}
 	var a Tipos.Usuario
 	return a

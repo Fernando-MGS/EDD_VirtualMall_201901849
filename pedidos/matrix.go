@@ -113,15 +113,35 @@ func (l *lista) Print() {
 	temp := l.first
 	for temp != nil {
 		t := temp
-		fmt.Print("Cabecera:", temp.y, temp.header, ":   ")
+		//fmt.Print("Cabecera:", temp.y, temp.header, ":   ")
 
 		for t != nil {
-			fmt.Print(t.producto, "  ", t.x, "-", t.y)
+			//	fmt.Print(t.producto, "  ", t.x, "-", t.y)
 			t = t.derecha
 		}
-		fmt.Println()
+		//fmt.Println()
 		temp = temp.siguiente
 	}
+}
+
+func (l *lista) Dev() []Tipos.Matrices {
+	var arr []Tipos.Matrices
+
+	temp := l.first
+	for temp != nil {
+		t := temp
+		//	fmt.Print("Cabecera:", temp.y, temp.header, ":   ")
+		for t != nil {
+			var matriz Tipos.Matrices
+			matriz.Producto = t.producto
+			arr = append(arr, matriz)
+			//fmt.Print(t.producto, "  ", t.x, "-", t.y)
+			t = t.derecha
+		}
+		//fmt.Println()
+		temp = temp.siguiente
+	}
+	return arr
 }
 
 func (l *lista) buscar(x, y int, producto Tipos.Producto) int {
@@ -149,9 +169,7 @@ func (l *lista) buscar(x, y int, producto Tipos.Producto) int {
 		for t != nil {
 			if t.x == x && t.y == y {
 				//fmt.Println("Producto ya existe")
-				if find == 0 {
-					t.producto = append(t.producto, producto)
-				}
+				t.producto = append(t.producto, producto)
 				find = 1
 			}
 			t = t.abajo
@@ -164,29 +182,79 @@ func (l *lista) buscar(x, y int, producto Tipos.Producto) int {
 	return find
 }
 
+func (l *lista) _rec_head(t *nodo) {
+	//	fmt.Println("----")
+	for t.abajo != nil {
+		//fmt.Println(t.x)
+	}
+	for t.derecha != nil {
+		//fmt.Println(t.y)
+	}
+}
+
+func (l *lista) _buscar() []Tipos.Matrices {
+	var b []Tipos.Matrices
+
+	temp := l.first
+	//find := 0
+	for temp != nil {
+		t := temp
+		for t != nil {
+			if t.x != 0 {
+				var l Tipos.Matrices
+				l.Producto = t.producto
+				l.X = t.x
+				l.Y = t.y
+				b = append(b, l)
+			}
+			t = t.derecha
+		}
+		//fmt.Println("-")
+		temp = temp.siguiente
+	}
+	temp = l.first
+	for temp != nil {
+		t := temp
+		for t != nil {
+			if t.y != 0 {
+				var l Tipos.Matrices
+				l.Producto = t.producto
+				l.X = t.x
+				l.Y = t.y
+				b = append(b, l)
+			}
+			t = t.abajo
+		}
+		//fmt.Println()
+		temp = temp.siguiente
+	}
+	return b
+}
+
 func (l *lista) Print_h() {
-	fmt.Println("Print de las columnas")
+	//fmt.Println("Print de las columnas")
 	temp := l.first
 	for temp != nil {
 		t := temp
-		fmt.Print("Cabecera:", temp.x, temp.header, ":   ")
+		//fmt.Print("Cabecera:", temp.x, temp.header, ":   ")
 		for t != nil {
 			fmt.Print(t.x, "-", t.y, "v: ")
 			fmt.Println(t.producto)
 			t = t.abajo
 
 		}
-		fmt.Println("________________")
+		//fmt.Println("________________")
 		temp = temp.siguiente
 	}
 }
 
 func (m *matriz) Insert(producto Tipos.Producto, x int, y int) {
-	//fmt.Println("________________________________")
-	//fmt.Println("Preparandose para insertar ", producto, " en", x, ",", y)
-	//fmt.Println("bUSCANDO H")
+	/*fmt.Println("________________________________")
+	fmt.Println("Preparandose para insertar ", producto, " en", x, ",", y)
+	fmt.Println("bUSCANDO H")*/
 	h := m.lst_h.search(x)
-	//fmt.Println("h es ", h)
+
+	//fmt.Println("h es ", h.x, "--", h.y, "--", h.producto[0].Nombre)
 	//fmt.Println("bUSCANDO V")
 	v := m.lst_v.search(y)
 	find := m.lst_v.buscar(x, y, producto)
@@ -197,16 +265,16 @@ func (m *matriz) Insert(producto Tipos.Producto, x int, y int) {
 			//fmt.Println("h y  v nill")
 			m.noExisten(producto, x, y)
 		} else if h == nil && v != nil {
-			//fmt.Println("h nil, v no")
+			//	fmt.Println("h nil, v no")
 			m.existeVertical(producto, x, y)
 		} else if h != nil && v == nil {
-			//fmt.Println("h, v nill")
+			//	fmt.Println("h, v nill")
 			m.existeHorizontal(producto, x, y)
 		} else {
 			m.existen(producto, x, y)
 		}
 	}
-	//fmt.Println("Fin del buscar")
+	//fmt.Println("Fin del buscar del insert")
 }
 
 func (m *matriz) noExisten(producto Tipos.Producto, x int, y int) {
@@ -232,7 +300,7 @@ func (m *matriz) existeVertical(producto Tipos.Producto, x int, y int) {
 
 	h := m.lst_h.search(x) //vamos a buscar el n7odo que acabos de insertar para poder enlazarlo
 	v := m.lst_v.search(y) //vamos a buscar el nodo que acabos de insertar para poder enlazarlo
-	//fmt.Println("h.x es ", h.x, "  vy es:", v.y)
+	//	fmt.Println("h.x es ", h.x, "  vy es:", v.y)
 	nuevo := nodoMatriz(x, y, producto) //creamos nuevo nodo tipo matriz
 
 	h.abajo = nuevo  //enlazamos el nodo horizontal hacia abajo
@@ -262,7 +330,7 @@ func (m *matriz) existen(producto Tipos.Producto, x int, y int) {
 	//fmt.Println("Si Existen")
 	h := m.lst_h.search(x) //vamos a buscar el n7odo que acabos de insertar para poder enlazarlo
 	v := m.lst_v.search(y) //vamos a buscar el nodo que acabos de insertar para poder enlazarlo
-	//fmt.Println("h.x es ", h.x, "  vy es:", v.y)
+	//	fmt.Println("h.x es ", h.x, "  vy es:", v.y)
 	nuevo := nodoMatriz(x, y, producto) //creamos nuevo nodo tipo matriz
 	h.abajo = nuevo                     //enlazamos el nodo horizontal hacia abajo
 	nuevo.arriba = h                    //enlazmos el nuevo nodo hacia arriba

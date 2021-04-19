@@ -53,6 +53,7 @@ type nodo_m struct {
 var nodes string
 var graph string
 var pointers string
+var cluster int
 
 func newnodo_m(indice Year) *nodo_m {
 	return &nodo_m{indice, 0, nil, nil}
@@ -289,12 +290,52 @@ func inOrden(temp *nodo_m) {
 		inOrden(temp.der)
 	}
 }
-func (avl *AVL) Dev() {
-	a := avl.raiz.indice.List
-	b := a.inicio.pedidos
-	b.lst_h.Print_h()
-	fmt.Println("-----------")
-	b.lst_v.Print()
+func (avl *AVL) Dev(mes string, año int, nombres []string) {
+	b := a(mes, año, avl.raiz)
+	fmt.Println("Va mo a dev", len(b), "-")
+	//fmt.Println(len(b[0].Producto))
+	for i := 0; i < len(b); i++ {
+		c := b[i].Producto
+		fmt.Println(b[i].X, "....", b[i].Y)
+		for j := 0; j < len(c); j++ {
+			fmt.Print(c[j].Codigo, "--", c[j].ID, "--", c[j].Departamento)
+		}
+		fmt.Println()
+		fmt.Println("______________________")
+	}
+	fmt.Println("//////////////////////////")
+
+	t := strconv.Itoa(año)
+	graph_matriz(mes, t, ordenar_matriz(b, nombres), nombres)
+}
+
+func a(mes string, año int, t *nodo_m) []Tipos.Matrices {
+	if t != nil {
+		if t.indice.Año == año {
+			//fmt.Println("Encontrado")
+			return t.indice.List._GetItem(dev_mes(mes))
+		}
+	}
+	return nil
+}
+
+func dev_mes(mes string) int {
+	Meses := []string{"ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"}
+	for i := 0; i < len(Meses); i++ {
+		if mes == Meses[i] {
+			return i + 1
+		}
+	}
+	return 0
+}
+func (avl *AVL) dev_matriz() {
+	in_Orden(avl.raiz)
+	var year Años
+	year.Datos = mes
+	//year.Indice = 0
+	year.Large = len(mes)
+	var niu []Meses
+	mes = niu
 }
 
 func (avl *AVL) Dev_year(ind string) Años {
@@ -328,4 +369,166 @@ func (avl *AVL) Graph_lista(año, mes int) {
 			break
 		}
 	}
+}
+
+func dev_nombre_depto(index int, nombres []string) string {
+	return nombres[index]
+}
+
+func ordenar_matriz(e []Tipos.Matrices, nombres []string) Tipos.Pedidos_mes {
+
+	var orden Tipos.Pedidos_mes
+	for i := 0; i < len(e); i++ {
+		orden.Cabeceras_x = append(orden.Cabeceras_x, e[i].X)
+	}
+
+	for i := 0; i < len(e); i++ {
+		find := 0
+		for j := 0; j < len(orden.Cabeceras_y); j++ {
+			if e[i].Y == orden.Cabeceras_y[j] {
+				find = 1
+			}
+		}
+		if find == 0 {
+			orden.Cabeceras_y = append(orden.Cabeceras_y, e[i].Y)
+		}
+	}
+
+	//juntar los productos por departamento y luego compararlos
+	for i := 0; i < len(e); i++ {
+		conf := -1
+		var a Tipos.Cabecera_y
+		a.Dia = e[i].X
+		a.Productos = e[i].Producto
+		for j := 0; j < len(orden.Cabeceras_y); j++ {
+			//fmt.Println(orden.Cabeceras_y[j], "-", dev_ind_dep(e[i].Producto[0].Departamento, nombres))
+			if orden.Cabeceras_y[j] == dev_ind_dep(e[i].Producto[0].Departamento, nombres) {
+				a.Conf_exis = append(a.Conf_exis, j)
+				d := conf_dia(a.Dia, orden)
+				conf = d
+				if d >= 0 {
+					orden.Pedidos_D[d].Conf_exis = append(orden.Pedidos_D[d].Conf_exis, j)
+					for k := 0; k < len(e[i].Producto); k++ {
+						orden.Pedidos_D[d].Productos = append(orden.Pedidos_D[d].Productos, e[i].Producto[k])
+					}
+				}
+			}
+		}
+		if conf == -1 {
+			orden.Pedidos_D = append(orden.Pedidos_D, a)
+		}
+	}
+
+	for j := 0; j < len(orden.Pedidos_D); j++ {
+		fmt.Print("El dia es", orden.Pedidos_D[j].Dia, "-", len(orden.Pedidos_D[j].Productos))
+		fmt.Print(orden.Pedidos_D[j].Conf_exis)
+		fmt.Println("===================")
+	}
+	//fmt.Println(orden.Pedidos_D)
+	return orden
+}
+
+func conf_dia(dia int, e Tipos.Pedidos_mes) int {
+	conf := -1
+	for i := 0; i < len(e.Pedidos_D); i++ {
+		if dia == e.Pedidos_D[i].Dia {
+			conf = i
+			//fmt.Println("El día que coincide es", conf)
+		}
+	}
+	return conf
+}
+
+func dev_ind_dep(name string, nombres []string) int {
+	cont := 0
+	for i := 0; i < len(nombres); i++ {
+		if nombres[i] == name {
+
+			cont = i
+		}
+	}
+	return cont + 1
+}
+
+func graph_matriz(mes string, año string, month Tipos.Pedidos_mes, nombres []string) {
+	fmt.Println(month.Cabeceras_y)
+	fmt.Println(nombres)
+	graph = "digraph G{\n"
+	cont_n := 0
+	cluster = 1
+	/*graph += "rankdir=TB;"
+	graph += "node [shape = circle, color=greenyellow , style=filled, fillcolor=darkgreen];"*/
+	nodes += "subgraph cluster" + strconv.Itoa(cluster) + "{\n"
+	nodes += "node [style=filled,color =lightgrey,shape=Mrecord];\n"
+	nodes += "style=filled;\n"
+	nodes += "color=white;\n"
+	nodes += "node" + strconv.Itoa(cont_n) + "[label=\"\" style=filled, color=white]\n"
+	nodes += "node0 -> node1 [arrowhead=none, color=white]\n"
+	cont_n = 1
+	for i := 0; i < len(month.Cabeceras_y); i++ {
+		//name:=dev_nombre_depto(month.Cabeceras_y[i])
+		nodes += "node" + strconv.Itoa(cont_n) + "[label=\"" + nombres[month.Cabeceras_y[i]-1] + "\" style=filled]\n"
+		if i <= len(month.Cabeceras_y)-2 {
+			pointers += "node" + strconv.Itoa(cont_n) + " ->"
+		} else if i == len(month.Cabeceras_y)-1 {
+			pointers += "node" + strconv.Itoa(cont_n) + "[arrowhead=none, color=white]; \n"
+			pointers += mes + " [shape=Mdiamond,color=white];"
+			pointers += mes + " -> node0 [arrowhead=none, color=white]\n"
+		}
+		cont_n++
+	}
+	for i := 0; i < len(month.Pedidos_D); i++ {
+		nodes += "subgraph cluster" + strconv.Itoa(cluster) + "{\n"
+		nodes += "node [style=filled,color=lightgrey,shape=Mrecord];\n"
+		nodes += "style=filled\n"
+		nodes += "color=white\n"
+		index := 0
+		for j := 0; j < len(month.Cabeceras_y); j++ {
+			if j == 0 {
+				nodes += "node" + strconv.Itoa(cont_n) + "[label=\"" + strconv.Itoa(month.Pedidos_D[i].Dia) + "\"]\n"
+				pointers += mes + " -> node" + strconv.Itoa(cont_n) + "[arrowhead=none, color=white]\n"
+				pointers += "node" + strconv.Itoa(cont_n) + " -> "
+				cont_n++
+			}
+			if month.Pedidos_D[i].Conf_exis[index] == j {
+				nodes += "node" + strconv.Itoa(cont_n) + "[label=\"\"]\n"
+				if j == len(month.Cabeceras_y)-1 {
+					pointers += "node" + strconv.Itoa(cont_n) + "[arrowhead=none, color=white];\n"
+				} else {
+					pointers += "node" + strconv.Itoa(cont_n) + " ->"
+				}
+				if index < len(month.Pedidos_D[i].Conf_exis)-1 {
+					index++
+				}
+			} else {
+				nodes += "node" + strconv.Itoa(cont_n) + "[label=\"\" color=white]\n"
+				if j == len(month.Cabeceras_y)-1 {
+					pointers += "node" + strconv.Itoa(cont_n) + "[arrowhead=none, color=white];\n"
+				} else {
+					pointers += "node" + strconv.Itoa(cont_n) + " ->"
+				}
+			}
+			cont_n++
+		}
+		nodes += "}\n"
+		cluster++
+	}
+	nodes += "}"
+	graph += nodes + "\n" + pointers
+	graph += "\n}"
+	data := []byte(graph)                            //Almacenar el codigo en el formato adecuado
+	err := ioutil.WriteFile("graph.dot", data, 0644) //Crear el archivo .dot necesario para la imagen
+	if err != nil {
+		log.Fatal(err)
+	}
+	//fmt.Println(graph)
+	//Creación de la imagen
+	path, _ := exec.LookPath("dot") //Para que funcione bien solo asegurate de tener todas las herramientas para
+	// Graphviz en tu compu, si no descargalas osea el Graphviz
+	cmd, _ := exec.Command(path, "-Tpng", "graph.dot").Output()            //En esta parte en lugar de graph va el nombre de tu grafica
+	mode := int(0777)                                                      //Se mantiene igual
+	ioutil.WriteFile("Pedidos"+mes+"-"+año+".png", cmd, os.FileMode(mode)) //Creacion de la imagen
+	pointers = ""
+	nodes = ""
+	graph = ""
 }

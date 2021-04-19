@@ -45,6 +45,7 @@ type Producto struct {
 	Almacenamiento string  `json:"Almacenamiento,omitempty"`
 	ID             string
 	Cant           []int
+	Departamento   string
 }
 type Pedidos struct {
 	Pedidos []Pedido `json:"Pedidos,omitempty"`
@@ -103,10 +104,33 @@ type Usuario struct {
 	Tipo     int //1 admin, 2 user
 }
 
+type Consulta_prod struct {
+	Find int
+	Prod Producto
+}
 type Consulta struct {
 	Nombre   string `json:"Nombre,omitempty"`
 	Password string `json:"Password,omitempty"`
 	DPI      string `json:"dpi,omitempty"`
+}
+
+type Matrices struct {
+	Producto []Producto
+	X        int
+	Y        int
+}
+
+type Pedidos_mes struct {
+	Matrix      []Matrices
+	Cabeceras_x []int
+	Cabeceras_y []int
+	Pedidos_D   []Cabecera_y
+}
+
+type Cabecera_y struct {
+	Dia       int
+	Productos []Producto
+	Conf_exis []int
 }
 
 type Clave struct {

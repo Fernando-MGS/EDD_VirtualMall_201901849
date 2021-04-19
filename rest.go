@@ -346,6 +346,7 @@ func llenar_avl(e Tipos.Inventarios) {
 		sum := 0
 		for sum < len(e.Inventario[cont].Productos) {
 			prod := e.Inventario[cont].Productos[sum]
+			prod.Departamento = e.Inventario[cont].Departamento
 			tmp.Inventario.Insertar(prod)
 			sum++
 			rowmajor[_index].Set_Inventario(tmp)
@@ -438,7 +439,7 @@ func offProduct(w http.ResponseWriter, r *http.Request) {
 	if carrito.Tamaño() == 0 {
 		resetCart()
 	}
-	fmt.Println(err)
+	//fmt.Println(err)
 	t.Add(num, e)
 	return
 }
@@ -470,7 +471,8 @@ func addProduct(w http.ResponseWriter, r *http.Request) {
 	str := rowmajor[i].Get(index[1])
 	j, er := strconv.Atoi(index[2])
 	str.Inventario.Quitar(j, e)
-	fmt.Println(er)
+	inutil(er)
+	//fmt.Println(er)
 	e.Cantidad = j
 	errorResponse(w, "Archivo Recibido", http.StatusOK)
 	carrito.Add(e)
@@ -511,7 +513,7 @@ func addPedido(w http.ResponseWriter, r *http.Request) {
 }
 func pedido_json(pedido Tipos.Pedidos) {
 	envio := pedido.Pedidos
-	find := 0
+	var find Tipos.Consulta_prod
 	cont := 0
 	for cont < len(envio) {
 		fecha := strings.Split(envio[cont].Fecha, "-") //dd-mm-aa
@@ -524,15 +526,16 @@ func pedido_json(pedido Tipos.Pedidos) {
 		index_dep := dev_depto(envio[cont].Departamento) + 1
 		var prod_real []Tipos.Producto
 		for cont2 < len(elemento) {
-			find = prob_exist_avl(envio[cont].Departamento, envio[cont].Tienda, envio[cont].Calificacion, elemento[cont2].Codigo)
-			if find == 1 {
-				prod_real = append(prod_real, elemento[cont2])
-				fmt.Println(err)
+			find = _prob_exist_avl(envio[cont].Departamento, envio[cont].Tienda, envio[cont].Calificacion, elemento[cont2].Codigo)
+			if find.Find == 1 {
+				prod_real = append(prod_real, find.Prod)
+				inutil(err)
 				//matriz.Insert(elemento[cont2],dia,index_dep)
 			}
 			cont2++
 		}
 		if len(prod_real) > 0 {
+			//fmt.Println("El len prod", len(prod_real), index_dep, mes, dia)
 			meses.Insercion(prod_real, index_dep, mes, dia)
 			var year pedidos.Year
 			year.Año = año
@@ -542,7 +545,7 @@ func pedido_json(pedido Tipos.Pedidos) {
 		}
 		cont++
 	}
-	AVL_Pedidos.Dev()
+	AVL_Pedidos.Dev("ENERO", 2013, depto)
 	//AVL_Pedidos.Print()
 }
 
@@ -553,6 +556,16 @@ func prob_exist_avl(Departamento, Nombre string, Calificacion, Codigo int) int {
 	_index := (Calificacion) + 5*(index_dep+len(depto)*index_ind) - 1
 	tmp := rowmajor[_index].Get(Nombre).Inventario
 	find = tmp.Buscar(Codigo)
+	return find
+}
+
+func _prob_exist_avl(Departamento, Nombre string, Calificacion, Codigo int) Tipos.Consulta_prod {
+	var find Tipos.Consulta_prod
+	index_dep := dev_depto(Departamento)
+	index_ind := dev_indice(Nombre)
+	_index := (Calificacion) + 5*(index_dep+len(depto)*index_ind) - 1
+	tmp := rowmajor[_index].Get(Nombre).Inventario
+	find = tmp.Buscar_(Codigo)
 	return find
 }
 
@@ -824,10 +837,13 @@ func regisUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(str2, "str2")
 	//str3 := bytes.NewBuffer(e.SHA_pass[]).String()
 	e.SHA_pass = sum
+	e.Dpi_, err = strconv.Atoi(e.DPI)
+	e.Tipo = 2
 	usuarios.Insertar(e, 1)
 	usuarios.Print(3)
 	//fmt.Println(e)
 	//fmt.Printf("%x", e.SHA_pass)
+	user_actual = e
 }
 
 func loginUser(w http.ResponseWriter, r *http.Request) {

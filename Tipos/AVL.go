@@ -71,24 +71,13 @@ func (avl *AVL) Buscar(indice int) int {
 	return _prob_exist(indice, &avl.raiz)
 }
 
-func (avl *AVL) Comp() int {
-	if &avl.raiz != nil {
-		return 1
-	}
-	return 0
+func (avl *AVL) Buscar_(indice int) Consulta_prod {
+	//fmt.Println("Llego a buscar ", indice)
+	return _prob_exist_(indice, &avl.raiz)
 }
 
-func _prob_exist(indice int, root **nodo_m) int {
-	if (*root) == nil {
-		return 0
-	}
-	if indice < (*root).indice.Codigo {
-		//fmt.Println(indice, "--", (*root).indice.Codigo)
-		prob_exist(indice, &(*root).izq)
-	} else if indice > (*root).indice.Codigo {
-		//fmt.Println(indice, "--", (*root).indice.Codigo)
-		prob_exist(indice, &(*root).der)
-	} else {
+func (avl *AVL) Comp() int {
+	if &avl.raiz != nil {
 		return 1
 	}
 	return 0
@@ -156,6 +145,41 @@ func prob_exist(indice int, root **nodo_m) int { //0 no existe, 1 si existe
 	}
 
 	return 2
+}
+func _prob_exist(indice int, root **nodo_m) int {
+	if (*root) == nil {
+		return 0
+	}
+	if indice < (*root).indice.Codigo {
+		//fmt.Println(indice, "--", (*root).indice.Codigo)
+		return prob_exist(indice, &(*root).izq)
+	} else if indice > (*root).indice.Codigo {
+		//fmt.Println(indice, "--", (*root).indice.Codigo)
+		return prob_exist(indice, &(*root).der)
+	} else if indice == (*root).indice.Codigo {
+		return 1
+	}
+	return 0
+}
+
+func _prob_exist_(indice int, root **nodo_m) Consulta_prod {
+	var a Consulta_prod
+	a.Find = 0
+	if (*root) == nil {
+		return a
+	}
+	if indice < (*root).indice.Codigo {
+		//fmt.Println(indice, "--", (*root).indice.Codigo)
+		return _prob_exist_(indice, &(*root).izq)
+	} else if indice > (*root).indice.Codigo {
+		//fmt.Println(indice, "--", (*root).indice.Codigo)
+		return _prob_exist_(indice, &(*root).der)
+	} else if indice == (*root).indice.Codigo {
+		a.Find = 1
+		a.Prod = (*root).indice
+		return a
+	}
+	return a
 }
 
 func agregar_cant(indice int, root **nodo_m, prod Producto) { //0 no existe, 1 si existe

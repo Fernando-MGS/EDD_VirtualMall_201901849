@@ -2,6 +2,7 @@ package pedidos
 
 import (
 	//"fmt"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -106,6 +107,41 @@ func (m *Lista) Imprimir() { //IMPRIMIR
 
 func (m *Lista) Tamaño() int { //IMPRIMIR TAMAÑO DE LISTA
 	return m.tam
+}
+
+func (m *Lista) _GetItem(index int) []Tipos.Matrices {
+	ind := 1
+	aux := m.inicio
+	var b []Tipos.Matrices
+	var c []Tipos.Matrices
+	for ind <= m.tam {
+		if index == aux.Mes {
+			fmt.Println("Encontrado 1")
+			b = aux.pedidos.lst_h._buscar()
+			c = aux.pedidos.lst_v._buscar()
+			//aux.pedidos.lst_h._rec_head(aux.pedidos.lst_h.first)
+			//aux.pedidos.lst_v._rec_head(aux.pedidos.lst_v.first)
+		}
+		aux = aux.siguiente
+		ind++
+	}
+	for i := 0; i < len(c); i++ {
+		//var d Tipos.Matrices
+		//conf := 0
+		for j := 0; j < len(b); j++ {
+			//fmt.Println(c[i].X, "x-y", c[i].Y, "-", b[j].X, "x-b-y", b[j].Y)
+			if c[i].X == b[j].X {
+
+				//conf = 1
+			}
+
+		}
+		b = append(b, c[i])
+		//
+
+	}
+
+	return b
 }
 
 func (m *Lista) GetItem(index int) matriz { //Devuelve un dato de la lista

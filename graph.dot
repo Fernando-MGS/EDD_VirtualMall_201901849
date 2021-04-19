@@ -1,97 +1,160 @@
-digraph List {
-rankdir=TB;node [shape = record];Node27[label="<f0>27--3|<f1>54--3|<f2>81--3|<f3>108--3|<f4>135--3"]
-Node9[label="<f0>9--2|<f1>18--2"]
-Node3[label="<f0>3--1|<f1>6--1"]
-Node1[label="<f0>1-0|<f1>2-0"]
-Node4[label="<f0>4-0|<f1>5-0"]
-Node12[label="<f0>12--1|<f1>15--1"]
-Node10[label="<f0>10-0|<f1>11-0"]
-Node13[label="<f0>13-0|<f1>14-0"]
-Node36[label="<f0>36--2|<f1>45--2"]
-Node30[label="<f0>30--1|<f1>33--1"]
-Node28[label="<f0>28-0|<f1>29-0"]
-Node31[label="<f0>31-0|<f1>32-0"]
-Node39[label="<f0>39--1|<f1>42--1"]
-Node37[label="<f0>37-0|<f1>38-0"]
-Node40[label="<f0>40-0|<f1>41-0"]
-Node63[label="<f0>63--2|<f1>72--2"]
-Node57[label="<f0>57--1|<f1>60--1"]
-Node55[label="<f0>55-0|<f1>56-0"]
-Node58[label="<f0>58-0|<f1>59-0"]
-Node66[label="<f0>66--1|<f1>69--1"]
-Node64[label="<f0>64-0|<f1>65-0"]
-Node67[label="<f0>67-0|<f1>68-0"]
-Node90[label="<f0>90--2|<f1>99--2"]
-Node84[label="<f0>84--1|<f1>87--1"]
-Node82[label="<f0>82-0|<f1>83-0"]
-Node85[label="<f0>85-0|<f1>86-0"]
-Node93[label="<f0>93--1|<f1>96--1"]
-Node91[label="<f0>91-0|<f1>92-0"]
-Node94[label="<f0>94-0|<f1>95-0"]
-Node117[label="<f0>117--2|<f1>126--2"]
-Node111[label="<f0>111--1|<f1>114--1"]
-Node109[label="<f0>109-0|<f1>110-0"]
-Node112[label="<f0>112-0|<f1>113-0"]
-Node120[label="<f0>120--1|<f1>123--1"]
-Node118[label="<f0>118-0|<f1>119-0"]
-Node121[label="<f0>121-0|<f1>122-0"]
-Node144[label="<f0>144--2|<f1>153--2"]
-Node138[label="<f0>138--1|<f1>141--1"]
-Node136[label="<f0>136-0|<f1>137-0"]
-Node139[label="<f0>139-0|<f1>140-0"]
-Node147[label="<f0>147--1|<f1>150--1"]
-Node145[label="<f0>145-0|<f1>146-0"]
-Node148[label="<f0>148-0|<f1>149-0"]
-Node156[label="<f0>156--1|<f1>159--1"]
-Node154[label="<f0>154-0|<f1>155-0"]
-Node157[label="<f0>157-0|<f1>158-0"]
-Node160[label="<f0>160-0|<f1>3031970130108-0"]
-
-"Node27":f0->"Node9":f0;
-"Node27":f1->"Node36":f0;
-"Node27":f2->"Node63":f0;
-"Node27":f3->"Node90":f0;
-"Node27":f4->"Node117":f0;
-"Node27":f4->"Node144":f0;
-"Node9":f0->"Node3":f0;
-"Node9":f1->"Node12":f0;
-"Node3":f0->"Node1":f0;
-"Node3":f1->"Node4":f0;
-"Node12":f0->"Node10":f0;
-"Node12":f1->"Node13":f0;
-"Node36":f0->"Node30":f0;
-"Node36":f1->"Node39":f0;
-"Node30":f0->"Node28":f0;
-"Node30":f1->"Node31":f0;
-"Node39":f0->"Node37":f0;
-"Node39":f1->"Node40":f0;
-"Node63":f0->"Node57":f0;
-"Node63":f1->"Node66":f0;
-"Node57":f0->"Node55":f0;
-"Node57":f1->"Node58":f0;
-"Node66":f0->"Node64":f0;
-"Node66":f1->"Node67":f0;
-"Node90":f0->"Node84":f0;
-"Node90":f1->"Node93":f0;
-"Node84":f0->"Node82":f0;
-"Node84":f1->"Node85":f0;
-"Node93":f0->"Node91":f0;
-"Node93":f1->"Node94":f0;
-"Node117":f0->"Node111":f0;
-"Node117":f1->"Node120":f0;
-"Node111":f0->"Node109":f0;
-"Node111":f1->"Node112":f0;
-"Node120":f0->"Node118":f0;
-"Node120":f1->"Node121":f0;
-"Node144":f0->"Node138":f0;
-"Node144":f1->"Node147":f0;
-"Node144":f1->"Node156":f0;
-"Node138":f0->"Node136":f0;
-"Node138":f1->"Node139":f0;
-"Node147":f0->"Node145":f0;
-"Node147":f1->"Node148":f0;
-"Node156":f0->"Node154":f0;
-"Node156":f1->"Node157":f0;
-"Node156":f1->"Node160":f0;
+digraph G{
+subgraph cluster1{
+node [style=filled,color =lightgrey,shape=Mrecord];
+style=filled;
+color=white;
+node0[label="" style=filled, color=white]
+node0 -> node1 [arrowhead=none, color=white]
+node1[label="Consolas de videojuegos" style=filled]
+node2[label="Otros" style=filled]
+node3[label="Arte y Artesanias" style=filled]
+node4[label="Vinilos" style=filled]
+node5[label="Electrónicos para autos" style=filled]
+subgraph cluster1{
+node [style=filled,color=lightgrey,shape=Mrecord];
+style=filled
+color=white
+node6[label="2"]
+node7[label=""]
+node8[label="a8" color=white]
+node9[label="a9" color=white]
+node10[label="a10" color=white]
+node11[label="a11" color=white]
+}
+subgraph cluster2{
+node [style=filled,color=lightgrey,shape=Mrecord];
+style=filled
+color=white
+node12[label="9"]
+node13[label="a13" color=white]
+node14[label=""]
+node15[label="a15" color=white]
+node16[label="a16" color=white]
+node17[label="a17" color=white]
+}
+subgraph cluster3{
+node [style=filled,color=lightgrey,shape=Mrecord];
+style=filled
+color=white
+node18[label="11"]
+node19[label="a19" color=white]
+node20[label="a20" color=white]
+node21[label=""]
+node22[label="a22" color=white]
+node23[label=""]
+}
+subgraph cluster4{
+node [style=filled,color=lightgrey,shape=Mrecord];
+style=filled
+color=white
+node24[label="12"]
+node25[label=""]
+node26[label="a26" color=white]
+node27[label="a27" color=white]
+node28[label="a28" color=white]
+node29[label="a29" color=white]
+}
+subgraph cluster5{
+node [style=filled,color=lightgrey,shape=Mrecord];
+style=filled
+color=white
+node30[label="14"]
+node31[label="a31" color=white]
+node32[label=""]
+node33[label="a33" color=white]
+node34[label="a34" color=white]
+node35[label="a35" color=white]
+}
+subgraph cluster6{
+node [style=filled,color=lightgrey,shape=Mrecord];
+style=filled
+color=white
+node36[label="16"]
+node37[label=""]
+node38[label="a38" color=white]
+node39[label="a39" color=white]
+node40[label="a40" color=white]
+node41[label="a41" color=white]
+}
+subgraph cluster7{
+node [style=filled,color=lightgrey,shape=Mrecord];
+style=filled
+color=white
+node42[label="20"]
+node43[label=""]
+node44[label="a44" color=white]
+node45[label="a45" color=white]
+node46[label="a46" color=white]
+node47[label="a47" color=white]
+}
+subgraph cluster8{
+node [style=filled,color=lightgrey,shape=Mrecord];
+style=filled
+color=white
+node48[label="21"]
+node49[label="a49" color=white]
+node50[label="a50" color=white]
+node51[label="a51" color=white]
+node52[label=""]
+node53[label="a53" color=white]
+}
+subgraph cluster9{
+node [style=filled,color=lightgrey,shape=Mrecord];
+style=filled
+color=white
+node54[label="22"]
+node55[label=""]
+node56[label="a56" color=white]
+node57[label="a57" color=white]
+node58[label="a58" color=white]
+node59[label="a59" color=white]
+}
+subgraph cluster10{
+node [style=filled,color=lightgrey,shape=Mrecord];
+style=filled
+color=white
+node60[label="28"]
+node61[label=""]
+node62[label="a62" color=white]
+node63[label="a63" color=white]
+node64[label="a64" color=white]
+node65[label="a65" color=white]
+}
+subgraph cluster11{
+node [style=filled,color=lightgrey,shape=Mrecord];
+style=filled
+color=white
+node66[label="29"]
+node67[label="a67" color=white]
+node68[label="a68" color=white]
+node69[label=""]
+node70[label="a70" color=white]
+node71[label="a71" color=white]
+}
+}
+node1 ->node2 ->node3 ->node4 ->node5[arrowhead=none, color=white]; 
+ENERO [shape=Mdiamond,color=white];ENERO -> node0 [arrowhead=none, color=white]
+ENERO -> node6[arrowhead=none, color=white]
+node6 -> node7 ->node8 ->node9 ->node10 ->node11[arrowhead=none, color=white];
+ENERO -> node12[arrowhead=none, color=white]
+node12 -> node13 ->node14 ->node15 ->node16 ->node17[arrowhead=none, color=white];
+ENERO -> node18[arrowhead=none, color=white]
+node18 -> node19 ->node20 ->node21 ->node22 ->node23[arrowhead=none, color=white];
+ENERO -> node24[arrowhead=none, color=white]
+node24 -> node25 ->node26 ->node27 ->node28 ->node29[arrowhead=none, color=white];
+ENERO -> node30[arrowhead=none, color=white]
+node30 -> node31 ->node32 ->node33 ->node34 ->node35[arrowhead=none, color=white];
+ENERO -> node36[arrowhead=none, color=white]
+node36 -> node37 ->node38 ->node39 ->node40 ->node41[arrowhead=none, color=white];
+ENERO -> node42[arrowhead=none, color=white]
+node42 -> node43 ->node44 ->node45 ->node46 ->node47[arrowhead=none, color=white];
+ENERO -> node48[arrowhead=none, color=white]
+node48 -> node49 ->node50 ->node51 ->node52 ->node53[arrowhead=none, color=white];
+ENERO -> node54[arrowhead=none, color=white]
+node54 -> node55 ->node56 ->node57 ->node58 ->node59[arrowhead=none, color=white];
+ENERO -> node60[arrowhead=none, color=white]
+node60 -> node61 ->node62 ->node63 ->node64 ->node65[arrowhead=none, color=white];
+ENERO -> node66[arrowhead=none, color=white]
+node66 -> node67 ->node68 ->node69 ->node70 ->node71[arrowhead=none, color=white];
 
 }

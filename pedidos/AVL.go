@@ -124,28 +124,16 @@ func prob_exist(indice int, root **nodo_m) int { //0 no existe, 1 si existe
 }
 
 func (avl *AVL) Insertar(indice Year, l_prod []Tipos.Producto, depto, mes, dia int) {
-	//fmt.Println("Llego a insertar")
-	/*if prob_exist(indice.Año, &avl.raiz) == 0 || prob_exist(indice.Año, &avl.raiz) == 2 {
-		fmt.Println()
-		fmt.Println("---------")
-		fmt.Println("El año ", indice.Año, " no existe")
-		insert(indice, &avl.raiz)
-	} else {
-		fmt.Println("El año ", indice.Año, " ya existe")
-		agregar_toList(&avl.raiz, l_prod, indice.Año, depto, mes, dia)
-	}*/
 	_insert(indice, &avl.raiz, l_prod, depto, mes, dia)
 }
 
 func _insert(indice Year, root **nodo_m, l_prod []Tipos.Producto, depto, mes, dia int) {
 	if (*root) == nil {
-		//fmt.Println("Insertando como root ", indice.Año)
 		*root = newnodo_m(indice)
 		return
 	}
 	if indice.Año < (*root).indice.Año {
 		_insert(indice, &(*root).izq, l_prod, depto, mes, dia)
-		//fmt.Println("Insertando izq ", indice.Año)
 		if (altura((*root).izq) - altura((*root).der)) == -2 {
 			if indice.Año < (*root).izq.indice.Año {
 				rotacionIzquierda(root)
@@ -155,7 +143,6 @@ func _insert(indice Year, root **nodo_m, l_prod []Tipos.Producto, depto, mes, di
 		}
 	} else if indice.Año > (*root).indice.Año {
 		_insert(indice, &(*root).der, l_prod, depto, mes, dia)
-		//fmt.Println("Insertando der ", indice.Año)
 		if (altura((*root).der) - altura((*root).izq)) == 2 {
 			if indice.Año > (*root).der.indice.Año {
 				rotacionDerecha(root)
@@ -262,7 +249,7 @@ func (avl *AVL) Grap() {
 	graph += "rankdir=TB;"
 	graph += "node [shape = circle, color=greenyellow , style=filled, fillcolor=darkgreen];"
 	graph_inOrden(avl.raiz)
-	fmt.Println("El root es ", avl.raiz.indice.Año)
+	//fmt.Println("El root es ", avl.raiz.indice.Año)
 	graph += nodes + "\n" + pointers
 	graph += "\n}"
 	data := []byte(graph)                            //Almacenar el codigo en el formato adecuado
@@ -284,29 +271,38 @@ func (avl *AVL) Grap() {
 func inOrden(temp *nodo_m) {
 	if temp != nil {
 		inOrden(temp.izq)
-		fmt.Println("Index: ", temp.indice)
-		fmt.Print("Lista: ")
+		//fmt.Println("Index: ", temp.indice)
+		//fmt.Print("Lista: ")
 		temp.indice.List.Imprimir()
 		inOrden(temp.der)
 	}
 }
 func (avl *AVL) Dev(mes string, año int, nombres []string) {
 	b := a(mes, año, avl.raiz)
-	fmt.Println("Va mo a dev", len(b), "-")
+	//fmt.Println("Va mo a dev", len(b), "-")
 	//fmt.Println(len(b[0].Producto))
 	for i := 0; i < len(b); i++ {
 		c := b[i].Producto
-		fmt.Println(b[i].X, "....", b[i].Y)
+		//fmt.Println(b[i].X, "....", b[i].Y)
 		for j := 0; j < len(c); j++ {
-			fmt.Print(c[j].Codigo, "--", c[j].ID, "--", c[j].Departamento)
+			//fmt.Print(c[j].Codigo, "--", c[j].ID, "--", c[j].Departamento)
 		}
-		fmt.Println()
-		fmt.Println("______________________")
+		/*fmt.Println()
+		fmt.Println("______________________")*/
 	}
-	fmt.Println("//////////////////////////")
+	//fmt.Println("//////////////////////////")
 
 	t := strconv.Itoa(año)
 	graph_matriz(mes, t, ordenar_matriz(b, nombres), nombres)
+}
+
+func (avl *AVL) _Dev(mes string, año int, nombres []string) {
+	b := a(mes, año, avl.raiz)
+	//t := strconv.Itoa(año)
+	e := ordenar_matriz(b, nombres)
+	fmt.Println(e.Cabeceras_x)
+	fmt.Println("Cabeceras_y", e.Cabeceras_y)
+	fmt.Println(e.Cabeceras_x)
 }
 
 func a(mes string, año int, t *nodo_m) []Tipos.Matrices {
@@ -420,9 +416,9 @@ func ordenar_matriz(e []Tipos.Matrices, nombres []string) Tipos.Pedidos_mes {
 	}
 
 	for j := 0; j < len(orden.Pedidos_D); j++ {
-		fmt.Print("El dia es", orden.Pedidos_D[j].Dia, "-", len(orden.Pedidos_D[j].Productos))
+		/*fmt.Print("El dia es", orden.Pedidos_D[j].Dia, "-", len(orden.Pedidos_D[j].Productos))
 		fmt.Print(orden.Pedidos_D[j].Conf_exis)
-		fmt.Println("===================")
+		fmt.Println("===================")*/
 	}
 	//fmt.Println(orden.Pedidos_D)
 	return orden

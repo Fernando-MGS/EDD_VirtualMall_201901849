@@ -3,10 +3,25 @@
         <div class="col">
             <div class="card mt-4" style="width: 18rem;">
                 <div class="card-body">
-                  <h5 class="card-title">{{year}}</h5>
+                  
+                   
+                      <h5 class="card-title">{{year}}</h5>
+                   
+                  
+                  
                 </div>
                 <ul class="list-group list-group-flush">
-                  <li *ngFor="let ped of pedido" class="list-group-item">{{ped}}</li>
+                  <li *ngFor="let ped of pedido" class="list-group-item">
+                    <div class="row">
+                    <div class="col">
+                      <a href="/pedido/3" (click)="pedidos(ped)">{{ped}}</a>
+                    </div>
+                    <div class="col">
+                      <a href="/pedido/3" >REPORTE</a>
+                    </div>
+                    </div>
+                  </li>
+                  
                 </ul>
                 <div class="card-body">
                   <div class="row">
@@ -20,5 +35,52 @@
                 </div>
               </div>
         </div>
+        <div class="col mt-4 mr-4">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Fecha</th>
+                <th scope="col">Usuario</th>
+                <th scope="col">Departamento</th>
+                
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+              </tr>
+              <tr>
+                <th scope="row">2</th>
+                <td>Jacob</td>
+                <td>Thornton</td>
+                <td>@fat</td>
+              </tr>
+              <tr>
+                <th scope="row">3</th>
+                <td>Larry</td>
+                <td>the Bird</td>
+                <td>@twitter</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
         
+</div>
+<br>
+<h1>REPORTES</h1>
+<div class="row">
+  
+  <div class="col mt-4">
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item"><a href="/pedido/3">Tiendas</a></li>
+    <li class="list-group-item"><a href="/pedido/3">Pedidos Años</a></li>
+    <li class="list-group-item"><a href="/pedido/3">Almacem</a></li>
+    <li class="list-group-item"><a href="/pedido/3">Usuarios sin cifrar</a></li>
+    <li class="list-group-item"><a href="/pedido/3">Arbol cifrado</a></li>
+    <li class="list-group-item"><a href="/pedido/3">Arbol cifrado sensible</a></li>
+  </ul>
+</div>
 </div>

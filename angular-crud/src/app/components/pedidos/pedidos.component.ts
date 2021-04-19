@@ -17,6 +17,11 @@ export class PedidosComponent implements OnInit {
   test: any
   constructor(private rutaActiva: ActivatedRoute, private storeServices: TiendaService) { }
 
+  pedidos(chain:any){
+    var split = chain.concat('-',this.year)
+    console.log(split)
+  }
+
   ngOnInit(): void {
     
     this.id=this.rutaActiva.snapshot.params.id

@@ -545,7 +545,7 @@ func pedido_json(pedido Tipos.Pedidos) {
 		}
 		cont++
 	}
-	AVL_Pedidos.Dev("ENERO", 2013, depto)
+	//AVL_Pedidos.Dev("ENERO", 2013, depto)
 	//AVL_Pedidos.Print()
 }
 
@@ -581,7 +581,7 @@ func dev_pedidos(w http.ResponseWriter, r *http.Request) {
 		if index_pedido == AVL_Pedidos.Dev_year(conv).Large {
 			index_pedido = index_pedido - 1
 		}
-	} else { //baja otro
+	} else if conv == "2" { //baja otro
 		index_pedido = index_pedido - 1
 		if index_pedido < 0 {
 			index_pedido = index_pedido + 1
@@ -612,7 +612,7 @@ func pedido_carrito(w http.ResponseWriter, r *http.Request) {
 	//fmt.Println("El tamaño del carrito es ", carrito.Cantidad)
 	for sum < carrito.Cantidad {
 		prod := carrito.GetItem(sum)
-		//fmt.Println(prod.ID)
+		fmt.Println(prod)
 		index := strings.Split(prod.ID, "-")
 		ID, err := strconv.Atoi(index[0])
 		inutil(err)
@@ -719,7 +719,7 @@ func test_b() {
 		//c := rand.Intn(10000)
 		a.DPI = strconv.Itoa(cont)
 		a.Dpi_ = cont
-		a.Tipo = 1
+		a.Tipo = 2
 		a.Password = "Hola"
 		b = append(b, a)
 		/*usuarios.Insertar(a, cont)

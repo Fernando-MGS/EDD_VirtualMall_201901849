@@ -2,7 +2,7 @@ package pedidos
 
 import (
 	//"fmt"
-	"fmt"
+
 	"io/ioutil"
 	"log"
 	"os"
@@ -116,7 +116,7 @@ func (m *Lista) _GetItem(index int) []Tipos.Matrices {
 	var c []Tipos.Matrices
 	for ind <= m.tam {
 		if index == aux.Mes {
-			fmt.Println("Encontrado 1")
+
 			b = aux.pedidos.lst_h._buscar()
 			c = aux.pedidos.lst_v._buscar()
 			//aux.pedidos.lst_h._rec_head(aux.pedidos.lst_h.first)
@@ -131,7 +131,6 @@ func (m *Lista) _GetItem(index int) []Tipos.Matrices {
 		for j := 0; j < len(b); j++ {
 			//fmt.Println(c[i].X, "x-y", c[i].Y, "-", b[j].X, "x-b-y", b[j].Y)
 			if c[i].X == b[j].X {
-
 				//conf = 1
 			}
 

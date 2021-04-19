@@ -83,4 +83,7 @@ export class TiendaService {
   Logout():Observable<any>{
     return this.http.get<any>('/Logout')
   }
+  Graph_year():Observable<any>{
+    return this.http.get<any>('/year')
+  }
 }

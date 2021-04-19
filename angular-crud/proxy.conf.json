@@ -83,5 +83,9 @@
         "target": "http://localhost:3000",
         "secure": false,
         "loglevel": "debug"
+    },"/year":{
+        "target": "http://localhost:3000",
+        "secure": false,
+        "loglevel": "debug"
     }
 }

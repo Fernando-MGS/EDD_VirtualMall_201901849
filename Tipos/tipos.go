@@ -98,7 +98,9 @@ type Usuario struct {
 	Nombre   string `json:"Nombre,omitempty"`
 	Correo   string `json:"Correo,omitempty"`
 	Password string `json:"Password,omitempty"`
-	Pass     string
+	Pass     string //cifrado sha 256
+	D_PI     string //cifrado fernet
+	Mail     string //cifrado fernet
 	Cuenta   string `json:"Cuenta,omitempty"`
 	SHA_pass [32]byte
 	Tipo     int //1 admin, 2 user
@@ -111,7 +113,7 @@ type Consulta_prod struct {
 type Consulta struct {
 	Nombre   string `json:"Nombre,omitempty"`
 	Password string `json:"Password,omitempty"`
-	DPI      string `json:"dpi,omitempty"`
+	DPI      string `json:"DPI,omitempty"`
 }
 
 type Matrices struct {
@@ -156,9 +158,20 @@ type Almacen struct {
 	Entrega    string
 }
 
+type Master struct {
+	Key string `json:"Key,omitempty"`
+}
 type Enlace struct {
 	Nombre    string `json:"Nombre,omitempty"`
 	Distancia int    `json:"Distancia,omitempty"`
+}
+
+type POST struct {
+	Tipo string
+	Par1 string
+	Par2 string
+	Par3 int
+	Par4 int
 }
 
 /*type Años struct {

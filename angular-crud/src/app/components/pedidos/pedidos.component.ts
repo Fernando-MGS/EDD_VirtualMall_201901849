@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import {TiendaService} from 'src/app/tienda.service';
 import {Pedidos} from 'src/app/models/pedidos'
+import {POST} from 'src/app/models/post'
 @Component({
   selector: 'app-pedidos',
   templateUrl: './pedidos.component.html',
@@ -15,15 +16,43 @@ export class PedidosComponent implements OnInit {
   pedido: any
   year: any
   test: any
+ 
+  n_cif:POST={Tipo:"0",Par1:"0",Par2:"0",Par3:0,Par4:0}
+  cif:POST={Tipo:"1",Par1:"0",Par2:"0",Par3:0,Par4:0}
+  cif_s:POST={Tipo:"2",Par1:"0",Par2:"0",Par3:0,Par4:0}
   constructor(private rutaActiva: ActivatedRoute, private storeServices: TiendaService) { }
 
   pedidos(chain:any){
     var split = chain.concat('-',this.year)
     console.log(split)
   }
-
-  ngOnInit(): void {
+  graf_alm(){
+    this.storeServices.Graph_Alm().subscribe((res)=>{})
+  }
+  graf_store(){
+    this.storeServices.Graph_store().subscribe((res)=>{})
+  }
+  graf_user(){
+    this.storeServices.Graf_users(this.n_cif).subscribe(data=>console.log(data),err=>console.log(err),()=>console.log("Finish"));
+  }
+  graf_user__(){
+    this.storeServices.Graf_users(this.cif).subscribe(data=>console.log(data),err=>console.log(err),()=>console.log("Finish"));
+  }
+  graf_user_(){
+    this.storeServices.Graf_users(this.cif_s).subscribe(data=>console.log(data),err=>console.log(err),()=>console.log("Finish"));
+  }
+  graf_year(){
+    this.storeServices.Graph_year().subscribe((res)=>{})
+  }
+  graf_mes(file:any){
     
+    var post: POST={Tipo:"0",Par1:"0",Par2:file,Par3:this.year,Par4:0}
+    console.log(post)
+    this.storeServices.Graph_mes(post).subscribe(data=>console.log(data),err=>console.log(err),()=>console.log("Finish"));
+    
+  }
+  ngOnInit(): void {
+    this.storeServices.Graph_Alm().subscribe((res)=>{})
     this.id=this.rutaActiva.snapshot.params.id
     this.storeServices.dev_pedido(this.id).subscribe((res)=>{
       this.pedido=res.Mes

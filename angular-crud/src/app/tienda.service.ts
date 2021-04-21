@@ -86,4 +86,27 @@ export class TiendaService {
   Graph_year():Observable<any>{
     return this.http.get<any>('/year')
   }
+  Graph_store():Observable<any>{
+    return this.http.get<any>('/graf_stores')
+  }
+  Graph_Alm():Observable<any>{
+    console.log('hOLA 15')
+    return this.http.get<any>('/graf_grafo')
+  }
+  Graph_stores():Observable<any>{
+    console.log('hOLA 15')
+    return this.http.get<any>('/graf_stores')
+  }
+  Graph_mes(file:any): Observable<any>{
+    return this.http.post<any>('/graf_mes',file)
+  }
+  Master_Key(file:any): Observable<any>{
+    return this.http.post<any>('/masterKey',file)
+  }
+  Post_grafo(file:any):Observable<any>{
+    return this.http.post<any>('/Loadgrafo',file)
+  }
+  Graf_users(file:any):Observable<any>{
+    return this.http.post<any>('graf_users',file)
+  }
 }

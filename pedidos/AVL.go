@@ -158,13 +158,13 @@ func _insert(indice Year, root **nodo_m, l_prod []Tipos.Producto, depto, mes, di
 }
 func insert(indice Year, root **nodo_m) {
 	if (*root) == nil {
-		fmt.Println("Insertando como root ", indice.Año)
+		//fmt.Println("Insertando como root ", indice.Año)
 		*root = newnodo_m(indice)
 		return
 	}
 	if indice.Año < (*root).indice.Año {
 		insert(indice, &(*root).izq)
-		fmt.Println("Insertando izq ", indice.Año)
+		//fmt.Println("Insertando izq ", indice.Año)
 		if (altura((*root).izq) - altura((*root).der)) == -2 {
 			if indice.Año < (*root).izq.indice.Año {
 				rotacionIzquierda(root)
@@ -174,7 +174,7 @@ func insert(indice Year, root **nodo_m) {
 		}
 	} else if indice.Año > (*root).indice.Año {
 		insert(indice, &(*root).der)
-		fmt.Println("Insertando der ", indice.Año)
+		//fmt.Println("Insertando der ", indice.Año)
 		if (altura((*root).der) - altura((*root).izq)) == 2 {
 			if indice.Año > (*root).der.indice.Año {
 				rotacionDerecha(root)
@@ -184,7 +184,7 @@ func insert(indice Year, root **nodo_m) {
 		}
 	} else {
 
-		fmt.Println("Solo para ver si llego")
+		//	fmt.Println("Solo para ver si llego")
 	}
 
 	(*root).altura = max(altura((*root).izq), altura((*root).der)) + 1
@@ -447,8 +447,8 @@ func dev_ind_dep(name string, nombres []string) int {
 }
 
 func graph_matriz(mes string, año string, month Tipos.Pedidos_mes, nombres []string) {
-	fmt.Println(month.Cabeceras_y)
-	fmt.Println(nombres)
+	//fmt.Println(month.Cabeceras_y)
+	//fmt.Println(nombres)
 	graph = "digraph G{\n"
 	cont_n := 0
 	cluster = 1

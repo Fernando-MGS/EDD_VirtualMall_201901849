@@ -1,7 +1,7 @@
 package pedidos
 
 import (
-	"fmt"
+	//"fmt"
 
 	"github.com/Fernando-MGS/TEST/Tipos"
 	//"github.com/Fernando-MGS/TEST/AV"
@@ -238,8 +238,8 @@ func (l *lista) Print_h() {
 		t := temp
 		//fmt.Print("Cabecera:", temp.x, temp.header, ":   ")
 		for t != nil {
-			fmt.Print(t.x, "-", t.y, "v: ")
-			fmt.Println(t.producto)
+			//fmt.Print(t.x, "-", t.y, "v: ")
+			//	fmt.Println(t.producto)
 			t = t.abajo
 
 		}

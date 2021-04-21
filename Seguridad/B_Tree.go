@@ -217,7 +217,7 @@ func impr(a []*Nodo_B) {
 	}
 }
 
-func (m *B_Tree) Print(num int) {
+func (m *B_Tree) Print() {
 	rompimiento(m.raiz, &m.raiz)
 	rompimiento(m.raiz, &m.raiz)
 	fmt.Println("Vamo a graficar")
@@ -237,13 +237,80 @@ func (m *B_Tree) Print(num int) {
 	//fmt.Println(graph)
 	path, _ := exec.LookPath("dot") //Para que funcione bien solo asegurate de tener todas las herramientas para
 	// Graphviz en tu compu, si no descargalas osea el Graphviz
-	cmd, _ := exec.Command(path, "-Tpng", "graph.dot").Output()                   //En esta parte en lugar de graph va el nombre de tu grafica
-	mode := int(0777)                                                             //Se mantiene igual
-	ioutil.WriteFile("Usuarios"+strconv.Itoa(num)+".png", cmd, os.FileMode(mode)) //Creacion de la imagen
+	cmd, _ := exec.Command(path, "-Tpdf", "graph.dot").Output() //En esta parte en lugar de graph va el nombre de tu grafica
+	mode := int(0777)                                           //Se mantiene igual
+	ioutil.WriteFile("Usuarios.pdf", cmd, os.FileMode(mode))    //Creacion de la imagen
 	pointers = ""
 	nodes = ""
 	graph = ""
 	//imprimir(m.raiz)
+}
+
+func (m *B_Tree) Print_() {
+	rompimiento(m.raiz, &m.raiz)
+	rompimiento(m.raiz, &m.raiz)
+	fmt.Println("Vamo a graficar")
+	graph = "digraph List {\n"
+	graph += "rankdir=TB;"
+	graph += "node [shape = record];"
+	imprimir_(m.raiz)
+	graph += nodes + "\n" + pointers
+	graph += "\n}"
+	data := []byte(graph)                            //Almacenar el codigo en el formato adecuado
+	err := ioutil.WriteFile("graph.dot", data, 0644) //Crear el archivo .dot necesario para la imagen
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	//Creación de la imagen
+	//fmt.Println(graph)
+	path, _ := exec.LookPath("dot") //Para que funcione bien solo asegurate de tener todas las herramientas para
+	// Graphviz en tu compu, si no descargalas osea el Graphviz
+	cmd, _ := exec.Command(path, "-Tpdf", "graph.dot").Output()  //En esta parte en lugar de graph va el nombre de tu grafica
+	mode := int(0777)                                            //Se mantiene igual
+	ioutil.WriteFile("Usuarios_sha.pdf", cmd, os.FileMode(mode)) //Creacion de la imagen
+	pointers = ""
+	nodes = ""
+	graph = ""
+	//imprimir(m.raiz)
+}
+
+func imprimir_(pag *Pagina) {
+	if pag != nil {
+		cont := 0
+		nodes += "Node" + pag.users[cont].User.DPI + "[label="
+		for cont < len(pag.users) {
+			if cont == 0 {
+				if len(pag.users) > 1 {
+					nodes += "\"<f" + strconv.Itoa(cont) + ">" + pag.users[cont].User.Pass + "-" + pag.users[cont].User.DPI + "|"
+				} else {
+					nodes += "\"<f" + strconv.Itoa(cont) + ">" + pag.users[cont].User.Pass + "-" + pag.users[cont].User.DPI + "\"]\n"
+				}
+			}
+			if cont < len(pag.users)-1 && cont != 0 {
+				nodes += "<f" + strconv.Itoa(cont) + ">" + pag.users[cont].User.Pass + "-" + pag.users[cont].User.DPI + "|"
+			} else {
+				if len(pag.users) > 1 && cont != 0 {
+					nodes += "<f" + strconv.Itoa(cont) + ">" + pag.users[cont].User.Pass + "-" + pag.users[cont].User.DPI + "\"]\n"
+				}
+			}
+			if pag.users[cont].izquierda != nil {
+				pointers += "\"Node" + pag.users[0].User.DPI + "\":f" + strconv.Itoa(cont) + "->\"Node" + pag.users[cont].izquierda.users[0].User.DPI + "\":f0;\n"
+			}
+			if cont == len(pag.users)-1 {
+				if pag.users[cont].derecha != nil {
+					pointers += "\"Node" + pag.users[0].User.DPI + "\":f" + strconv.Itoa(cont) + "->\"Node" + pag.users[cont].derecha.users[0].User.DPI + "\":f0;\n"
+				}
+			}
+			cont++
+		}
+		cont = 0
+		for cont < len(pag.users) {
+			imprimir_(pag.users[cont].izquierda)
+			imprimir_(pag.users[cont].derecha)
+			cont++
+		}
+	}
 }
 
 func inutil(a error) {
@@ -273,16 +340,16 @@ func imprimir(pag *Pagina) {
 		for cont < len(pag.users) {
 			if cont == 0 {
 				if len(pag.users) > 1 {
-					nodes += "\"<f" + strconv.Itoa(cont) + ">" + pag.users[cont].User.DPI + "-" + strconv.Itoa(pag.users[cont].altura) + "|"
+					nodes += "\"<f" + strconv.Itoa(cont) + ">" + pag.users[cont].User.DPI + "-" + pag.users[cont].User.Nombre + "|"
 				} else {
-					nodes += "\"<f" + strconv.Itoa(cont) + ">" + pag.users[cont].User.DPI + "-" + strconv.Itoa(pag.users[cont].altura) + "\"]\n"
+					nodes += "\"<f" + strconv.Itoa(cont) + ">" + pag.users[cont].User.DPI + "-" + pag.users[cont].User.Nombre + "\"]\n"
 				}
 			}
 			if cont < len(pag.users)-1 && cont != 0 {
-				nodes += "<f" + strconv.Itoa(cont) + ">" + pag.users[cont].User.DPI + "-" + strconv.Itoa(pag.users[cont].altura) + "|"
+				nodes += "<f" + strconv.Itoa(cont) + ">" + pag.users[cont].User.DPI + "-" + pag.users[cont].User.Nombre + "|"
 			} else {
 				if len(pag.users) > 1 && cont != 0 {
-					nodes += "<f" + strconv.Itoa(cont) + ">" + pag.users[cont].User.DPI + "-" + strconv.Itoa(pag.users[cont].altura) + "\"]\n"
+					nodes += "<f" + strconv.Itoa(cont) + ">" + pag.users[cont].User.DPI + "-" + pag.users[cont].User.Nombre + "\"]\n"
 				}
 			}
 			if pag.users[cont].izquierda != nil {
@@ -330,3 +397,69 @@ func busq_orden() {
 /*func main() {
 	fmt.Println("asa")
 }*/
+func (m *B_Tree) Print__() {
+	rompimiento(m.raiz, &m.raiz)
+	rompimiento(m.raiz, &m.raiz)
+	fmt.Println("Vamo a graficar")
+	graph = "digraph List {\n"
+	graph += "rankdir=TB;"
+	graph += "node [shape = record];"
+	imprimir__(m.raiz)
+	graph += nodes + "\n" + pointers
+	graph += "\n}"
+	data := []byte(graph)                            //Almacenar el codigo en el formato adecuado
+	err := ioutil.WriteFile("graph.dot", data, 0644) //Crear el archivo .dot necesario para la imagen
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	//Creación de la imagen
+	//fmt.Println(graph)
+	path, _ := exec.LookPath("dot") //Para que funcione bien solo asegurate de tener todas las herramientas para
+	// Graphviz en tu compu, si no descargalas osea el Graphviz
+	cmd, _ := exec.Command(path, "-Tpdf", "graph.dot").Output()     //En esta parte en lugar de graph va el nombre de tu grafica
+	mode := int(0777)                                               //Se mantiene igual
+	ioutil.WriteFile("Usuarios_fernet.pdf", cmd, os.FileMode(mode)) //Creacion de la imagen
+	pointers = ""
+	nodes = ""
+	graph = ""
+	//imprimir(m.raiz)
+}
+
+func imprimir__(pag *Pagina) {
+	if pag != nil {
+		cont := 0
+		nodes += "Node" + pag.users[cont].User.DPI + "[label="
+		for cont < len(pag.users) {
+			if cont == 0 {
+				if len(pag.users) > 1 {
+					nodes += "\"<f" + strconv.Itoa(cont) + ">" + pag.users[cont].User.D_PI + "-" + pag.users[cont].User.Mail + "-" + pag.users[cont].User.DPI + "|"
+				} else {
+					nodes += "\"<f" + strconv.Itoa(cont) + ">" + pag.users[cont].User.D_PI + "-" + pag.users[cont].User.Mail + "-" + pag.users[cont].User.DPI + "\"]\n"
+				}
+			}
+			if cont < len(pag.users)-1 && cont != 0 {
+				nodes += "<f" + strconv.Itoa(cont) + ">" + pag.users[cont].User.D_PI + "-" + pag.users[cont].User.Mail + "-" + pag.users[cont].User.DPI + "|"
+			} else {
+				if len(pag.users) > 1 && cont != 0 {
+					nodes += "<f" + strconv.Itoa(cont) + ">" + pag.users[cont].User.D_PI + "-" + pag.users[cont].User.Mail + "-" + pag.users[cont].User.DPI + "\"]\n"
+				}
+			}
+			if pag.users[cont].izquierda != nil {
+				pointers += "\"Node" + pag.users[0].User.DPI + "\":f" + strconv.Itoa(cont) + "->\"Node" + pag.users[cont].izquierda.users[0].User.DPI + "\":f0;\n"
+			}
+			if cont == len(pag.users)-1 {
+				if pag.users[cont].derecha != nil {
+					pointers += "\"Node" + pag.users[0].User.DPI + "\":f" + strconv.Itoa(cont) + "->\"Node" + pag.users[cont].derecha.users[0].User.DPI + "\":f0;\n"
+				}
+			}
+			cont++
+		}
+		cont = 0
+		for cont < len(pag.users) {
+			imprimir__(pag.users[cont].izquierda)
+			imprimir__(pag.users[cont].derecha)
+			cont++
+		}
+	}
+}

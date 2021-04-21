@@ -14,11 +14,16 @@
         <a href="/tiendas"(click)="getInvent(carga.value)">INVENTARIOS</a>
         <a href="/tiendas"(click)="postPedido(carga.value)">PEDIDOS</a>
         <a href="/tiendas"(click)="postUser(carga.value)">USUARIOS</a>
-        <a href="/tiendas"(click)="postUser(carga.value)">ALMACEN</a>
-        <a href="/tiendas"(click)="postUser(carga.value)">MASTER KEY</a>
+        <a href="/tiendas"(click)="PostGrafo(carga.value)">ALMACEN</a>
       </div>
     </div>
   </div>
+  <form [formGroup]="Register">
+    <p style="color: white;">Usuario:</p> <input style="width: 400px;" type="text" 
+    [class.is-invalid]="Register.get('Key').touched && Register.get('Key').invalid"
+    class="form-control" formControlName="Key">
+    <button class="button btn-primary" (click)="Master()"  type="submit">Registrar</button>
+</form>
     </div>
   </div>
   

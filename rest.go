@@ -2,6 +2,7 @@ package main
 
 import (
 	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -21,6 +22,7 @@ import (
 	"github.com/Fernando-MGS/TEST/list"
 	"github.com/Fernando-MGS/TEST/lista"
 	"github.com/Fernando-MGS/TEST/pedidos"
+	"github.com/fernet/fernet-go"
 	"github.com/gorilla/mux"
 )
 
@@ -303,9 +305,9 @@ func graph_(w http.ResponseWriter, r *http.Request) {
 	//fmt.Println(graph)
 	path, _ := exec.LookPath("dot") //Para que funcione bien solo asegurate de tener todas las herramientas para
 	// Graphviz en tu compu, si no descargalas osea el Graphviz
-	cmd, _ := exec.Command(path, "-Tpng", "graph.dot").Output() //En esta parte en lugar de graph va el nombre de tu grafica
+	cmd, _ := exec.Command(path, "-Tpdf", "graph.dot").Output() //En esta parte en lugar de graph va el nombre de tu grafica
 	mode := int(0777)                                           //Se mantiene igual
-	ioutil.WriteFile("Tiendas.png", cmd, os.FileMode(mode))     //Creacion de la imagen
+	ioutil.WriteFile("Tiendas.pdf", cmd, os.FileMode(mode))     //Creacion de la imagen
 }
 
 //Funciones  de inventario
@@ -597,6 +599,34 @@ func dev_pedidos(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
+func graf_mes(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Si llego al graf_mes")
+	headerContentTtype := r.Header.Get("Content-Type")
+	if headerContentTtype != "application/json" {
+		errorResponse(w, "Content Type is not application/json", http.StatusUnsupportedMediaType)
+		return
+	}
+	var e Tipos.POST // par 1 tiene el año y par 2 el mes
+	var unmarshalErr *json.UnmarshalTypeError
+
+	decoder := json.NewDecoder(r.Body)
+	decoder.DisallowUnknownFields()
+	err := decoder.Decode(&e)
+	if err != nil {
+		if errors.As(err, &unmarshalErr) {
+			errorResponse(w, "Bad Request. Wrong Type provided for field "+unmarshalErr.Field, http.StatusBadRequest)
+		} else {
+			errorResponse(w, "Bad Request "+err.Error(), http.StatusBadRequest)
+		}
+		return
+	}
+	errorResponse(w, "Archivo Recibido", http.StatusOK)
+
+	inutil(err)
+	AVL_Pedidos.Dev(e.Par2, e.Par3, depto)
+	return
+}
+
 func pedido_carrito(w http.ResponseWriter, r *http.Request) {
 	sum := 0
 	t := time.Now()
@@ -626,6 +656,7 @@ func pedido_carrito(w http.ResponseWriter, r *http.Request) {
 		var prod_real []Tipos.Producto
 		prod_real = append(prod_real, prod)
 		meses.Insercion(prod_real, index_dep, _mes, dia)
+		fmt.Println(prod_real)
 		var year pedidos.Year
 		year.Año = año
 		year.List = *meses
@@ -669,6 +700,7 @@ func default_admin() {
 	admin_def.Correo = "auxiliar@edd.com"
 	admin_def.Password = "1234"
 	admin_def.Nombre = "EDD2021"
+	admin_def.Tipo = 1
 }
 
 func default_user() {
@@ -704,6 +736,73 @@ func cargar_users(w http.ResponseWriter, r *http.Request) {
 	llenar_users(e)
 	return
 	//json.NewEncoder(w).Encode(user_tipo)
+}
+
+func _cargar_users(w http.ResponseWriter, r *http.Request) {
+	headerContentTtype := r.Header.Get("Content-Type")
+	if headerContentTtype != "application/json" {
+		errorResponse(w, "Content Type is not application/json", http.StatusUnsupportedMediaType)
+		return
+	}
+	var e Tipos.Cuentas
+	var unmarshalErr *json.UnmarshalTypeError
+
+	decoder := json.NewDecoder(r.Body)
+	decoder.DisallowUnknownFields()
+	err := decoder.Decode(&e)
+	if err != nil {
+		if errors.As(err, &unmarshalErr) {
+			errorResponse(w, "Bad Request. Wrong Type provided for field "+unmarshalErr.Field, http.StatusBadRequest)
+		} else {
+			errorResponse(w, "Bad Request "+err.Error(), http.StatusBadRequest)
+		}
+		return
+	}
+	errorResponse(w, "Archivo Recibido", http.StatusOK)
+	//fmt.Println("LLego 1")
+	_llenar_users(e)
+	return
+	//json.NewEncoder(w).Encode(user_tipo)
+}
+
+func _llenar_users(e Tipos.Cuentas) {
+	//fmt.Println("LLego 2")
+	array_users := e.Usuarios
+	sum := 0
+	c := len(array_users) - 1
+	array := ordenar_users(array_users, 0, c)
+	for sum < len(array) {
+		if array_users[sum].Cuenta == "Admin" {
+			array[sum].Tipo = 1
+		} else {
+			array[sum].Tipo = 2
+		}
+		k := fernet.MustDecodeKeys("cw_0x689RpI-jtRR7oE8h_eQsKImvJapLeSbXpwF4e4=")
+		tok, err := fernet.EncryptAndSign([]byte(array[sum].Correo), k[0])
+		if err != nil {
+			panic(err)
+		}
+		b := string(tok)
+		array[sum].DPI = strconv.Itoa(array[sum].Dpi_)
+		array[sum].D_PI = b
+		t, err := fernet.EncryptAndSign([]byte(array[sum].Correo), k[0])
+		if err != nil {
+			panic(err)
+		}
+		d := string(t)
+		array[sum].Mail = d
+		h := sha256.New()
+		h.Write([]byte(array[sum].DPI))
+		z := hex.EncodeToString(h.Sum(nil))
+		array[sum].Pass = z
+		fmt.Println(array[sum].D_PI, "--", a)
+		usuarios.Insertar(array[sum], sum)
+		sum++
+	}
+	usuarios.Print()
+	//fmt.Println(array)
+	//fmt.Println(usuarios.Buscar(array[0]))
+
 }
 
 func logout(w http.ResponseWriter, r *http.Request) {
@@ -749,7 +848,7 @@ func test_b() {
 		t++
 	}
 	usuarios.Insertar(a, 2)
-	usuarios.Print(t)
+	//usuarios.Print(t)
 }
 
 func ordenar_users(slice []Tipos.Usuario, left int, right int) []Tipos.Usuario {
@@ -794,13 +893,61 @@ func llenar_users(e Tipos.Cuentas) {
 			array[sum].Tipo = 2
 		}
 		array[sum].DPI = strconv.Itoa(array[sum].Dpi_)
+		h := sha256.New()
+		h.Write([]byte(array[sum].DPI))
+		z := hex.EncodeToString(h.Sum(nil))
+		array[sum].D_PI = z
+
+		k := fernet.MustDecodeKeys("cw_0x689RpI-jtRR7oE8h_eQsKImvJapLeSbXpwF4e4=")
+		tok, err := fernet.EncryptAndSign([]byte(array[sum].Correo), k[0])
+		if err != nil {
+			panic(err)
+		}
+		b := string(tok)
+		array[sum].D_PI = b
+		t, err := fernet.EncryptAndSign([]byte(array[sum].Correo), k[0])
+		if err != nil {
+			panic(err)
+		}
+		d := string(t)
+		array[sum].Mail = d
+
 		usuarios.Insertar(array[sum], sum)
 		sum++
 	}
-	usuarios.Print(sum)
+	//usuarios.Print()
 	//fmt.Println(array)
 	//fmt.Println(usuarios.Buscar(array[0]))
+}
 
+func graf_users(w http.ResponseWriter, r *http.Request) {
+	headerContentTtype := r.Header.Get("Content-Type")
+	if headerContentTtype != "application/json" {
+		errorResponse(w, "Content Type is not application/json", http.StatusUnsupportedMediaType)
+		return
+	}
+	var e Tipos.POST
+	var unmarshalErr *json.UnmarshalTypeError
+
+	decoder := json.NewDecoder(r.Body)
+	decoder.DisallowUnknownFields()
+	err := decoder.Decode(&e)
+	if err != nil {
+		if errors.As(err, &unmarshalErr) {
+			errorResponse(w, "Bad Request. Wrong Type provided for field "+unmarshalErr.Field, http.StatusBadRequest)
+		} else {
+			errorResponse(w, "Bad Request "+err.Error(), http.StatusBadRequest)
+		}
+		return
+	}
+	errorResponse(w, "Archivo Recibido", http.StatusOK)
+	if e.Tipo == "0" {
+		usuarios.Print()
+	} else if e.Tipo == "1" {
+		usuarios.Print_()
+	} else if e.Tipo == "2" {
+		usuarios.Print__()
+	}
 }
 
 func setupCorsResponse(w *http.ResponseWriter, req *http.Request) {
@@ -831,17 +978,39 @@ func regisUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	errorResponse(w, "Archivo Recibido", http.StatusOK)
-	sum := sha256.Sum256([]byte(e.Password))
-	str2 := string(e.SHA_pass[:])
+
+	//sum := sha256.Sum256([]byte(e.Password))
+	//str2 := string(e.SHA_pass[:])
 	//fmt.Println("-------")
-	fmt.Println(str2, "str2")
+	//fmt.Println(str2, "str2")
 	//str3 := bytes.NewBuffer(e.SHA_pass[]).String()
-	e.SHA_pass = sum
+	h := sha256.New()
+	h.Write([]byte(e.DPI))
+	z := hex.EncodeToString(h.Sum(nil))
 	e.Dpi_, err = strconv.Atoi(e.DPI)
 	e.Tipo = 2
+	e.D_PI = z
+	k := fernet.MustDecodeKeys("cw_0x689RpI-jtRR7oE8h_eQsKImvJapLeSbXpwF4e4=")
+	tok, err := fernet.EncryptAndSign([]byte(e.Correo), k[0])
+	if err != nil {
+		panic(err)
+	}
+	b := string(tok)
+	e.DPI = strconv.Itoa(e.Dpi_)
+	e.D_PI = b
+	t, err := fernet.EncryptAndSign([]byte(e.Correo), k[0])
+	if err != nil {
+		panic(err)
+	}
+	d := string(t)
+	e.Mail = d
 	usuarios.Insertar(e, 1)
-	usuarios.Print(3)
-	//fmt.Println(e)
+	usuarios.Print()
+	fmt.Println(e.Pass)
+	fmt.Println("(())")
+	fmt.Println(e.D_PI)
+	fmt.Println("(())")
+	fmt.Println(e.Mail)
 	//fmt.Printf("%x", e.SHA_pass)
 	user_actual = e
 }
@@ -873,29 +1042,57 @@ func loginUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func dev_user(e Tipos.Consulta) {
-	var buscar_user Tipos.Usuario
-	buscar_user.DPI = e.DPI
-	//i, err := strconv.Atoi(conv)
-	r, err := strconv.Atoi(buscar_user.DPI)
-	inutil(err)
-	buscar_user.Dpi_ = r
-	resultado := usuarios.Buscar(buscar_user)
-	//fmt.Println(resultado.DPI, "-", resultado.Dpi_, "-", resultado.Tipo)
-	if resultado.Tipo != 0 {
-		if e.Password == resultado.Password {
-			user_actual = resultado
+	if e.Nombre == admin_def.Nombre && e.Password == admin_def.Password {
+		user_actual = admin_def
+	} else {
+		var buscar_user Tipos.Usuario
+		buscar_user.DPI = e.DPI
+		//i, err := strconv.Atoi(conv)
+		r, err := strconv.Atoi(buscar_user.DPI)
+		inutil(err)
+		buscar_user.Dpi_ = r
+		resultado := usuarios.Buscar(buscar_user)
+		//fmt.Println(resultado.DPI, "-", resultado.Dpi_, "-", resultado.Tipo)
+		if resultado.Tipo != 0 {
+			if e.Password == resultado.Password {
+				user_actual = resultado
+			} else {
+				default_user()
+			}
 		} else {
 			default_user()
 		}
-	} else {
-		default_user()
 	}
-	//fmt.Println(user_actual.Tipo)
 }
 
 //CODIFICACION FERNET
 func Key(w http.ResponseWriter, r *http.Request) {
-	m_key = ""
+	fmt.Println("Llego al mk")
+	setupCorsResponse(&w, r)
+	headerContentTtype := r.Header.Get("Content-Type")
+	if headerContentTtype != "application/json" {
+		errorResponse(w, "Content Type is not application/json", http.StatusUnsupportedMediaType)
+		return
+	}
+	var e Tipos.Master
+	var unmarshalErr *json.UnmarshalTypeError
+	decoder := json.NewDecoder(r.Body)
+	decoder.DisallowUnknownFields()
+	err := decoder.Decode(&e)
+	if err != nil {
+		if errors.As(err, &unmarshalErr) {
+			errorResponse(w, "Bad Request. Wrong Type provided for field "+unmarshalErr.Field, http.StatusBadRequest)
+		} else {
+			errorResponse(w, "Bad Request "+err.Error(), http.StatusBadRequest)
+		}
+		return
+	}
+	errorResponse(w, "Archivo Recibido", http.StatusOK)
+	//fmt.Println(e)
+	m_key = e.Key
+	fmt.Println(e)
+	fmt.Println(m_key)
+	fmt.Println("___{")
 }
 
 //GRAFOS
@@ -989,11 +1186,41 @@ func crear_grafo(e Tipos.File_grafo) {
 		}
 		c++
 	}
-	//fmt.Println("--------")
-	//storage.Aristas()
+	fmt.Println("se creo el grafo--------")
+	storage.Aristas()
+	/*storage.Graficar()
+	storage.Grafos()
+	storage.Camino_corto("a", "d")*/
+}
+
+func graf_alm(w http.ResponseWriter, r *http.Request) {
 	storage.Graficar()
 	storage.Grafos()
-	storage.Camino_corto("a", "d")
+	return
+}
+func graf_corto(w http.ResponseWriter, r *http.Request) {
+	setupCorsResponse(&w, r)
+	headerContentTtype := r.Header.Get("Content-Type")
+	if headerContentTtype != "application/json" {
+		errorResponse(w, "Content Type is not application/json", http.StatusUnsupportedMediaType)
+		return
+	}
+	var e Tipos.File_grafo
+	var unmarshalErr *json.UnmarshalTypeError
+	decoder := json.NewDecoder(r.Body)
+	decoder.DisallowUnknownFields()
+	err := decoder.Decode(&e)
+	if err != nil {
+		if errors.As(err, &unmarshalErr) {
+			errorResponse(w, "Bad Request. Wrong Type provided for field "+unmarshalErr.Field, http.StatusBadRequest)
+		} else {
+			errorResponse(w, "Bad Request "+err.Error(), http.StatusBadRequest)
+		}
+		return
+	}
+	errorResponse(w, "Archivo Recibido", http.StatusOK)
+	//fmt.Println(e)
+	crear_grafo(e)
 }
 
 //ERRORES DE RESPONSE
@@ -1036,9 +1263,16 @@ func main() {
 	router.HandleFunc("/user", devolver_t_user).Methods("GET")
 	router.HandleFunc("/Logout", logout).Methods("GET")
 	router.HandleFunc("/LoadUsers", cargar_users).Methods("POST")
+	router.HandleFunc("/Load_Users", _cargar_users).Methods("POST")
 	router.HandleFunc("/regisUser", regisUser).Methods("POST")
 	router.HandleFunc("/loginUser", loginUser).Methods("POST")
 	router.HandleFunc("/masterKey", Key).Methods("POST")
 	router.HandleFunc("/Loadgrafo", loadGrafo).Methods("POST")
+	router.HandleFunc("/graf_grafo", graf_alm).Methods("GET")
+	router.HandleFunc("/graf_users", graf_users).Methods("POST")
+	//router.HandleFunc("/graf_Lista", graf_list).Methods("POST")
+	router.HandleFunc("/graf_mes", graf_mes).Methods("POST")
+	router.HandleFunc("/graf_corto", graf_corto).Methods("POST")
+	//router.HandleFunc("/graf_b", graf_b).Methods("POST")
 	log.Fatal(http.ListenAndServe(":3000", router))
 }

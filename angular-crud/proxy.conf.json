@@ -69,6 +69,11 @@
         "secure": false,
         "loglevel": "debug"
     },
+    "/Load_Users":{
+        "target": "http://localhost:3000",
+        "secure": false,
+        "loglevel": "debug"
+    },
     "/regisUser":{
         "target": "http://localhost:3000",
         "secure": false,
@@ -83,7 +88,48 @@
         "target": "http://localhost:3000",
         "secure": false,
         "loglevel": "debug"
-    },"/year":{
+    },
+    "/year":{
+        "target": "http://localhost:3000",
+        "secure": false,
+        "loglevel": "debug"
+    },
+    "/graf_stores":{
+        "target": "http://localhost:3000",
+        "secure": false,
+        "loglevel": "debug"
+    },
+    "/graf_grafo":{
+        "target": "http://localhost:3000",
+        "secure": false,
+        "loglevel": "debug"
+    },
+    "/graf_mes":{
+        "target": "http://localhost:3000",
+        "secure": false,
+        "loglevel": "debug"
+    },
+    "/graf_Lista":{
+        "target": "http://localhost:3000",
+        "secure": false,
+        "loglevel": "debug"
+    },
+    "/masterKey":{
+        "target": "http://localhost:3000",
+        "secure": false,
+        "loglevel": "debug"
+    },
+    "/Loadgrafo":{
+        "target": "http://localhost:3000",
+        "secure": false,
+        "loglevel": "debug"
+    },
+    "/graf_corto":{
+        "target": "http://localhost:3000",
+        "secure": false,
+        "loglevel": "debug"
+    },
+    "/graf_users":{
         "target": "http://localhost:3000",
         "secure": false,
         "loglevel": "debug"

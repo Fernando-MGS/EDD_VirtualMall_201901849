@@ -1,7 +1,12 @@
 <div class="row">
     <div class="col-3">
 <div class="card mt-4 ml-4" style="width: 18rem;">
-    <img class="card-img-top" src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/202723d1-2752-4bf8-99a0-300d385a37a8/d6xp27u-eec43cd5-4a1c-4dbb-b403-0079a3b7facb.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOiIsImlzcyI6InVybjphcHA6Iiwib2JqIjpbW3sicGF0aCI6IlwvZlwvMjAyNzIzZDEtMjc1Mi00YmY4LTk5YTAtMzAwZDM4NWEzN2E4XC9kNnhwMjd1LWVlYzQzY2Q1LTRhMWMtNGRiYi1iNDAzLTAwNzlhM2I3ZmFjYi5wbmcifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6ZmlsZS5kb3dubG9hZCJdfQ.YmzwQvIxDyyDQVM0_wr2oPh0kf8FA4GeCZozFPyYyG0" alt="Card image cap">
+    <div *ngIf="tipo==1">
+        <img class="card-img-top" src="https://cdn.hobbyconsolas.com/sites/navi.axelspringer.es/public/media/image/2021/04/stonks-2286073.jpg" alt="Card image cap">
+    </div>
+    <div *ngIf="tipo==2">
+        <img class="card-img-top" src="https://res.cloudinary.com/teepublic/image/private/s--PJLwJwG9--/t_Resized%20Artwork/c_fit,g_north_west,h_1054,w_1054/co_ffffff,e_outline:53/co_ffffff,e_outline:inner_fill:53/co_bbbbbb,e_outline:3:1000/c_mpad,g_center,h_1260,w_1260/b_rgb:eeeeee/t_watermark_lock/c_limit,f_auto,h_630,q_90,w_630/v1592344539/production/designs/11396407_0.jpg" alt="Card image cap">
+    </div>
     <div class="card-body">
         <div class="row">
             <div class="col">
@@ -37,10 +42,10 @@
           <b><p style="color: rgb(89, 173, 252); ">OPCIONES DE USUARIO</p></b>
         </div>
         <div class="card-body" style="color:rgb(165, 111, 216)">
-          <a href="#" class="btn btn-primary">Eliminar Usuario</a>
+          <a href="#" class="btn btn-light" style="color: blueviolet;">Eliminar Usuario</a>
           <br>
           <br>
-          <a href="/" (click)="log_out()" class="btn btn-primary">Cerrar Sesión</a>
+          <a href="/" (click)="log_out()" class="btn btn-light" style="color: blueviolet;">Cerrar Sesión</a>
         </div>
       </div>
 </div>

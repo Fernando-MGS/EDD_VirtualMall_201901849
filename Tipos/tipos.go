@@ -43,6 +43,7 @@ type Producto struct {
 	Cantidad       int     `json:"Cantidad,omitempty"`
 	Imagen         string  `json:"Imagen,omitempty"`
 	Almacenamiento string  `json:"Almacenamiento,omitempty"`
+	Dueño          string
 	ID             string
 	Cant           []int
 	Departamento   string

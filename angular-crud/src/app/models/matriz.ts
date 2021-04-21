@@ -1,7 +1,7 @@
 
 import {Prod} from 'src/app/models/producto'
-export class Matrices {
-    Producto: Prod[]
-    X:  number
-    Y: number
+export class M_front {
+    Departamento: string
+    Usuario: string
+    Dia:    number
 }

@@ -3,12 +3,7 @@
         <div class="col">
             <div class="card mt-4" style="width: 18rem;">
                 <div class="card-body">
-                  
-                   
                       <h5 class="card-title">{{year}}</h5>
-                   
-                  
-                  
                 </div>
                 <ul class="list-group list-group-flush">
                   <li *ngFor="let ped of pedido" class="list-group-item">
@@ -21,7 +16,6 @@
                     </div>
                     </div>
                   </li>
-                  
                 </ul>
                 <div class="card-body">
                   <div class="row">
@@ -34,42 +28,7 @@
                   </div>
                 </div>
               </div>
-        </div>
-        <div class="col mt-4 mr-4">
-          <table class="table">
-            <thead>
-              <tr>
-                <th scope="col">Fecha</th>
-                <th scope="col">Usuario</th>
-                <th scope="col">Departamento</th>
-                
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-              </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>Larry</td>
-                <td>the Bird</td>
-                <td>@twitter</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        
-</div>
-<br>
+              <br>
 <h1>REPORTES</h1>
 <div class="row">
   
@@ -84,4 +43,25 @@
     <li class="list-group-item"><button type="button" (click)="graf_user_()" class="btn btn-success btn-sm" style="background-color: blueviolet;">Arbol de Cifrado sensible</button></li>
   </ul>
 </div>
+</div>
+        </div>
+        <div class="col mt-4 mr-4">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Dia</th>
+                <th scope="col">Usuario</th>
+                <th scope="col">Departamento</th>          
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let pet of rest">
+                <td>{{pet.Dia}}</td>
+                <td>{{pet.Usuario}}</td>
+                <td>{{pet.Departamento}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        
 </div>

@@ -3,7 +3,7 @@ import { ActivatedRoute, Params } from '@angular/router';
 import {TiendaService} from 'src/app/tienda.service';
 import {Pedidos} from 'src/app/models/pedidos'
 import {Prod} from 'src/app/models/producto'
-import {Matrices} from 'src/app/models/matriz'
+import {M_front} from 'src/app/models/matriz'
 import {POST} from 'src/app/models/post'
 @Component({
   selector: 'app-pedidos',
@@ -23,7 +23,7 @@ export class PedidosComponent implements OnInit {
   year: any
   test: any
   testito:string="1"
-  rest:Matrices[]
+  rest:M_front[]
   n_cif:POST={Tipo:"0",Par1:"0",Par2:"0",Par3:0,Par4:0}
   cif:POST={Tipo:"1",Par1:"0",Par2:"0",Par3:0,Par4:0}
   cif_s:POST={Tipo:"2",Par1:"0",Par2:"0",Par3:0,Par4:0}
@@ -35,14 +35,14 @@ export class PedidosComponent implements OnInit {
     this.url=this.url.concat(file)
     this.storeServices.Dev_mes(this.url).subscribe((res)=>{
       this.rest=res
-      console.log(this.rest)
+      
     })
     var post: POST={Tipo:"0",Par1:"0",Par2:file,Par3:this.year,Par4:0}
     
   }
   pedidos(chain:any){
     var split = chain.concat('-',this.year)
-    console.log(split)
+    
   }
   graf_alm(){
     this.storeServices.Graph_Alm().subscribe((res)=>{})
@@ -78,7 +78,7 @@ export class PedidosComponent implements OnInit {
       this.large=res.Large
       this.year=res.Año
       console.log(res)
-      console.log(this.indice)
+      
     })
   }
 

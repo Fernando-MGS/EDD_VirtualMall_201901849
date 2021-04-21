@@ -530,7 +530,7 @@ func pedido_json(pedido Tipos.Pedidos) {
 		for cont2 < len(elemento) {
 			find = _prob_exist_avl(envio[cont].Departamento, envio[cont].Tienda, envio[cont].Calificacion, elemento[cont2].Codigo)
 			if find.Find == 1 {
-
+				find.Prod.Dueño = "Anonimo"
 				prod_real = append(prod_real, find.Prod)
 				inutil(err)
 				//matriz.Insert(elemento[cont2],dia,index_dep)
@@ -603,7 +603,6 @@ func dev_pedidos(w http.ResponseWriter, r *http.Request) {
 }
 
 func dev_mes(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Si llego")
 	params := mux.Vars(r)
 	conv := params["id"]
 	num_mes := strings.Split(conv, "-")
@@ -617,7 +616,7 @@ func dev_mes(w http.ResponseWriter, r *http.Request) {
 }
 
 func graf_mes(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Si llego al graf_mes")
+	//fmt.Println("Si llego al graf_mes")
 	headerContentTtype := r.Header.Get("Content-Type")
 	if headerContentTtype != "application/json" {
 		errorResponse(w, "Content Type is not application/json", http.StatusUnsupportedMediaType)
@@ -660,7 +659,7 @@ func pedido_carrito(w http.ResponseWriter, r *http.Request) {
 	//fmt.Println("El tamaño del carrito es ", carrito.Cantidad)
 	for sum < carrito.Cantidad {
 		prod := carrito.GetItem(sum)
-		fmt.Println(prod)
+		//fmt.Println(prod)
 		index := strings.Split(prod.ID, "-")
 		ID, err := strconv.Atoi(index[0])
 		inutil(err)
@@ -671,10 +670,11 @@ func pedido_carrito(w http.ResponseWriter, r *http.Request) {
 		/*tmp := rowmajor[ID].Get(index[1]).Inventario
 		tmp.Print()
 		fmt.Println("El arbol")*/
+		prod.Dueño = user_actual.Nombre
 		var prod_real []Tipos.Producto
 		prod_real = append(prod_real, prod)
 		meses.Insercion(prod_real, index_dep, _mes, dia)
-		fmt.Println(prod_real)
+		//fmt.Println(prod_real)
 		var year pedidos.Year
 		year.Año = año
 		year.List = *meses
@@ -1003,11 +1003,11 @@ func regisUser(w http.ResponseWriter, r *http.Request) {
 	//fmt.Println(str2, "str2")
 	//str3 := bytes.NewBuffer(e.SHA_pass[]).String()
 	h := sha256.New()
-	h.Write([]byte(e.DPI))
+	h.Write([]byte(e.Password))
 	z := hex.EncodeToString(h.Sum(nil))
 	e.Dpi_, err = strconv.Atoi(e.DPI)
 	e.Tipo = 2
-	e.D_PI = z
+
 	k := fernet.MustDecodeKeys("cw_0x689RpI-jtRR7oE8h_eQsKImvJapLeSbXpwF4e4=")
 	tok, err := fernet.EncryptAndSign([]byte(e.Correo), k[0])
 	if err != nil {
@@ -1022,6 +1022,7 @@ func regisUser(w http.ResponseWriter, r *http.Request) {
 	}
 	d := string(t)
 	e.Mail = d
+	e.Pass = z
 	usuarios.Insertar(e, 1)
 	usuarios.Print()
 	fmt.Println(e.Pass)
@@ -1085,7 +1086,7 @@ func dev_user(e Tipos.Consulta) {
 
 //CODIFICACION FERNET
 func Key(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Llego al mk")
+	//fmt.Println("Llego al mk")
 	setupCorsResponse(&w, r)
 	headerContentTtype := r.Header.Get("Content-Type")
 	if headerContentTtype != "application/json" {
@@ -1108,9 +1109,9 @@ func Key(w http.ResponseWriter, r *http.Request) {
 	errorResponse(w, "Archivo Recibido", http.StatusOK)
 	//fmt.Println(e)
 	m_key = e.Key
-	fmt.Println(e)
+	//fmt.Println(e)
 	fmt.Println(m_key)
-	fmt.Println("___{")
+	//fmt.Println("___{")
 }
 
 //GRAFOS

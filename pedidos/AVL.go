@@ -1,7 +1,7 @@
 package pedidos
 
 import (
-	"fmt"
+	//"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -310,26 +310,25 @@ func (avl *AVL) Dev(mes string, año int, nombres []string) {
 	graph_matriz(mes, t, ordenar_matriz(b, nombres), nombres)
 }
 
-func (avl *AVL) Devo(mes string, año int, nombres []string) []Tipos.Matrices {
+func (avl *AVL) Devo(mes string, año int, nombres []string) []Tipos.M_front {
 	temp := dev_año(año, avl.raiz)
 	b := a(mes, año, temp)
 	//t := strconv.Itoa(año)
 	//e := ordenar_matriz(b, nombres)
-	//var a []Tipos.M_front
-	fmt.Println("Prueba")
+	var a []Tipos.M_front
+	//fmt.Println("Prueba")
 
 	for i := 0; i < len(b); i++ {
-		fmt.Println("=================")
-		d := b[i].Producto
-		for j := 0; j < len(d); j++ {
-			fmt.Println(d[j].Departamento)
-		}
-
+		var y Tipos.M_front
+		y.Departamento = b[i].Producto[0].Departamento
+		y.Dia = b[i].Y
+		y.Usuario = b[i].Producto[0].Dueño
+		a = append(a, y)
 	}
 	/*fmt.Println(e.Cabeceras_x)
 	fmt.Println("Cabeceras_y", e.Cabeceras_y)
 	fmt.Println(e.Cabeceras_x)*/
-	return b
+	return a
 }
 
 func a(mes string, año int, t *nodo_m) []Tipos.Matrices {
@@ -558,7 +557,7 @@ func graph_matriz(mes string, año string, month Tipos.Pedidos_mes, nombres []st
 
 func (avl *AVL) Dev_(mes string, año int, nombres []string) {
 	b := a(mes, año, avl.raiz)
-	fmt.Println("Va mo a dev", len(b), "-")
+	//fmt.Println("Va mo a dev", len(b), "-")
 	//fmt.Println(len(b[0].Producto))
 	for i := 0; i < len(b); i++ {
 		c := b[i].Producto

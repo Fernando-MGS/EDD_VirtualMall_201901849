@@ -277,32 +277,59 @@ func inOrden(temp *nodo_m) {
 		inOrden(temp.der)
 	}
 }
+func dev_año(año int, t *nodo_m) *nodo_m {
+	if t != nil {
+		if año < t.indice.Año {
+			return dev_año(año, t.izq)
+		} else if año > t.indice.Año {
+			return dev_año(año, t.der)
+		} else if año == t.indice.Año {
+			return t
+		}
+	}
+	return nil
+}
+
 func (avl *AVL) Dev(mes string, año int, nombres []string) {
-	b := a(mes, año, avl.raiz)
+	temp := dev_año(año, avl.raiz)
+	b := a(mes, año, temp)
 	//fmt.Println("Va mo a dev", len(b), "-")
 	//fmt.Println(len(b[0].Producto))
-	for i := 0; i < len(b); i++ {
+	/*for i := 0; i < len(b); i++ {
 		c := b[i].Producto
 		//fmt.Println(b[i].X, "....", b[i].Y)
 		for j := 0; j < len(c); j++ {
 			//fmt.Print(c[j].Codigo, "--", c[j].ID, "--", c[j].Departamento)
 		}
-		/*fmt.Println()
-		fmt.Println("______________________")*/
-	}
+		fmt.Println()
+		fmt.Println("______________________")
+	}*/
 	//fmt.Println("//////////////////////////")
 
 	t := strconv.Itoa(año)
 	graph_matriz(mes, t, ordenar_matriz(b, nombres), nombres)
 }
 
-func (avl *AVL) _Dev(mes string, año int, nombres []string) {
-	b := a(mes, año, avl.raiz)
+func (avl *AVL) Devo(mes string, año int, nombres []string) []Tipos.Matrices {
+	temp := dev_año(año, avl.raiz)
+	b := a(mes, año, temp)
 	//t := strconv.Itoa(año)
-	e := ordenar_matriz(b, nombres)
-	fmt.Println(e.Cabeceras_x)
+	//e := ordenar_matriz(b, nombres)
+	//var a []Tipos.M_front
+	fmt.Println("Prueba")
+
+	for i := 0; i < len(b); i++ {
+		fmt.Println("=================")
+		d := b[i].Producto
+		for j := 0; j < len(d); j++ {
+			fmt.Println(d[j].Departamento)
+		}
+
+	}
+	/*fmt.Println(e.Cabeceras_x)
 	fmt.Println("Cabeceras_y", e.Cabeceras_y)
-	fmt.Println(e.Cabeceras_x)
+	fmt.Println(e.Cabeceras_x)*/
+	return b
 }
 
 func a(mes string, año int, t *nodo_m) []Tipos.Matrices {
@@ -527,4 +554,44 @@ func graph_matriz(mes string, año string, month Tipos.Pedidos_mes, nombres []st
 	pointers = ""
 	nodes = ""
 	graph = ""
+}
+
+func (avl *AVL) Dev_(mes string, año int, nombres []string) {
+	b := a(mes, año, avl.raiz)
+	fmt.Println("Va mo a dev", len(b), "-")
+	//fmt.Println(len(b[0].Producto))
+	for i := 0; i < len(b); i++ {
+		c := b[i].Producto
+		//fmt.Println(b[i].X, "....", b[i].Y)
+		for j := 0; j < len(c); j++ {
+			//fmt.Print(c[j].Codigo, "--", c[j].ID, "--", c[j].Departamento)
+		}
+		/*fmt.Println()
+		fmt.Println("______________________")*/
+	}
+	//fmt.Println("//////////////////////////")
+
+	//t := strconv.Itoa(año)
+	/*c := ordenar_matriz(b, nombres)
+	fmt.Println(c.Cabeceras_x)
+	fmt.Println("============")
+	fmt.Println(c.Cabeceras_y)*/
+
+	/*for i := 0; i < len(c.Matrix); i++ {
+		fmt.Println("============")
+		fmt.Println(c.Matrix[i].X, "-", c.Matrix[i].Y)
+		for j := 0; j < len(c.Matrix[i].Producto); j++ {
+			fmt.Println(c.Matrix[i].Producto[j].Nombre, "-")
+		}
+	}
+	for i := 0; i < len(c.Pedidos_D); i++ {
+		fmt.Println("================")
+		fmt.Println(c.Pedidos_D[i].Dia, "-", c.Pedidos_D[i].Conf_exis)
+		for j := 0; j < len(c.Pedidos_D[i].Productos); j++ {
+			fmt.Print(c.Pedidos_D[i].Productos[j].Nombre, "-")
+		}
+	}*/
+
+	//	fmt.Println("============")
+
 }

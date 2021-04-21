@@ -1,8 +1,6 @@
 package pedidos
 
 import (
-	//"fmt"
-
 	"github.com/Fernando-MGS/TEST/Tipos"
 	//"github.com/Fernando-MGS/TEST/AV"
 )
@@ -257,22 +255,20 @@ func (m *matriz) Insert(producto Tipos.Producto, x int, y int) {
 	//fmt.Println("h es ", h.x, "--", h.y, "--", h.producto[0].Nombre)
 	//fmt.Println("bUSCANDO V")
 	v := m.lst_v.search(y)
-	find := m.lst_v.buscar(x, y, producto)
-	//fmt.Println("El find es ", find)
-	if find == 0 {
-		//fmt.Println("Entro al find 0")
-		if h == nil && v == nil {
-			//fmt.Println("h y  v nill")
-			m.noExisten(producto, x, y)
-		} else if h == nil && v != nil {
-			//	fmt.Println("h nil, v no")
-			m.existeVertical(producto, x, y)
-		} else if h != nil && v == nil {
-			//	fmt.Println("h, v nill")
-			m.existeHorizontal(producto, x, y)
-		} else {
-			m.existen(producto, x, y)
-		}
+	/*find := m.lst_v.buscar(x, y, producto)
+	find_1 := m.lst_h.buscar(x, y, producto)*/
+	//fmt.Println("Entro al find 0")
+	if h == nil && v == nil {
+		//fmt.Println("h y  v nill")
+		m.noExisten(producto, x, y)
+	} else if h == nil && v != nil {
+		//	fmt.Println("h nil, v no")
+		m.existeVertical(producto, x, y)
+	} else if h != nil && v == nil {
+		//	fmt.Println("h, v nill")
+		m.existeHorizontal(producto, x, y)
+	} else {
+		m.existen(producto, x, y)
 	}
 	//fmt.Println("Fin del buscar del insert")
 }

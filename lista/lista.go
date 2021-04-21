@@ -1,7 +1,7 @@
 package lista
 
 import (
-	"fmt"
+	//	"fmt"
 
 	"github.com/Fernando-MGS/TEST/Tipos"
 )
@@ -77,7 +77,7 @@ func (l *List) Putoff_car(prod Tipos.Producto, cantidad int) {
 		if tmp.data.Codigo == prod.Codigo {
 			tmp.data.Cantidad = tmp.data.Cantidad - cantidad
 			if tmp.data.Cantidad == 0 {
-				fmt.Println("Ya no hay :v")
+				//				fmt.Println("Ya no hay :v")
 				l.Cantidad = l.Cantidad - 1
 				l.delete(tmp.data.Codigo)
 				l.tamaño = l.tamaño - cantidad
@@ -156,7 +156,7 @@ func (l *List) GetItem(index int) Tipos.Producto {
 func (l *List) Show() {
 	tmp := l.head
 	for tmp != nil {
-		fmt.Print(tmp.data, " ")
+		//fmt.Print(tmp.data, " ")
 		tmp = tmp.next
 	}
 }

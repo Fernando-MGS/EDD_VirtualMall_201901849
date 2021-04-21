@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import {TiendaService} from 'src/app/tienda.service';
 import {Pedidos} from 'src/app/models/pedidos'
+import {Prod} from 'src/app/models/producto'
+import {Matrices} from 'src/app/models/matriz'
 import {POST} from 'src/app/models/post'
 @Component({
   selector: 'app-pedidos',
@@ -11,17 +13,33 @@ import {POST} from 'src/app/models/post'
 })
 export class PedidosComponent implements OnInit {
   id: string
+  arr:Prod[]
   indice: any
   large: any
+  url:string
+  y1:string
+  mes:string
   pedido: any
   year: any
   test: any
- 
+  testito:string="1"
+  rest:Matrices[]
   n_cif:POST={Tipo:"0",Par1:"0",Par2:"0",Par3:0,Par4:0}
   cif:POST={Tipo:"1",Par1:"0",Par2:"0",Par3:0,Par4:0}
   cif_s:POST={Tipo:"2",Par1:"0",Par2:"0",Par3:0,Par4:0}
   constructor(private rutaActiva: ActivatedRoute, private storeServices: TiendaService) { }
 
+  tesl(file){
+    var x=this.year.toString()
+    this.url=x.concat("-")
+    this.url=this.url.concat(file)
+    this.storeServices.Dev_mes(this.url).subscribe((res)=>{
+      this.rest=res
+      console.log(this.rest)
+    })
+    var post: POST={Tipo:"0",Par1:"0",Par2:file,Par3:this.year,Par4:0}
+    
+  }
   pedidos(chain:any){
     var split = chain.concat('-',this.year)
     console.log(split)
@@ -52,7 +70,7 @@ export class PedidosComponent implements OnInit {
     
   }
   ngOnInit(): void {
-    this.storeServices.Graph_Alm().subscribe((res)=>{})
+    
     this.id=this.rutaActiva.snapshot.params.id
     this.storeServices.dev_pedido(this.id).subscribe((res)=>{
       this.pedido=res.Mes

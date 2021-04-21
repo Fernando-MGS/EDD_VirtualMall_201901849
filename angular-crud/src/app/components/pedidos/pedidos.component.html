@@ -14,7 +14,7 @@
                   <li *ngFor="let ped of pedido" class="list-group-item">
                     <div class="row">
                     <div class="col">
-                      <a href="/pedido/3" (click)="pedidos(ped)" style="color: blueviolet;">{{ped}}</a>
+                      <button type="button" (click)="tesl(ped)" class="btn btn-danger btn-sm">{{ped}}</button>
                     </div>
                     <div class="col">
                       <button type="button" class="btn btn-warning btn-sm" style="color: white; background-color: rgb(36, 36, 36);"(click)="graf_mes(ped)">Reporte</button>
@@ -78,7 +78,7 @@
     <li class="list-group-item"><button type="button" (click)="graf_store()" class="btn btn-success btn-sm" style="background-color: blueviolet;">Tiendas</button></li>
     <li class="list-group-item"><button type="button" (click)="graf_year()" class="btn btn-success btn-sm" style="background-color: blueviolet;">Arbol de Pedidos</button></li>
     <li class="list-group-item"><button type="button" (click)="graf_alm()" class="btn btn-success btn-sm" style="background-color: blueviolet;">Almacen</button></li>
-    <li class="list-group-item"><button type="button" (click)="graf_alm()" class="btn btn-success btn-sm" style="background-color: blueviolet;">Usuarios</button></li>
+    
     <li class="list-group-item"><button type="button" (click)="graf_user()" class="btn btn-success btn-sm" style="background-color: blueviolet;">Arbol sin Cifrar</button></li>
     <li class="list-group-item"><button type="button" (click)="graf_user__()" class="btn btn-success btn-sm" style="background-color: blueviolet;">Arbol Cifrado</button></li>
     <li class="list-group-item"><button type="button" (click)="graf_user_()" class="btn btn-success btn-sm" style="background-color: blueviolet;">Arbol de Cifrado sensible</button></li>

@@ -530,6 +530,7 @@ func pedido_json(pedido Tipos.Pedidos) {
 		for cont2 < len(elemento) {
 			find = _prob_exist_avl(envio[cont].Departamento, envio[cont].Tienda, envio[cont].Calificacion, elemento[cont2].Codigo)
 			if find.Find == 1 {
+
 				prod_real = append(prod_real, find.Prod)
 				inutil(err)
 				//matriz.Insert(elemento[cont2],dia,index_dep)
@@ -537,6 +538,7 @@ func pedido_json(pedido Tipos.Pedidos) {
 			cont2++
 		}
 		if len(prod_real) > 0 {
+			//fmt.Println(len(prod_real), dia, "-", mes, "-", año)
 			//fmt.Println("El len prod", len(prod_real), index_dep, mes, dia)
 			meses.Insercion(prod_real, index_dep, mes, dia)
 			var year pedidos.Year
@@ -589,12 +591,27 @@ func dev_pedidos(w http.ResponseWriter, r *http.Request) {
 			index_pedido = index_pedido + 1
 		}
 	}
+
 	y.Indice = index_pedido
 	y.Large = AVL_Pedidos.Dev_year(conv).Large
 	resp.Mes = y.Datos[index_pedido].Mes
 	resp.Indice = index_pedido
 	resp.Año = y.Datos[index_pedido].Año
 	resp.Large = y.Large
+	json.NewEncoder(w).Encode(resp)
+	return
+}
+
+func dev_mes(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Si llego")
+	params := mux.Vars(r)
+	conv := params["id"]
+	num_mes := strings.Split(conv, "-")
+	año, err := strconv.Atoi(num_mes[0])
+	inutil(err)
+	mes := num_mes[1]
+	resp := AVL_Pedidos.Devo(mes, año, depto)
+	//fmt.Println(resp)
 	json.NewEncoder(w).Encode(resp)
 	return
 }
@@ -624,6 +641,7 @@ func graf_mes(w http.ResponseWriter, r *http.Request) {
 
 	inutil(err)
 	AVL_Pedidos.Dev(e.Par2, e.Par3, depto)
+	AVL_Pedidos.Dev_(e.Par2, e.Par3, depto)
 	return
 }
 
@@ -1239,7 +1257,7 @@ func inutil(a error) {
 
 func main() {
 	router := mux.NewRouter()
-	test_b()
+	//test_b()
 	default_user()
 	//endpoint-rutas
 	default_admin()
@@ -1259,6 +1277,7 @@ func main() {
 	router.HandleFunc("/year", graph_año).Methods("GET")
 	router.HandleFunc("/month/{id}", graph_month).Methods("GET")
 	router.HandleFunc("/pedidos/{id}", dev_pedidos).Methods("GET")
+	router.HandleFunc("/pedidos_mes/{id}", dev_mes).Methods("GET")
 	router.HandleFunc("/CartSize", CartSize).Methods("GET")
 	router.HandleFunc("/user", devolver_t_user).Methods("GET")
 	router.HandleFunc("/Logout", logout).Methods("GET")

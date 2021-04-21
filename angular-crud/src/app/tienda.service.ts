@@ -107,6 +107,9 @@ export class TiendaService {
     return this.http.post<any>('/Loadgrafo',file)
   }
   Graf_users(file:any):Observable<any>{
-    return this.http.post<any>('graf_users',file)
+    return this.http.post<any>('/graf_users',file)
+  }
+  Dev_mes(file:any):Observable<any>{
+    return this.http.get<any>('/pedidos_mes/'+file)
   }
 }

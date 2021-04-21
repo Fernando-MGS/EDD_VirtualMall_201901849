@@ -121,12 +121,23 @@ type Matrices struct {
 	X        int
 	Y        int
 }
+type M_front struct {
+	Departamento string
+	Usuario      string
+	Dia          int
+}
 
 type Pedidos_mes struct {
 	Matrix      []Matrices
 	Cabeceras_x []int
 	Cabeceras_y []int
 	Pedidos_D   []Cabecera_y
+}
+
+type Pedido_esp struct {
+	Matrix      []Matrices
+	Cabeceras_x []int
+	Cabeceras_y []int
 }
 
 type Cabecera_y struct {

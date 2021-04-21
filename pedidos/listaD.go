@@ -50,7 +50,7 @@ func (m *Lista) buscar(mes, dia, depto int, l_prod []Tipos.Producto) int {
 		if aux.Mes == mes {
 			find = 1
 			cont := 0
-			//fmt.Print(", ha sido encontrado")
+			//fmt.Print(", ha sido encontrado", aux.Mes)
 			for cont < len(l_prod) {
 				aux.pedidos.Insert(l_prod[cont], dia, depto)
 				cont++

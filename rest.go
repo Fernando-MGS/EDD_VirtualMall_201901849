@@ -366,7 +366,7 @@ func getProduct(w http.ResponseWriter, r *http.Request) {
 	var j Tipos.Products
 	j.Array = str.Inventario.Get_Inventario(conv)
 	json.NewEncoder(w).Encode(j)
-	fmt.Println(0, err)
+	inutil(err)
 }
 
 //Funciones del CARRITO
@@ -655,7 +655,7 @@ func pedido_carrito(w http.ResponseWriter, r *http.Request) {
 	inutil(err)
 	//fmt.Println(err)
 	meses := pedidos.NewLista()
-
+	carro := carrito.GetProducts()
 	//fmt.Println("El tamaño del carrito es ", carrito.Cantidad)
 	for sum < carrito.Cantidad {
 		prod := carrito.GetItem(sum)
@@ -685,6 +685,7 @@ func pedido_carrito(w http.ResponseWriter, r *http.Request) {
 	}
 	var new lista.List
 	carrito = new
+	Camino_corto(carro)
 	//fmt.Println("Vacío el carrito")
 }
 
@@ -1144,6 +1145,7 @@ func crear_grafo(e Tipos.File_grafo) {
 	//long := len(e.Nodos)
 	//var lista_grafo []*Tipos.Nodo_G
 	storage.Pos_Robot = e.Pos_init
+	storage.Entrega = e.Entrega
 	cont := 0
 	for cont < len(e.Nodos) {
 		var a Tipos.Nodo_G
@@ -1206,10 +1208,10 @@ func crear_grafo(e Tipos.File_grafo) {
 		c++
 	}
 	fmt.Println("se creo el grafo--------")
-	storage.Aristas()
-	/*storage.Graficar()
+	//storage.Aristas()
+	storage.Graficar()
 	storage.Grafos()
-	storage.Camino_corto("a", "d")*/
+	//storage.Camino_corto("a", "d")
 }
 
 func graf_alm(w http.ResponseWriter, r *http.Request) {
@@ -1217,6 +1219,17 @@ func graf_alm(w http.ResponseWriter, r *http.Request) {
 	storage.Grafos()
 	return
 }
+
+func Camino_corto(prod []Tipos.Producto) {
+	var destinos []string
+	destinos = append(destinos, storage.Pos_Robot)
+	for i := 0; i < len(prod); i++ {
+		destinos = append(destinos, prod[i].Almacenamiento)
+	}
+	destinos = append(destinos, storage.Entrega)
+	storage.Despacho(destinos)
+}
+
 func graf_corto(w http.ResponseWriter, r *http.Request) {
 	setupCorsResponse(&w, r)
 	headerContentTtype := r.Header.Get("Content-Type")

@@ -9,7 +9,8 @@
                     "Descripcion": "El smartphone del futuro",
                     "Precio": 2500.00,
                     "Cantidad": 25,
-                    "Imagen":"https://i.blogs.es/7a4489/galaxy-s8-4/450_1000.jpg"
+                    "Imagen":"https://i.blogs.es/7a4489/galaxy-s8-4/450_1000.jpg",
+                    "Almacenamiento":"g"
                 },
                 {
                     "Nombre": "s9",
@@ -17,7 +18,8 @@
                     "Descripcion": "El smartphone del futuro mejorado",
                     "Precio": 5500.00,
                     "Cantidad": 10,
-                    "Imagen":"https://static.kemikcdn.com/2019/01/griss.jpg"
+                    "Imagen":"https://static.kemikcdn.com/2019/01/griss.jpg",
+                    "Almacenamiento":"g"
                 }
             ]
         },
@@ -31,7 +33,8 @@
                     "Descripcion": "Sobresale en todas Sus areas",
                     "Precio": 5500.00,
                     "Cantidad": 15,
-                    "Imagen":"https://cdn.computerhoy.com/sites/navi.axelspringer.es/public/styles/1200/public/media/image/2020/01/estos-seran-colores-camaras-huawei-p40-p40-pro-1846245.jpg?itok=SE-h-ICj"
+                    "Imagen":"https://cdn.computerhoy.com/sites/navi.axelspringer.es/public/styles/1200/public/media/image/2020/01/estos-seran-colores-camaras-huawei-p40-p40-pro-1846245.jpg?itok=SE-h-ICj",
+                    "Almacenamiento":"c"
                 },
                 {
                     "Nombre": "Mate 40 Pro",
@@ -39,7 +42,8 @@
                     "Descripcion": "Son ahora mas eficientes energicamente",
                     "Precio": 7500.00,
                     "Cantidad": 10,
-                    "Imagen":"https://files.gsmchoice.com/phones/lenovo-p90-pro/lenovo-p90-pro-17.jpg"
+                    "Imagen":"https://files.gsmchoice.com/phones/lenovo-p90-pro/lenovo-p90-pro-17.jpg",
+                    "Almacenamiento":"e"
                 }
             ]
         },
@@ -53,7 +57,8 @@
                     "Descripcion": "Teclado OptoMecanico con switches purple",
                     "Precio": 810.00,
                     "Cantidad": 15,
-                    "Imagen":"https://techaeris.com/wp-content/uploads/2020/07/Razer-Huntsman-Mini-review.jpg"
+                    "Imagen":"https://techaeris.com/wp-content/uploads/2020/07/Razer-Huntsman-Mini-review.jpg",
+                    "Almacenamiento":"b"
                 },
                 {
                     "Nombre": "Logitech G G915TKL",
@@ -61,7 +66,8 @@
                     "Descripcion": "Juega en la siguiente dimension con los nuevos skitches reducidos para una mejor comodidad",
                     "Precio": 1844.00,
                     "Cantidad": 10,
-                    "Imagen":"https://static.kemikcdn.com/2020/02/G502X1.jpg"
+                    "Imagen":"https://static.kemikcdn.com/2020/02/G502X1.jpg",
+                    "Almacenamiento":"d"
                 }
             ]
         },
@@ -75,7 +81,8 @@
                     "Descripcion": "Comodos y ergonomicos para una mejor estabilidad de los deportistas",
                     "Precio": 1500.00,
                     "Cantidad": 35,
-                    "Imagen":"https://tecvolucion.com/wp-content/uploads/2019/01/Sp19_BB_Nike_Adapt_20181218_NIKE0538_Detail5_rectangle_1600.jpg"
+                    "Imagen":"https://tecvolucion.com/wp-content/uploads/2019/01/Sp19_BB_Nike_Adapt_20181218_NIKE0538_Detail5_rectangle_1600.jpg",
+                    "Almacenamiento":"a"
                 },
                 {
                     "Nombre": "Air Jordan",
@@ -84,6 +91,7 @@
                     "Precio": 1300.00,
                     "Cantidad": 50,
                     "Imagen":"https://images.mediotiempo.com/TAGSYH6AgmeIR2gKHucF5vK8lDs=/0x530/uploads/media/2020/05/05/air-jordan-vi-fabricados-mj.jpg"
+                    
                 }
             ]
         },

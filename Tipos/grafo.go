@@ -26,6 +26,9 @@ var search1 Recorridos
 var search2 Recorridos
 var search3 Recorridos
 var search4 Recorridos
+var local []string
+var final Recorridos
+var dest string
 
 type search struct {
 	name1 string
@@ -66,7 +69,100 @@ func (m *Almacen) Prob_exist(index int, nombre string) int { //0 no, 1 si existe
 	return conf
 }
 
-func (m *Almacen) Camino_corto(origen, destino string) {
+func (m *Almacen) Despacho(destinos []string) {
+	inicio := destinos[0]
+	destino := destinos[len(destinos)-1]
+	//fmt.Println(destinos)
+	//ind := 0
+	dest = destino
+	local = append(local, inicio)
+	for i := 0; i < len(destinos); i++ {
+		conf := 0
+		for j := 0; j < len(local); j++ {
+			//fmt.Println(local[j], "--", destinos[i])
+			if local[j] == destinos[i] || destinos[i] == inicio || destinos[i] == destino {
+				conf = 1
+				//			ind = i
+			}
+		}
+		if conf == 0 {
+			local = append(local, destinos[i])
+		}
+	}
+	local = append(local, destino)
+	fmt.Println("/////////////////////")
+	fmt.Println(local)
+	b := local[0]
+	for 0 != len(local) {
+		fmt.Println(b, "vs", local[0])
+		t := m.Camino_corto(b, local[0])
+		b = local[1]
+		fix_destinos(t)
+		llenar_final(t)
+		fmt.Println("vuelta")
+	}
+	fmt.Println(final)
+	Graficar_camino(final)
+}
+
+func fix_destinos(usos Recorridos) {
+	var a []string
+	var b []string
+	var niu []string
+
+	back := local
+
+	for i := 0; i < len(usos.Nodos); i++ {
+		a = append(a, usos.Nodos[i].name1)
+		if i == len(usos.Nodos)-1 {
+			a = append(a, usos.Nodos[i].name2)
+		}
+	}
+	fmt.Println("El recorrido es ", a)
+	for j := 0; j < len(a); j++ {
+		for i := 0; i < len(local); i++ {
+			if a[j] == local[i] {
+				b = append(b, local[i])
+			}
+		}
+	}
+	fmt.Println("MARCA 2")
+	for i := 0; i < len(local); i++ {
+		conf := 0
+		for j := 0; j < len(b); j++ {
+			if b[j] == local[i] {
+				conf = 1
+			}
+		}
+		if conf == 0 {
+			niu = append(niu, local[i])
+		}
+	}
+	fmt.Println("MARCA 1")
+	if len(a) != 0 {
+		local = niu
+	} else {
+		if len(back) > 0 {
+			for i := 0; i < len(back); i++ {
+				if i >= 1 {
+					a = append(a, back[i])
+				}
+			}
+			local = a
+		}
+	}
+
+	fmt.Println("=========Local es")
+	fmt.Println(local)
+}
+
+func llenar_final(a Recorridos) {
+	for i := 0; i < len(a.Nodos); i++ {
+		final.Nodos = append(final.Nodos, a.Nodos[i])
+	}
+}
+
+func (m *Almacen) Camino_corto(origen, destino string) Recorridos {
 	n := m
 	index := n.find_index(origen)
 	_index := n.find_index(destino)
@@ -79,7 +175,7 @@ func (m *Almacen) Camino_corto(origen, destino string) {
 	recorrer_(m.Estructura[index], m.Estructura[_index], m.Estructura[index], destino)
 	n.reset_visit()
 	answer := camino_final()
-	Graficar_camino(answer)
+	return answer
 }
 
 func (n *Almacen) reset_visit() {
@@ -374,6 +470,11 @@ func camino_final() Recorridos {
 		}
 		cont++
 	}
+	var a Recorridos
+	search1 = a
+	search2 = a
+	search3 = a
+	search4 = a
 	return rutas[index-1]
 }
 

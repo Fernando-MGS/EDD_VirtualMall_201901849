@@ -26,6 +26,7 @@ type Tienda struct {
 	Departamento string
 	ID           string
 	Inventario   AVL
+	//Comentarios *Merkle
 }
 
 type _Inventario struct {
@@ -57,6 +58,7 @@ type Pedido struct {
 	Tienda       string     `json:"Tienda,omitempty"`
 	Departamento string     `json:"Departamento,omitempty"`
 	Calificacion int        `json:"Calificacion,omitempty"`
+	Cliente      int        `json:"Cliente,omitempty"`
 	Producto     []Producto `json:"Productos,omitempty"`
 }
 
@@ -184,6 +186,11 @@ type POST struct {
 	Par2 string
 	Par3 int
 	Par4 int
+}
+
+type Merkle struct {
+	Datos []string
+	hash  string
 }
 
 /*type Años struct {

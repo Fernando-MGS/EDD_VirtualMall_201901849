@@ -72,9 +72,18 @@
         },
         {
             "Nombre": "d",
+            "Enlaces": [
+                {
+                    "Nombre": "Des",
+                    "Distancia": 4
+                }
+            ]
+        },
+        {
+            "Nombre": "Des",
             "Enlaces": []
         }
     ],
     "PosicionInicialRobot": "a",
-    "Entrega": "d"
+    "Entrega": "Des"
 }

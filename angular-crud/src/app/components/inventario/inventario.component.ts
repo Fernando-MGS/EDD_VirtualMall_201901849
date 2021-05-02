@@ -47,7 +47,6 @@ export class InventarioComponent implements OnInit {
     this.id=this.rutaActiva.snapshot.params.id
     this.storeServices.getProd(this.id).subscribe((res)=>{
       this.Prodc=res.Array
-      console.log(this.Prodc[0])
     })
   }
 

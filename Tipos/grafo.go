@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"strconv"
+	"time"
 	//"github.com/Fernando-MGS/TEST/AV"
 	//"strconv"
 )
@@ -71,6 +72,7 @@ func (m *Almacen) Prob_exist(index int, nombre string) int { //0 no, 1 si existe
 
 func (m *Almacen) Despacho(destinos []string) {
 	inicio := destinos[0]
+	fmt.Println("El incicio es", inicio, "///", len(destinos))
 	destino := destinos[len(destinos)-1]
 	//fmt.Println(destinos)
 	//ind := 0
@@ -92,12 +94,14 @@ func (m *Almacen) Despacho(destinos []string) {
 	local = append(local, destino)
 	fmt.Println("/////////////////////")
 	fmt.Println(local)
-	b := local[0]
-	for 0 != len(local) {
-		fmt.Println(b, "vs", local[0])
-		t := m.Camino_corto(b, local[0])
-		b = local[1]
-		fix_destinos(t)
+	fmt.Println("------")
+	fmt.Println(local[0])
+	//b := local[0]
+	for len(local) > 1 {
+		fmt.Println(local[0], "vs", local[1])
+		t := m.Camino_corto(local[0], local[1])
+		b := local[1]
+		fix_destinos(t, b)
 		llenar_final(t)
 		fmt.Println("vuelta")
 	}
@@ -105,7 +109,7 @@ func (m *Almacen) Despacho(destinos []string) {
 	Graficar_camino(final)
 }
 
-func fix_destinos(usos Recorridos) {
+func fix_destinos(usos Recorridos, destino string) {
 	var a []string
 	var b []string
 	var niu []string
@@ -127,6 +131,7 @@ func fix_destinos(usos Recorridos) {
 		}
 	}
 	fmt.Println("MARCA 2")
+	niu = append(niu, destino)
 	for i := 0; i < len(local); i++ {
 		conf := 0
 		for j := 0; j < len(b); j++ {
@@ -139,7 +144,7 @@ func fix_destinos(usos Recorridos) {
 		}
 	}
 	fmt.Println("MARCA 1")
-	if len(a) != 0 {
+	if len(a) > 1 {
 		local = niu
 	} else {
 		if len(back) > 0 {
@@ -166,13 +171,17 @@ func (m *Almacen) Camino_corto(origen, destino string) Recorridos {
 	n := m
 	index := n.find_index(origen)
 	_index := n.find_index(destino)
-	recorrer(n.Estructura[index], n.Estructura[_index], n.Estructura[index], destino)
+	recorrer(n.Estructura[index], n.Estructura[_index], n.Estructura[index], destino, "")
+	fmt.Println("1era")
 	n.reset_visit()
 	_recorrer(m.Estructura[index], m.Estructura[_index], m.Estructura[index], destino)
+	fmt.Println("2da")
 	n.reset_visit()
 	__recorrer(m.Estructura[index], m.Estructura[_index], m.Estructura[index], destino)
 	n.reset_visit()
+	fmt.Println("3era")
 	recorrer_(m.Estructura[index], m.Estructura[_index], m.Estructura[index], destino)
+	fmt.Println("4ta")
 	n.reset_visit()
 	answer := camino_final()
 	return answer
@@ -190,24 +199,34 @@ func arista_menor(nodo, nodo2 *Nodo_G, destino, origen string) int {
 	index := 0
 	cont := 0
 	conf := 0
+	if nodo.Arista[cont].Destino.Visitado == 1 {
+		index = 1
+	}
 	for cont < len(nodo.Arista) {
+		/*fmt.Println("========")
+		fmt.Println(nodo.Arista[cont].Peso, "vs-ind-", nodo.Arista[index].Peso)*/
 		if nodo.Arista[cont].Destino.Nombre == destino {
 			index = cont
 			conf = 1
-		} else if arista_destino(nodo.Arista[cont].Destino.Nombre, nodo2) == 1 &&
+		}
+		if arista_destino(nodo.Arista[cont].Destino.Nombre, nodo2) == 1 &&
 			nodo.Arista[cont].Destino.Visitado != 1 && conf != 1 {
 			if nodo.Arista[cont].Destino.Nombre != origen {
 				index = cont
 				conf = 2
 			}
-		} else if nodo.Arista[cont].Peso <= nodo.Arista[index].Peso &&
-			nodo.Arista[cont].Destino.Visitado != 1 && conf > 3 {
+		}
+		if nodo.Arista[cont].Peso <= nodo.Arista[index].Peso &&
+			nodo.Arista[cont].Destino.Visitado == 0 && conf < 1 {
 			if nodo.Arista[cont].Destino.Nombre != origen {
+				fmt.Println("ENTRO")
 				index = cont
 			}
 		}
 		cont++
 	}
+	fmt.Print("Arista menor", nodo.Arista[index].Destino.Nombre, "conf es ", conf, "-")
+	fmt.Println(nodo.Arista[index].Destino.Visitado)
 	return index
 }
 
@@ -238,33 +257,45 @@ func (m *Almacen) find_index(nombre string) int {
 }
 
 //PRIMER RECORRIDO
-func recorrer(origen, destiny, actual *Nodo_G, destino string) {
+func recorrer(origen, destiny, actual *Nodo_G, destino, anterior string) {
 	//fmt.Println("VAMO A RECORRER")
-	if actual.Visitado == 0 {
-		if actual.Nombre == destino {
-			fmt.Println("Se encontró el nodo ", destino, "---", large1)
-			search1.Peso = large1
+	if exit(anterior, actual.Nombre) == 0 {
+		fmt.Println(origen.Nombre, "vs", destiny.Nombre)
+		fmt.Println("Estamos en ", actual.Nombre, " y esta", actual.Visitado)
+		fmt.Println("Destino en ", destiny.Nombre, " y esta", destiny.Visitado)
+		if actual.Visitado == 0 {
+			if actual.Nombre == destino {
+				search1.Peso = large1
+			} else {
+				actual.Visitado = 1
+				index := arista_menor(actual, destiny, destino, origen.Nombre)
+				large1 += actual.Arista[index].Peso
+				//actual.Arista[index].Destino.Visitado = 1
+				fmt.Println(actual.Nombre, "--", actual.Arista[index].Destino.Nombre)
+				time.Sleep(2 * time.Second)
+				var s1 search
+				s1.name1 = actual.Nombre
+				s1.name2 = actual.Arista[index].Destino.Nombre
+				s1.peso = actual.Arista[index].Peso
+				search1.Nodos = append(search1.Nodos, s1)
+				recorrer(origen, destiny, actual.Arista[index].Destino, destino, actual.Nombre)
+			}
 		} else {
-			actual.Visitado = 1
-			index := arista_menor(actual, destiny, destino, origen.Nombre)
-			large1 += actual.Arista[index].Peso
-			//actual.Arista[index].Destino.Visitado = 1
-			//fmt.Println(actual.Nombre, "--", actual.Arista[index].Destino.Nombre)
-			var s1 search
-			s1.name1 = actual.Nombre
-			s1.name2 = actual.Arista[index].Destino.Nombre
-			s1.peso = actual.Arista[index].Peso
-			search1.Nodos = append(search1.Nodos, s1)
-			recorrer(origen, destiny, actual.Arista[index].Destino, destino)
+			origen.Visitado = 0
+			large1 = 0
+			var a Recorridos
+			search1 = a
+			fmt.Println("vAMO A REINICIAR")
+			recorrer(origen, destiny, origen, destino, "")
 		}
-	} else {
-		origen.Visitado = 0
-		large1 = 0
-		var a Recorridos
-		search1 = a
-		//fmt.Println("vAMO A REINICIAR")
-		recorrer(origen, destiny, origen, destino)
 	}
+}
+
+func exit(name1, name2 string) int {
+	if name1 == name2 {
+		return 1
+	}
+	return 0
 }
 
 func arista_menor_(nodo, nodo2 *Nodo_G, destino, origen string) int {
@@ -290,6 +321,7 @@ func arista_menor_(nodo, nodo2 *Nodo_G, destino, origen string) int {
 		}
 		cont++
 	}
+	fmt.Println("Arista menor", nodo.Arista[index].Destino.Nombre)
 	return index
 }
 
@@ -298,7 +330,6 @@ func _recorrer(origen, destiny, actual *Nodo_G, destino string) {
 	//fmt.Println("VAMO A RECORRER")
 	if actual.Visitado == 0 {
 		if actual.Nombre == destino {
-			fmt.Println("Se encontró el nodo ", destino, "---", large2)
 			search2.Peso = large2
 		} else {
 			actual.Visitado = 1
@@ -345,6 +376,7 @@ func _arista_menor(nodo, nodo2 *Nodo_G, destino, origen string) int {
 		}
 		cont++
 	}
+	fmt.Println("Arista menor", nodo.Arista[index].Destino.Nombre)
 	return index
 }
 
@@ -353,7 +385,6 @@ func __recorrer(origen, destiny, actual *Nodo_G, destino string) {
 	//fmt.Println("VAMO A RECORRER")
 	if actual.Visitado == 0 {
 		if actual.Nombre == destino {
-			fmt.Println("Se encontró el nodo ", destino, "--", large3)
 			search3.Peso = large3
 		} else {
 			actual.Visitado = 1
@@ -400,6 +431,7 @@ func __arista_menor(nodo, nodo2 *Nodo_G, destino, origen string) int {
 		}
 		cont++
 	}
+	fmt.Println("Arista menor", nodo.Arista[index].Destino.Nombre)
 	return index
 }
 
@@ -408,7 +440,6 @@ func recorrer_(origen, destiny, actual *Nodo_G, destino string) {
 	//fmt.Println("VAMO A RECORRER")
 	if actual.Visitado == 0 {
 		if actual.Nombre == destino {
-			fmt.Println("Se encontró el nodo ", destino, "---", large4)
 			search4.Peso = large4
 		} else {
 			actual.Visitado = 1
@@ -436,6 +467,7 @@ func arista__menor(nodo, nodo2 *Nodo_G, destino, origen string) int {
 	index := 0
 	cont := 0
 	conf := 0
+	fmt.Println("Arista menor")
 	for cont < len(nodo.Arista) {
 		if nodo.Arista[cont].Peso < nodo.Arista[index].Peso &&
 			nodo.Arista[cont].Destino.Visitado != 1 && conf != 1 {
@@ -455,18 +487,21 @@ func arista__menor(nodo, nodo2 *Nodo_G, destino, origen string) int {
 		}
 		cont++
 	}
+	fmt.Println("Arista menor", nodo.Arista[index].Destino.Nombre)
 	return index
 }
 
 //ELECCION FINAL
 func camino_final() Recorridos {
-	cont := 1
-	index := 1
-	peso := 0
+	cont := 0
+	index := 0
+
 	rutas := []Recorridos{search1, search2, search3, search4}
-	for cont <= 4 {
-		if peso <= rutas[cont-1].Peso {
+	peso := rutas[0].Peso
+	for cont < 4 {
+		if rutas[cont].Peso <= peso {
 			index = cont
+			peso = rutas[cont].Peso
 		}
 		cont++
 	}
@@ -475,7 +510,7 @@ func camino_final() Recorridos {
 	search2 = a
 	search3 = a
 	search4 = a
-	return rutas[index-1]
+	return rutas[index]
 }
 
 func (m *Almacen) Graficar() {
@@ -583,12 +618,13 @@ func (m *Almacen) Grafos() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	fmt.Println(graph)
 	//Creación de la imagen
 	path, _ := exec.LookPath("dot") //Para que funcione bien solo asegurate de tener todas las herramientas para
 	// Graphviz en tu compu, si no descargalas osea el Graphviz
-	cmd, _ := exec.Command(path, "-Tpng", "graph.dot").Output() //En esta parte en lugar de graph va el nombre de tu grafica
+	cmd, _ := exec.Command(path, "-Tpdf", "graph.dot").Output() //En esta parte en lugar de graph va el nombre de tu grafica
 	mode := int(0777)                                           //Se mantiene igual
-	ioutil.WriteFile("Almacen2"+".png", cmd, os.FileMode(mode)) //Creacion de la imagen
+	ioutil.WriteFile("Almacen2"+".pdf", cmd, os.FileMode(mode)) //Creacion de la imagen
 }
 
 func conf_graf(array []search, busq search) int {

@@ -41,6 +41,7 @@ var storage Tipos.Almacen
 var usuarios Seguridad.B_Tree
 var admin_def Tipos.Usuario
 var user_actual Tipos.Usuario
+var pedido_merkle Seguridad.Arbol_Merkle
 
 //F U N C I O N E S
 
@@ -98,6 +99,20 @@ func llenar_matriz(info Tipos.Archivo) {
 						k[cont].ID = id + "-" + k[cont].Nombre
 						k[cont].Departamento = b[suma].Nombre
 						store = k[cont]
+						data := store.Nombre + "-" + store.Departamento + "-" + strconv.Itoa(store.Calificacion)
+						/*var array_dato []string
+						array_dato=append(array_dato, store.Nombre)
+						array_dato=append(array_dato, store.Departamento)
+						array_dato=append(array_dato, strconv.Itoa(store.Calificacion))*/
+						var datos Seguridad.Data_hash
+						datos.Data = data
+						split := strings.Split(data, "-")
+						datos.Data_original = split
+						h := sha256.New()
+						h.Write([]byte(data))
+						z := hex.EncodeToString(h.Sum(nil))
+						datos.Hash = z
+						pedido_merkle.Insert(datos)
 						lis.Insertar(store)
 					}
 					cont++
@@ -112,6 +127,10 @@ func llenar_matriz(info Tipos.Archivo) {
 	}
 	fmt.Println("tOTAL", len(inf))
 	llenar_lista(prelista)
+	pedido_merkle.Print()
+	//pedido_merkle.Fondo()
+	//os.Exit(0)
+
 }
 
 func llenar_lista(array []list.Lista) { //toma el arreglo line
@@ -349,6 +368,7 @@ func llenar_avl(e Tipos.Inventarios) {
 		for sum < len(e.Inventario[cont].Productos) {
 			prod := e.Inventario[cont].Productos[sum]
 			prod.Departamento = e.Inventario[cont].Departamento
+			prod.Almacenamiento = nombre_corregid(prod.Almacenamiento)
 			tmp.Inventario.Insertar(prod)
 			sum++
 			rowmajor[_index].Set_Inventario(tmp)
@@ -485,6 +505,10 @@ func CartSize(w http.ResponseWriter, r *http.Request) {
 	tamaño := carrito.Tamaño()
 	json.NewEncoder(w).Encode(tamaño)
 	return
+}
+
+func cart_s() {
+	fmt.Println(carrito.Tamaño())
 }
 
 //PEDIDOS
@@ -655,7 +679,7 @@ func pedido_carrito(w http.ResponseWriter, r *http.Request) {
 	inutil(err)
 	//fmt.Println(err)
 	meses := pedidos.NewLista()
-	carro := carrito.GetProducts()
+	//carro := carrito.GetProducts()
 	//fmt.Println("El tamaño del carrito es ", carrito.Cantidad)
 	for sum < carrito.Cantidad {
 		prod := carrito.GetItem(sum)
@@ -685,7 +709,7 @@ func pedido_carrito(w http.ResponseWriter, r *http.Request) {
 	}
 	var new lista.List
 	carrito = new
-	Camino_corto(carro)
+	//Camino_corto(carro)
 	//fmt.Println("Vacío el carrito")
 }
 
@@ -727,7 +751,7 @@ func default_user() {
 	user_actual = a
 	user_actual.Nombre = "N/A"
 	user_actual.Correo = "N/A"
-	user_actual.Tipo = 0
+	user_actual.Tipo = 1
 }
 
 func cargar_users(w http.ResponseWriter, r *http.Request) {
@@ -905,7 +929,7 @@ func llenar_users(e Tipos.Cuentas) {
 	sum := 0
 	c := len(array_users) - 1
 	array := ordenar_users(array_users, 0, c)
-	for sum < len(array) {
+	for sum < len(array) || sum < 150 {
 		if array_users[sum].Cuenta == "Admin" {
 			array[sum].Tipo = 1
 		} else {
@@ -913,12 +937,12 @@ func llenar_users(e Tipos.Cuentas) {
 		}
 		array[sum].DPI = strconv.Itoa(array[sum].Dpi_)
 		h := sha256.New()
-		h.Write([]byte(array[sum].DPI))
+		h.Write([]byte(array[sum].Password))
 		z := hex.EncodeToString(h.Sum(nil))
-		array[sum].D_PI = z
+		array[sum].Pass = z
 
 		k := fernet.MustDecodeKeys("cw_0x689RpI-jtRR7oE8h_eQsKImvJapLeSbXpwF4e4=")
-		tok, err := fernet.EncryptAndSign([]byte(array[sum].Correo), k[0])
+		tok, err := fernet.EncryptAndSign([]byte(array[sum].DPI), k[0])
 		if err != nil {
 			panic(err)
 		}
@@ -1138,14 +1162,46 @@ func loadGrafo(w http.ResponseWriter, r *http.Request) {
 	}
 	errorResponse(w, "Archivo Recibido", http.StatusOK)
 	//fmt.Println(e)
-	crear_grafo(e)
+	crear_grafo(corregir_nombres(e))
+}
+
+func corregir_nombres(e Tipos.File_grafo) Tipos.File_grafo {
+	for i := 0; i < len(e.Nodos); i++ {
+		e.Nodos[i].Nombre = nombre_corregid(e.Nodos[i].Nombre)
+		k := e.Nodos[i]
+		for j := 0; j < len(k.Enlaces); j++ {
+			e.Nodos[i].Enlaces[j].Nombre = nombre_corregid(e.Nodos[i].Enlaces[j].Nombre)
+		}
+	}
+	e.Entrega = nombre_corregid(e.Entrega)
+	e.Pos_init = nombre_corregid(e.Pos_init)
+	return e
+}
+
+func nombre_corregid(name string) string {
+	k := strings.Split(name, " ")
+	p := 0
+	niu := ""
+	if len(k) > 1 {
+		for p < len(k) {
+			niu += k[p]
+			p++
+		}
+		return niu
+	} else {
+		return name
+	}
+
 }
 
 func crear_grafo(e Tipos.File_grafo) {
 	//long := len(e.Nodos)
 	//var lista_grafo []*Tipos.Nodo_G
+
 	storage.Pos_Robot = e.Pos_init
 	storage.Entrega = e.Entrega
+	fmt.Println(e.Pos_init, "//", storage.Pos_Robot)
+	fmt.Println(e.Entrega, "//", storage.Entrega)
 	cont := 0
 	for cont < len(e.Nodos) {
 		var a Tipos.Nodo_G
@@ -1209,8 +1265,8 @@ func crear_grafo(e Tipos.File_grafo) {
 	}
 	fmt.Println("se creo el grafo--------")
 	//storage.Aristas()
-	storage.Graficar()
-	storage.Grafos()
+	//storage.Graficar()
+	//storage.Grafos()
 	//storage.Camino_corto("a", "d")
 }
 
@@ -1222,6 +1278,7 @@ func graf_alm(w http.ResponseWriter, r *http.Request) {
 
 func Camino_corto(prod []Tipos.Producto) {
 	var destinos []string
+	fmt.Println("El storage", storage.Pos_Robot)
 	destinos = append(destinos, storage.Pos_Robot)
 	for i := 0; i < len(prod); i++ {
 		destinos = append(destinos, prod[i].Almacenamiento)
@@ -1255,6 +1312,19 @@ func graf_corto(w http.ResponseWriter, r *http.Request) {
 	crear_grafo(e)
 }
 
+//FASE 4
+
+func add_carp() {
+	if _, err := os.Stat("Hash"); os.IsNotExist(err) {
+		err = os.Mkdir("Hash", 0755)
+		if err != nil {
+			// Aquí puedes manejar mejor el error, es un ejemplo
+			fmt.Println(err, "-")
+			panic(err)
+		}
+	}
+}
+
 //ERRORES DE RESPONSE
 func errorResponse(w http.ResponseWriter, message string, httpStatusCode int) {
 	w.Header().Set("Content-Type", "application/json")
@@ -1272,6 +1342,8 @@ func inutil(a error) {
 func main() {
 	router := mux.NewRouter()
 	//test_b()
+	cart_s()
+	add_carp()
 	default_user()
 	//endpoint-rutas
 	default_admin()

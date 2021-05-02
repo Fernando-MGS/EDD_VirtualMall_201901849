@@ -14,7 +14,8 @@ import { CarritoComponent } from './components/carrito/carrito.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { PedidosComponent } from './components/pedidos/pedidos.component';
 import { LoginComponent } from './components/login/login.component';
-import { UserComponent } from './components/user/user.component'
+import { UserComponent } from './components/user/user.component';
+import { ComentarioComponent } from './components/comentario/comentario.component'
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { UserComponent } from './components/user/user.component'
   NavbarComponent,
   PedidosComponent,
   LoginComponent,
-  UserComponent],
+  UserComponent,
+  ComentarioComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

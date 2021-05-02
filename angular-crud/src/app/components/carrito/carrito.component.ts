@@ -9,12 +9,17 @@ import {Prod} from 'src/app/models/producto';
 })
 export class CarritoComponent implements OnInit {
   Prodc: Prod[]   
+  niu: Prod[]
   Large: number
   Precio: number
   test: string
   constructor(private storeServices: TiendaService) { }
   carrito(){
     this.storeServices.pedido_Cart(this.Precio).subscribe(data=>console.log(data),err=>console.log(err),()=>console.log("Finish"));
+    this.Prodc=this.niu
+    this.Large=0
+    this.Precio=0
+    
   }
   print(){
     this.test="Hola"

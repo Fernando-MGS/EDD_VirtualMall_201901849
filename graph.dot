@@ -1,23 +1,66 @@
-digraph List {
-rankdir=LR;node [shape = circle, color=greenyellow , style=filled, fillcolor=darkgreen];Nodea[label="a"]
-Nodeb[label="b"]
-Nodef[label="f"]
-Nodeg[label="g"]
-Nodec[label="c"]
-Nodee[label="e"]
-Noded[label="d"]
-NodeDes[label="Des"]
+digraph structs {
+rankdir=BT;node [shape = record style=filled];
+struct0 [label="{9ae23c33bc84ccb91e44973e26db1d66f7ef34071a4b914fa873d9eef31aee1b|{Aguayo Cepeda S.A.\nAmazon Coins\n4\n0}}" fillcolor= olivedrab1]
+struct1 [label="{9a3e1a192c8e3564fef6eeca33de0020e4c872f2bd3c2d05226fb5298d7a0f4f|{Amaya, Rolón y Chavarría Asociados\nAmazon Coins\n5\n1}}" fillcolor= olivedrab1]
+struct2 [label="{26ee4ff2bd6a39bc14d47d4dc5e9be1dc2a7cc4c5dc45902a232a41bd9d40165|{Artemis\nLectura\n4\n2}}" fillcolor= olivedrab1]
+struct3 [label="{7962e4b9559874605d50e58f590a7e4b197edaa5b584331a91134f75ec2db859|{Amaya, Rolón y Chavarría Asociados\nSensores\n3\n3}}" fillcolor= olivedrab1]
+struct4 [label="{4899bb6c4b3e8b729c6947b2e82fb14f9aa7781e5baf3d7463af3fdff062a9fd|{Aguayo Cepeda S.A.\nSensores\n4\n4}}" fillcolor= olivedrab1]
+struct5 [label="{620626f8225f56528266dc2e459b39a2f5ed57d0205d1166631eecc57401cbe1|{Briones Pineda S.A.\nSensores\n1\n5}}" fillcolor= olivedrab1]
+struct6 [label="{ffa4d27379e9954c6fa3c1331d0a4aa36b92b45d9447f228b7da919d37976215|{Huawei\nTecnologia\n4\n6}}" fillcolor= olivedrab1]
+struct7 [label="{4991b23e72932f5e6b3edd9ae66cd418802fcb31e4531bee64f7eec401c525cd|{Intelaf\nTecnologia\n5\n7}}" fillcolor= olivedrab1]
+struct8 [label="{9cffc5ab2a70f7033c2a975a3675dfd94a7e42306c7081abe21f034d1e94ced7|{Nike\nDeporte\n4\n8}}" fillcolor= olivedrab1]
+struct9 [label="{bb1f75d44cd6e4a31a79b81b04b8f2131fad860b3078018136a15e8307d70fa1|{Samsung\nTecnologia\n3\n9}}" fillcolor= olivedrab1]
+struct10 [label="{e1ae5ed65c8c56f6d065257f1160aeebfc2855eb188085f98deaa6033b6385cf|{Zona Gamer\nVideojuegos\n4\n10}}" fillcolor= olivedrab1]
+struct11 [label="{|{nulo\n11}}" fillcolor= olivedrab1]
+struct12 [label="{|{nulo\n12}}" fillcolor= olivedrab1]
+struct13 [label="{|{nulo\n13}}" fillcolor= olivedrab1]
+struct14 [label="{|{nulo\n14}}" fillcolor= olivedrab1]
+struct15 [label="{|{nulo\n15}}" fillcolor= olivedrab1]
+struct16 [label="{2e8d1e247f56c9446d46f2a02a38f95dc7425dc8e6229fcc25105cd03f4d34b3|{9ae23c33bc84ccb91e44973e26db1d66f7ef34071a4b914fa873d9eef31aee1b\n\n16}}" fillcolor= olivedrab1]
+struct17 [label="{3facae8aa248bdb842bde76876b5a1a3b423f6b7901a351d2f9a8cfc41141aa0|{26ee4ff2bd6a39bc14d47d4dc5e9be1dc2a7cc4c5dc45902a232a41bd9d40165\n\n17}}" fillcolor= olivedrab1]
+struct18 [label="{79b88bc229ef7654578cdd3315fdf6a417961339de1d3ba55ba8471e4e5448c8|{4899bb6c4b3e8b729c6947b2e82fb14f9aa7781e5baf3d7463af3fdff062a9fd\n\n18}}" fillcolor= olivedrab1]
+struct19 [label="{3973e022e93220f9212c18d0d0c543ae7c309e46640da93a4a0314de999f5112|{\n\n19}}" fillcolor= olivedrab1]
+struct20 [label="{7014c791d5e928be26ec7eb125a7360211efdd0487bd24df5c2c89c62c60cfcb|{9cffc5ab2a70f7033c2a975a3675dfd94a7e42306c7081abe21f034d1e94ced7\n\n20}}" fillcolor= olivedrab1]
+struct21 [label="{3973e022e93220f9212c18d0d0c543ae7c309e46640da93a4a0314de999f5112|{\n\n21}}" fillcolor= olivedrab1]
+struct22 [label="{3973e022e93220f9212c18d0d0c543ae7c309e46640da93a4a0314de999f5112|{\n\n22}}" fillcolor= olivedrab1]
+struct23 [label="{3973e022e93220f9212c18d0d0c543ae7c309e46640da93a4a0314de999f5112|{\n\n23}}" fillcolor= olivedrab1]
+struct24 [label="{4b2e7b9f777bd13f219838f62f0c8a0a55156b3a4ed6930dc65f9dee970d12ae|{2e8d1e247f56c9446d46f2a02a38f95dc7425dc8e6229fcc25105cd03f4d34b3\n3facae8aa248bdb842bde76876b5a1a3b423f6b7901a351d2f9a8cfc41141aa0\n24}}" fillcolor= olivedrab1]
+struct25 [label="{71e5b51cd7f7e51d8a27e665bc4f371abecbb6960f6f16ef7e8beeae111a4694|{79b88bc229ef7654578cdd3315fdf6a417961339de1d3ba55ba8471e4e5448c8\n3973e022e93220f9212c18d0d0c543ae7c309e46640da93a4a0314de999f5112\n25}}" fillcolor= olivedrab1]
+struct26 [label="{8d674fcf056ff0a6eeaf07e36cfc22b7f72598d3cc2d11bd17846d5c9c6959e5|{7014c791d5e928be26ec7eb125a7360211efdd0487bd24df5c2c89c62c60cfcb\n3973e022e93220f9212c18d0d0c543ae7c309e46640da93a4a0314de999f5112\n26}}" fillcolor= olivedrab1]
+struct27 [label="{fe5f33fc11f5c1434995b6d6d4a65164dcd173a5fd109373e6b52bef65f27422|{3973e022e93220f9212c18d0d0c543ae7c309e46640da93a4a0314de999f5112\n3973e022e93220f9212c18d0d0c543ae7c309e46640da93a4a0314de999f5112\n27}}" fillcolor= olivedrab1]
+struct28 [label="{fde2df431e26d7039648d92d7a1cba13c8720d6942ebc3e2420b68c41a1d2875|{4b2e7b9f777bd13f219838f62f0c8a0a55156b3a4ed6930dc65f9dee970d12ae\n71e5b51cd7f7e51d8a27e665bc4f371abecbb6960f6f16ef7e8beeae111a4694\n28}}" fillcolor= olivedrab1]
+struct29 [label="{23c9110def404e09c8905cf4d27f7fd34e3a28e0c208cf3f384c421bb97d2e2e|{8d674fcf056ff0a6eeaf07e36cfc22b7f72598d3cc2d11bd17846d5c9c6959e5\nfe5f33fc11f5c1434995b6d6d4a65164dcd173a5fd109373e6b52bef65f27422\n29}}" fillcolor= olivedrab1]
+struct30 [label="{e0a8723d7266288d09fc6a8b1e6e41c381e733e7f8206959589cf29e65836bbe|{fde2df431e26d7039648d92d7a1cba13c8720d6942ebc3e2420b68c41a1d2875\n23c9110def404e09c8905cf4d27f7fd34e3a28e0c208cf3f384c421bb97d2e2e\n1}}" fillcolor= olivedrab1]
 
-Nodea->Nodeb [arrowhead=none label=3];
-Nodea->Nodef [arrowhead=none label=7];
-Nodeb->Nodec [arrowhead=none label=5];
-Nodeb->Nodeg [arrowhead=none label=2];
-Nodef->Nodee [arrowhead=none label=4];
-Nodef->Nodeg [arrowhead=none label=1];
-Nodeg->Nodec [arrowhead=none label=1];
-Nodec->Noded [arrowhead=none label=1];
-Nodec->Nodee [arrowhead=none label=8];
-Nodee->Noded [arrowhead=none label=2];
-Noded->NodeDes [arrowhead=none label=4];
+struct0 -> struct16
+struct1 -> struct16
+struct2 -> struct17
+struct3 -> struct17
+struct4 -> struct18
+struct5 -> struct18
+struct6 -> struct19
+struct7 -> struct19
+struct8 -> struct20
+struct9 -> struct20
+struct10 -> struct21
+struct11 -> struct21
+struct12 -> struct22
+struct13 -> struct22
+struct14 -> struct23
+struct15 -> struct23
+struct16 -> struct24
+struct17 -> struct24
+struct18 -> struct25
+struct19 -> struct25
+struct20 -> struct26
+struct21 -> struct26
+struct22 -> struct27
+struct23 -> struct27
+struct24 -> struct28
+struct25 -> struct28
+struct26 -> struct29
+struct27 -> struct29
+struct28 -> struct30
+struct29 -> struct30
 
 }

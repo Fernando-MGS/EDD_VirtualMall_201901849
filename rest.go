@@ -1368,19 +1368,63 @@ func add_comentario(w http.ResponseWriter, r *http.Request) {
 		codigo, er := strconv.Atoi(index[3])
 		inutil(er)
 		str.Inventario.Comentar(codigo, e)
-		//prod := str.Inventario.Buscar_(codigo).Prod.Comentarios
-		//prod.Print_com()
+		/*prod := str.Inventario.Buscar_(codigo).Prod.Comentarios
+		prod.Print_com()*/
+	} else {
+		rowmajor[i].Comentar(index[2], e)
+		//st := rowmajor[i].Get(index[2])
+		//str.Comentarios.Insertar(e.Contenido, e.User)
+		//st.Comentarios.Print_com()
+	}
+	//inutil(er)
+}
+
+func add_respuesta(w http.ResponseWriter, r *http.Request) {
+	headerContentTtype := r.Header.Get("Content-Type")
+	if headerContentTtype != "application/json" {
+		errorResponse(w, "Content Type is not application/json", http.StatusUnsupportedMediaType)
+		return
+	}
+	var e Tipos.Respuestas
+	var unmarshalErr *json.UnmarshalTypeError
+
+	decoder := json.NewDecoder(r.Body)
+	decoder.DisallowUnknownFields()
+	err := decoder.Decode(&e)
+	if err != nil {
+		if errors.As(err, &unmarshalErr) {
+			errorResponse(w, "Bad Request. Wrong Type provided for field "+unmarshalErr.Field, http.StatusBadRequest)
+		} else {
+			errorResponse(w, "Bad Request "+err.Error(), http.StatusBadRequest)
+		}
+		return
+	}
+	errorResponse(w, "Archivo Recibido", http.StatusOK)
+	fmt.Println("Estoy respondiendo")
+	fmt.Println(e)
+	//params := mux.Vars(r)
+	//conv := params["id"]
+	//index := strings.Split(conv, "-") //El index[0] tiene el indice en el array
+	//y el [1] tiene el nombre y el [2] tiene el codigo de producto
+	//tipo, err := strconv.Atoi(index[0])
+	/*i, err := strconv.Atoi(index[1])
+	str := rowmajor[i].Get(index[2])
+	if len(index) > 3 {
+		codigo, er := strconv.Atoi(index[3])
+		inutil(er)
+		str.Inventario.Comentar(codigo, e)
+		prod := str.Inventario.Buscar_(codigo).Prod.Comentarios
+		prod.Print_com()
 	} else {
 		rowmajor[i].Comentar(index[2], e)
 		st := rowmajor[i].Get(index[2])
 		//str.Comentarios.Insertar(e.Contenido, e.User)
 		st.Comentarios.Print_com()
-	}
-	//inutil(er)
+	}*/
 }
 
 func ver_comments(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Llego")
+	//fmt.Println("Llego")
 	params := mux.Vars(r)
 	conv := params["id"]
 	index := strings.Split(conv, "-") //El index[0] tiene el indice en el array
@@ -1394,6 +1438,7 @@ func ver_comments(w http.ResponseWriter, r *http.Request) {
 		inutil(er)
 		producto := str.Inventario.Buscar_(codigo)
 		comment := producto.Prod.Comentarios.Dev_Comentarios()
+		//fmt.Println(comment)
 		json.NewEncoder(w).Encode(comment)
 		return
 	} else {
@@ -1489,6 +1534,7 @@ func main() {
 	router.HandleFunc("/graf_mes", graf_mes).Methods("POST")
 	router.HandleFunc("/graf_corto", graf_corto).Methods("POST")
 	router.HandleFunc("/comentario/{id}", add_comentario).Methods("POST")
+	router.HandleFunc("/respuesta/{id}", add_respuesta).Methods("POST")
 	router.HandleFunc("/comentarios/{id}", ver_comments).Methods("GET")
 	router.HandleFunc("/articulo/{id}", ver_articulo).Methods("GET")
 

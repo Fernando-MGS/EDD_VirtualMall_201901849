@@ -121,4 +121,7 @@ export class TiendaService {
   Articulo(dir:any):Observable<any>{
     return this.http.get<any>('/articulo/'+dir)
   }
+  Responder(file:any,dir:any):Observable<any>{
+    return this.http.post<any>('/respuesta/'+dir,file)
+  }
 }

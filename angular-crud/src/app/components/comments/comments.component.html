@@ -6,37 +6,21 @@
             style="width: 100vh; height: 1cm; align-self: center; border-color: rgb(198, 148, 245);"></textarea>
         
         <br>
-        <button class="btn btn-primary" (click)="comentar(carga.value)"
-            style="background-color:rgb(165, 111, 216);border-color: darkmagenta; border-radius: 1px;">Responder</button>
-        <a href="coments/{{id}}" class="btn btn-primary"
-            style="background-color:rgb(165, 111, 216);border-color: darkmagenta;">Comentar</a>
+        <a href="comments/{{id}}" (click)="comentar(carga.value)" class="btn btn-primary"
+                style="background-color:rgb(165, 111, 216);border-color: darkmagenta;">Comentar1</a>
         </div>
         <div class="card" style="width: 100vh; border-color: rgb(198, 148, 245);">
-            <ul class="list-group list-group-flush overflow-auto">
-                <li class="list-group-item">
-                    <h6>👤 Nombre</h6>
-                    Cras justo odio Cras justo odio Cras justo odio Cras justo odio Cras justo odio
-                    <br>
-                    <button class="link" style="padding-right: 20px;"  (click)="test()"
-                        style="color: rgb(156, 95, 235); border: white;">Responder</button>
-                </li>
-
-                <li class="list-group-item">Dapibus ac facilisis in</li>
-
-                <li class="list-group-item">Vestibulum at eros</li>
-                <li class="list-group-item">Vestibulum at eros</li>
-                <li class="list-group-item">Vestibulum at eros</li>
-                <li class="list-group-item">Vestibulum at eros</li>
-                <li class="list-group-item">Vestibulum at eros</li>
-                <li class="list-group-item">Vestibulum at eros</li>
-                <li class="list-group-item">Vestibulum at eros</li>
-                <li class="list-group-item">Vestibulum at eros</li>
-                <li class="list-group-item">Vestibulum at eros</li>
-                <li class="list-group-item">Vestibulum at eros</li>
-                <li class="list-group-item">Vestibulum at eros</li>
-                <li class="list-group-item">Vestibulum at eros</li>
-                <li class="list-group-item">Vestibulum at eros</li>
-
+            <ul class="list-group mt-1">
+                <div *ngFor="let com of Comments">
+                    <li class="list-group-item">
+                        <h6>👤 {{com.User}}</h6>
+                        {{com.Contenido}}
+                        <br>
+                        <button class="link" style="padding-right: 20px;" (click)="test(com.User, com.Index)"
+                            style="color: rgb(156, 95, 235); border: white;">Responder</button>
+                    </li>
+                    
+                </div>
             </ul>
         </div>
     </div>

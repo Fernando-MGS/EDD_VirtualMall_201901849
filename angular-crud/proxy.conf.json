@@ -144,6 +144,11 @@
         "secure": false,
         "loglevel": "debug"
     },
+    "/respuesta/*":{
+        "target": "http://localhost:3000",
+        "secure": false,
+        "loglevel": "debug"
+    },
     "/articulo/*":{
         "target": "http://localhost:3000",
         "secure": false,

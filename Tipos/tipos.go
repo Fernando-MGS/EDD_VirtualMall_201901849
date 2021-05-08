@@ -123,8 +123,9 @@ type Comentarios struct {
 }
 
 type Respuestas struct {
-	Index string
-	User  Usuario
+	Index     string
+	User      Usuario
+	Respuesta string
 }
 
 type Respuesta struct {

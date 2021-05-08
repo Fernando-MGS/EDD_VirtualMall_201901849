@@ -26,9 +26,9 @@ type Comentario_ struct {
 }
 
 func (h *Hash) Insertar(content string, user Usuario) {
-	fmt.Println("INSERTANDO", content, "-", user)
+	/*fmt.Println("INSERTANDO", content, "-", user)
 	fmt.Println("eL TAMAÑO ES", h.Tamaño, "/", content, "-", user.Nombre)
-	fmt.Println("El len es", len(h.Comentarios))
+	fmt.Println("El len es", len(h.Comentarios))*/
 	var comentario Comentario_
 	comentario.Contenido = content
 	comentario.Creador = user.Dpi_
@@ -63,7 +63,7 @@ func (h *Hash) Insertar(content string, user Usuario) {
 }
 
 func (t *Hash) rehashing() {
-	fmt.Println("Rehashiando")
+	//fmt.Println("Rehashiando")
 	var new []Nod
 	temp := t.Comentarios
 	t.Tamaño = 0
@@ -74,15 +74,15 @@ func (t *Hash) rehashing() {
 		new = append(new, vacio)
 	}
 	t.Comentarios = new
-	fmt.Println("EL LEN DE REHASH ES", len(t.Comentarios))
-	fmt.Println("EL LEN DE temp ES", len(temp))
+	/*fmt.Println("EL LEN DE REHASH ES", len(t.Comentarios))
+	fmt.Println("EL LEN DE temp ES", len(temp))*/
 	for i := 0; i < len(temp); i++ {
 		if temp[i].Estado == 1 {
 			var user Usuario
 			user.Nombre = temp[i].Comentario.Nombre
 			user.Dpi_ = temp[i].Comentario.Creador
 			t.Insertar(temp[i].Comentario.Contenido, user)
-			fmt.Println("i es ", i)
+			//fmt.Println("i es ", i)
 		}
 	}
 	/*

@@ -25,18 +25,15 @@ export class ComentsComponent implements OnInit {
   }
   Respondiendo:string
   test(user:any, index:any){
-    this.r_activ=1
+    this.r_activ=0
     console.log(index)
     this.Respondiendo="Respondiendo a "+user
   }
   comentar(text:string){
     var comentario: Comentario={Contenido:text,User:this.user}
-    if (this.r_activ==0){
+    if (this.r_activ!=0){
     this.storeServices.Comentar(comentario,this.id).subscribe(data=>console.log(data),err=>console.log(err),()=>console.log("Finish"));
-    this.storeServices.Comentarios(this.id).subscribe((res) =>{
-      this.Comments=res;
-      console.log(this.Comments,"Hola 3")
-    }); }else{
+    }else{
       console.log("comentararara")
     }
   }
@@ -54,7 +51,7 @@ this.storeServices.Comentarios(this.id).subscribe((res) =>{
   this.Comments=res.Comentarios;
   console.log(this.Comments,"Hola 2")
 }); 
-    
+    console.log("Hola 3 ",this.r_activ)
   }
 
 }

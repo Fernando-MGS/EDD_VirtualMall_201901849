@@ -71,6 +71,24 @@ func (avl *AVL) Buscar(indice int) int {
 	return _prob_exist(indice, &avl.raiz)
 }
 
+func (avl *AVL) Comentar(indice int, content Comentario) {
+	Agregar_com(&avl.raiz, indice, content)
+}
+
+func Agregar_com(root **nodo_m, indice int, content Comentario) {
+	if (*root) != nil {
+		if indice < (*root).indice.Codigo {
+			//fmt.Println(indice, "--", (*root).indice.Codigo)
+			Agregar_com(&(*root).izq, indice, content)
+		} else if indice > (*root).indice.Codigo {
+			//fmt.Println(indice, "--", (*root).indice.Codigo)
+			Agregar_com(&(*root).der, indice, content)
+		} else if indice == (*root).indice.Codigo {
+			(*root).indice.Comentarios.Insertar(content.Contenido, content.User)
+		}
+	}
+}
+
 func (avl *AVL) Buscar_(indice int) Consulta_prod {
 	//fmt.Println("Llego a buscar ", indice)
 	return _prob_exist_(indice, &avl.raiz)

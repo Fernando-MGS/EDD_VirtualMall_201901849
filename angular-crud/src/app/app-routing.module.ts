@@ -11,6 +11,8 @@ import { PedidosComponent } from './components/pedidos/pedidos.component';
 import {LoginComponent} from './components/login/login.component';
 import {UserComponent} from './components/user/user.component'
 import {ComentarioComponent} from './components/comentario/comentario.component'
+import {ComentsComponent} from './components/coments/coments.component'
+import {CommentsComponent} from './components/comments/comments.component'
 import { from } from 'rxjs';
 const routes: Routes = [
   
@@ -24,8 +26,9 @@ const routes: Routes = [
   {path:'carrito', component: CarritoComponent},
   {path:'pedidos', component: PedidosComponent},
   {path:'pedido/:id', component: PedidosComponent},
-  {path:'test', component: ComentarioComponent},
-  {path:'comentarios/:id', component: ComentarioComponent}
+  {path:'comentario/:id', component: ComentarioComponent},
+  {path:'coments/:id', component: ComentsComponent},
+  {path:'comments/:id', component: CommentsComponent}
 ];
 
 @NgModule({

@@ -1,0 +1,54 @@
+<div class="container">
+    <div class="col" style="position:absolute;left: 5px;">
+        <div>
+        <h6 class="mt-4">{{Respondiendo}}</h6>
+        <textarea #carga
+            style="width: 100vh; height: 1cm; align-self: center; border-color: rgb(198, 148, 245);"></textarea>
+        
+        <br>
+        <button class="btn btn-primary" (click)="comentar(carga.value)"
+            style="background-color:rgb(165, 111, 216);border-color: darkmagenta; border-radius: 1px;">Responder</button>
+        <a href="coments/{{id}}" class="btn btn-primary"
+            style="background-color:rgb(165, 111, 216);border-color: darkmagenta;">Comentar</a>
+        </div>
+        <div class="card" style="width: 100vh; border-color: rgb(198, 148, 245);">
+            <ul class="list-group list-group-flush overflow-auto">
+                <li class="list-group-item">
+                    <h6>👤 Nombre</h6>
+                    Cras justo odio Cras justo odio Cras justo odio Cras justo odio Cras justo odio
+                    <br>
+                    <button class="link" style="padding-right: 20px;"  (click)="test()"
+                        style="color: rgb(156, 95, 235); border: white;">Responder</button>
+                </li>
+
+                <li class="list-group-item">Dapibus ac facilisis in</li>
+
+                <li class="list-group-item">Vestibulum at eros</li>
+                <li class="list-group-item">Vestibulum at eros</li>
+                <li class="list-group-item">Vestibulum at eros</li>
+                <li class="list-group-item">Vestibulum at eros</li>
+                <li class="list-group-item">Vestibulum at eros</li>
+                <li class="list-group-item">Vestibulum at eros</li>
+                <li class="list-group-item">Vestibulum at eros</li>
+                <li class="list-group-item">Vestibulum at eros</li>
+                <li class="list-group-item">Vestibulum at eros</li>
+                <li class="list-group-item">Vestibulum at eros</li>
+                <li class="list-group-item">Vestibulum at eros</li>
+                <li class="list-group-item">Vestibulum at eros</li>
+                <li class="list-group-item">Vestibulum at eros</li>
+
+            </ul>
+        </div>
+    </div>
+    <div class="=col mt-4" style="position:absolute;left: 700px;">
+        <div class="card" style="width: 18rem;">
+            <img class="card-img-top" src={{producto.Imagen}} alt="Card image cap">
+            <div class="card-body">
+                <h4>{{producto.Nombre}}</h4>
+                <b>Precio</b>
+                <span  class="badge badge-primary badge-pill" style="background-color: rgb(165, 111, 216);;">Q{{producto.Precio}}</span>
+                <p class="card-text">{{producto.Descripcion}}</p>
+            </div>
+        </div>
+    </div>
+</div>

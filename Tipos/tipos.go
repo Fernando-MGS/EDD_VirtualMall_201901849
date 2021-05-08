@@ -26,7 +26,7 @@ type Tienda struct {
 	Departamento string
 	ID           string
 	Inventario   AVL
-	//Comentarios *Merkle
+	Comentarios  Hash
 }
 
 type _Inventario struct {
@@ -48,6 +48,7 @@ type Producto struct {
 	ID             string
 	Cant           []int
 	Departamento   string
+	Comentarios    Hash
 }
 type Pedidos struct {
 	Pedidos []Pedido `json:"Pedidos,omitempty"`
@@ -107,6 +108,32 @@ type Usuario struct {
 	Cuenta   string `json:"Cuenta,omitempty"`
 	SHA_pass [32]byte
 	Tipo     int //1 admin, 2 user
+}
+
+type Comentario struct {
+	User      Usuario
+	Contenido string
+}
+
+type Comentarios struct {
+	User       string
+	Contenido  string
+	Index      int
+	Respuestas []Respuesta
+}
+
+type Respuestas struct {
+	Index string
+	User  Usuario
+}
+
+type Respuesta struct {
+	Respuesta string
+	User      string
+	Index     string
+}
+type Comments struct {
+	Comentarios []Comentarios
 }
 
 type Consulta_prod struct {

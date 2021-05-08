@@ -1,0 +1,41 @@
+<div class="container">
+    <div class="col" style="position:absolute;left: 5px;">
+        <div>
+            <h6 class="mt-4">{{Respondiendo}}</h6>
+            <textarea #carga
+                style="width: 100vh; height: 1cm; align-self: center; border-color: rgb(198, 148, 245);"></textarea>
+
+            <br>
+            <a href="coments/{{id}}" (click)="comentar(carga.value)" class="btn btn-primary"
+                style="background-color:rgb(165, 111, 216);border-color: darkmagenta;">Comentar</a>
+        </div>
+        <div class="card" style="width: 100vh; border-color: rgb(198, 148, 245);">
+            
+            <ul class="list-group mt-1">
+                <div *ngFor="let com of Comments">
+                    <li class="list-group-item">
+                        <h6>👤 {{com.User}}</h6>
+                        {{com.Contenido}}
+                        <br>
+                        <button class="link" style="padding-right: 20px;" (click)="test(com.User, com.Index)"
+                            style="color: rgb(156, 95, 235); border: white;">Responder</button>
+                    </li>
+                    
+                </div>
+            </ul>
+        </div>
+    </div>
+    <div class="=col mt-4" style="position:absolute;left: 700px;">
+        <div class="card" style="width: 18rem;">
+            <img class="card-img-top" src={{producto.Logo}} alt="Card image cap">
+            <div class="card-body">
+                <h4>{{producto.Nombre}}</h4>
+                <b>Contacto: </b>
+                <h6>{{producto.Contacto}}</h6>
+                <b>Calificación: </b>
+                <h6>{{producto.Calificacion}}</h6>
+                <p class="card-text">{{producto.Descripcion}}</p>
+            </div>
+        </div>
+    </div>
+</div>

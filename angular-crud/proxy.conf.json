@@ -138,6 +138,20 @@
         "target": "http://localhost:3000",
         "secure": false,
         "loglevel": "debug"
+    },
+    "/comentario/*":{
+        "target": "http://localhost:3000",
+        "secure": false,
+        "loglevel": "debug"
+    },
+    "/articulo/*":{
+        "target": "http://localhost:3000",
+        "secure": false,
+        "loglevel": "debug"
+    },
+    "/comentarios/*":{
+        "target": "http://localhost:3000",
+        "secure": false,
+        "loglevel": "debug"
     }
-
 }

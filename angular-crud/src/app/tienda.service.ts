@@ -112,4 +112,13 @@ export class TiendaService {
   Dev_mes(file:any):Observable<any>{
     return this.http.get<any>('/pedidos_mes/'+file)
   }
+  Comentar(file:any, dir:any):Observable<any>{
+    return this.http.post<any>('/comentario/'+dir,file)
+  }
+  Comentarios(dir:any):Observable<any>{
+      return this.http.get<any>('/comentarios/'+dir)
+  }
+  Articulo(dir:any):Observable<any>{
+    return this.http.get<any>('/articulo/'+dir)
+  }
 }

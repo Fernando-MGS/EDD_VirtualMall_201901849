@@ -15,7 +15,9 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { PedidosComponent } from './components/pedidos/pedidos.component';
 import { LoginComponent } from './components/login/login.component';
 import { UserComponent } from './components/user/user.component';
-import { ComentarioComponent } from './components/comentario/comentario.component'
+import { ComentarioComponent } from './components/comentario/comentario.component';
+import { ComentsComponent } from './components/coments/coments.component';
+import { CommentsComponent } from './components/comments/comments.component'
 
 @NgModule({
   declarations: [
@@ -27,7 +29,9 @@ import { ComentarioComponent } from './components/comentario/comentario.componen
   PedidosComponent,
   LoginComponent,
   UserComponent,
-  ComentarioComponent],
+  ComentarioComponent,
+  ComentsComponent,
+  CommentsComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

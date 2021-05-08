@@ -42,6 +42,9 @@ var usuarios Seguridad.B_Tree
 var admin_def Tipos.Usuario
 var user_actual Tipos.Usuario
 var pedido_merkle Seguridad.Arbol_Merkle
+var user_merkle Seguridad.Arbol_Merkle
+var tiendas_merkle Seguridad.Arbol_Merkle
+var product_merkle Seguridad.Arbol_Merkle
 
 //F U N C I O N E S
 
@@ -112,7 +115,7 @@ func llenar_matriz(info Tipos.Archivo) {
 						h.Write([]byte(data))
 						z := hex.EncodeToString(h.Sum(nil))
 						datos.Hash = z
-						pedido_merkle.Insert(datos)
+						tiendas_merkle.Insert(datos)
 						lis.Insertar(store)
 					}
 					cont++
@@ -127,7 +130,7 @@ func llenar_matriz(info Tipos.Archivo) {
 	}
 	fmt.Println("tOTAL", len(inf))
 	llenar_lista(prelista)
-	pedido_merkle.Print()
+	tiendas_merkle.Print("Tiendas")
 	//pedido_merkle.Fondo()
 	//os.Exit(0)
 
@@ -554,9 +557,17 @@ func pedido_json(pedido Tipos.Pedidos) {
 		for cont2 < len(elemento) {
 			find = _prob_exist_avl(envio[cont].Departamento, envio[cont].Tienda, envio[cont].Calificacion, elemento[cont2].Codigo)
 			if find.Find == 1 {
-				find.Prod.Dueño = "Anonimo"
+				find.Prod.Dueño = strconv.Itoa(envio[cont].Cliente)
 				prod_real = append(prod_real, find.Prod)
 				inutil(err)
+				var data Seguridad.Data_hash
+				data.Data = strconv.Itoa(envio[cont].Cliente) + "," + envio[cont].Fecha + "," + strconv.Itoa(find.Prod.Codigo)
+				data.Data_original = strings.Split(data.Data, ",")
+				hsh := sha256.New()
+				hsh.Write([]byte(data.Data))
+				y := hex.EncodeToString(hsh.Sum(nil))
+				data.Hash = y
+				pedido_merkle.Insert(data)
 				//matriz.Insert(elemento[cont2],dia,index_dep)
 			}
 			cont2++
@@ -573,6 +584,7 @@ func pedido_json(pedido Tipos.Pedidos) {
 		}
 		cont++
 	}
+	pedido_merkle.Print("Pedidos")
 	//AVL_Pedidos.Dev("ENERO", 2013, depto)
 	//AVL_Pedidos.Print()
 }
@@ -929,7 +941,8 @@ func llenar_users(e Tipos.Cuentas) {
 	sum := 0
 	c := len(array_users) - 1
 	array := ordenar_users(array_users, 0, c)
-	for sum < len(array) || sum < 150 {
+	for sum < len(array) && sum < 150 {
+		var data Seguridad.Data_hash
 		if array_users[sum].Cuenta == "Admin" {
 			array[sum].Tipo = 1
 		} else {
@@ -954,10 +967,19 @@ func llenar_users(e Tipos.Cuentas) {
 		}
 		d := string(t)
 		array[sum].Mail = d
-
 		usuarios.Insertar(array[sum], sum)
+		//insertar en el merkle de usuarios
+		data.Data = array[sum].DPI + "-" + array[sum].Nombre + "-" + strconv.Itoa(sum)
+		split := strings.Split(data.Data, "-")
+		data.Data_original = split
+		hsh := sha256.New()
+		hsh.Write([]byte(data.Data))
+		y := hex.EncodeToString(hsh.Sum(nil))
+		data.Hash = y
+		user_merkle.Insert(data)
 		sum++
 	}
+	user_merkle.Print("Users")
 	//usuarios.Print()
 	//fmt.Println(array)
 	//fmt.Println(usuarios.Buscar(array[0]))
@@ -1313,7 +1335,95 @@ func graf_corto(w http.ResponseWriter, r *http.Request) {
 }
 
 //FASE 4
+//Comentarios
+func add_comentario(w http.ResponseWriter, r *http.Request) {
+	headerContentTtype := r.Header.Get("Content-Type")
+	if headerContentTtype != "application/json" {
+		errorResponse(w, "Content Type is not application/json", http.StatusUnsupportedMediaType)
+		return
+	}
+	var e Tipos.Comentario
+	var unmarshalErr *json.UnmarshalTypeError
 
+	decoder := json.NewDecoder(r.Body)
+	decoder.DisallowUnknownFields()
+	err := decoder.Decode(&e)
+	if err != nil {
+		if errors.As(err, &unmarshalErr) {
+			errorResponse(w, "Bad Request. Wrong Type provided for field "+unmarshalErr.Field, http.StatusBadRequest)
+		} else {
+			errorResponse(w, "Bad Request "+err.Error(), http.StatusBadRequest)
+		}
+		return
+	}
+	errorResponse(w, "Archivo Recibido", http.StatusOK)
+	params := mux.Vars(r)
+	conv := params["id"]
+	index := strings.Split(conv, "-") //El index[0] tiene el indice en el array
+	//y el [1] tiene el nombre y el [2] tiene el codigo de producto
+	//tipo, err := strconv.Atoi(index[0])
+	i, err := strconv.Atoi(index[1])
+	str := rowmajor[i].Get(index[2])
+	if len(index) > 3 {
+		codigo, er := strconv.Atoi(index[3])
+		inutil(er)
+		str.Inventario.Comentar(codigo, e)
+		//prod := str.Inventario.Buscar_(codigo).Prod.Comentarios
+		//prod.Print_com()
+	} else {
+		rowmajor[i].Comentar(index[2], e)
+		st := rowmajor[i].Get(index[2])
+		//str.Comentarios.Insertar(e.Contenido, e.User)
+		st.Comentarios.Print_com()
+	}
+	//inutil(er)
+}
+
+func ver_comments(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Llego")
+	params := mux.Vars(r)
+	conv := params["id"]
+	index := strings.Split(conv, "-") //El index[0] tiene el indice en el array
+	//y el [1] tiene el nombre y el [2] tiene el codigo de producto
+	//tipo, err := strconv.Atoi(index[0])
+	i, err := strconv.Atoi(index[1])
+	str := rowmajor[i].Get(index[2])
+	inutil(err)
+	if len(index) > 3 {
+		codigo, er := strconv.Atoi(index[3])
+		inutil(er)
+		producto := str.Inventario.Buscar_(codigo)
+		comment := producto.Prod.Comentarios.Dev_Comentarios()
+		json.NewEncoder(w).Encode(comment)
+		return
+	} else {
+		json.NewEncoder(w).Encode(str.Comentarios.Dev_Comentarios())
+		return
+	}
+}
+
+func ver_articulo(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	conv := params["id"]
+	index := strings.Split(conv, "-") //El index[0] tiene el indice en el array
+	//y el [1] tiene el nombre y el [2] tiene el codigo de producto
+	//tipo, err := strconv.Atoi(index[0])
+	i, err := strconv.Atoi(index[1])
+	str := rowmajor[i].Get(index[2])
+	inutil(err)
+	if len(index) > 3 {
+		codigo, er := strconv.Atoi(index[3])
+		inutil(er)
+		producto := str.Inventario.Buscar_(codigo)
+		json.NewEncoder(w).Encode(producto.Prod)
+		return
+	} else {
+		json.NewEncoder(w).Encode(str)
+		return
+	}
+}
+
+//BLOQUES
 func add_carp() {
 	if _, err := os.Stat("Hash"); os.IsNotExist(err) {
 		err = os.Mkdir("Hash", 0755)
@@ -1378,6 +1488,10 @@ func main() {
 	//router.HandleFunc("/graf_Lista", graf_list).Methods("POST")
 	router.HandleFunc("/graf_mes", graf_mes).Methods("POST")
 	router.HandleFunc("/graf_corto", graf_corto).Methods("POST")
+	router.HandleFunc("/comentario/{id}", add_comentario).Methods("POST")
+	router.HandleFunc("/comentarios/{id}", ver_comments).Methods("GET")
+	router.HandleFunc("/articulo/{id}", ver_articulo).Methods("GET")
+
 	//router.HandleFunc("/graf_b", graf_b).Methods("POST")
 	log.Fatal(http.ListenAndServe(":3000", router))
 }

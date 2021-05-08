@@ -10,6 +10,7 @@ import (
 	"os"
 	"os/exec"
 	"strconv"
+	"strings"
 )
 
 type Sub_arbol struct {
@@ -41,7 +42,13 @@ func newnodo_m(indice Data_hash) *Nodo_markle {
 }
 func newnodo_nil() *Nodo_markle {
 	var b Data_hash
-	b.Data_original = append(b.Data_original, "nulo")
+	hsh := sha256.New()
+	hsh.Write([]byte("--"))
+	y := hex.EncodeToString(hsh.Sum(nil))
+	b.Hash = y
+	b.Data = "--"
+	b.Data_original = append(b.Data_original, "--")
+	b.Data_original = append(b.Data_original, "--")
 	return &Nodo_markle{b, nil, 0}
 }
 
@@ -75,8 +82,8 @@ func dev_raiz(der, izq *Nodo_markle) *Nodo_markle {
 }
 
 func (a *Arbol_Merkle) Insert(dato Data_hash) {
-	//fmt.Println("=======================")
-	//fmt.Println(dato.Data)
+	/*fmt.Println("=======================")
+	fmt.Println(dato.Data)*/
 	if len(a.fondos) == 0 {
 		//fmt.Println("len 0")
 		nodo := newnodo_m(dato)
@@ -95,6 +102,7 @@ func (a *Arbol_Merkle) Insert(dato Data_hash) {
 			for i := d; i < c; i++ {
 				a.fondos = append(a.fondos, newnodo_nil())
 			}
+			//fmt.Println("Se inserto en el nulo de pos ", d)
 			a.fondos[d] = newnodo_m(dato)
 			a.fondos[d].Estado = 1
 			a.insertados++
@@ -111,6 +119,7 @@ func (a *Arbol_Merkle) Insert(dato Data_hash) {
 			}
 		}
 		completar_raices(a.fondos)
+		rehacer_hash(a.fondos, len(a.fondos))
 	}
 	//fmt.Println(len(a.fondos), "-", a.insertados)
 }
@@ -154,7 +163,31 @@ func dev_hash(datos []string) Data_hash {
 	return a
 }
 
+func rehacer_hash(nodo []*Nodo_markle, len_original int) {
+	if len(nodo) > 1 {
+		var nodos []*Nodo_markle
+		for i := 0; i < len(nodo); i += 2 {
+			root := nodo[i].Siguiente
+			if nodo[i].Estado != 2 && nodo[i+1].Estado != 2 { //solo se modifico el if nodo estado
+				var data Data_hash
+				data.Data = nodo[i].hash.Hash + "-" + nodo[i+1].hash.Hash
+				split := strings.Split(data.Data, "-")
+				data.Data_original = split
+				hsh := sha256.New()
+				hsh.Write([]byte(data.Data))
+				y := hex.EncodeToString(hsh.Sum(nil))
+				data.Hash = y
+				root.hash = data
+			}
+			nodos = append(nodos, root)
+		}
+		rehacer_hash(nodos, len_original)
+
+	}
+}
+
 func completar_raices(nodo []*Nodo_markle) {
+	//fmt.Println("Completar raices alv")
 	if len(nodo) > 1 {
 		var raices []*Nodo_markle
 		for i := 0; i < len(nodo); i += 2 {
@@ -173,8 +206,8 @@ func completar_raices(nodo []*Nodo_markle) {
 	}
 }
 
-func (a *Arbol_Merkle) Print() {
-	fmt.Println("Vamo a graficar")
+func (a *Arbol_Merkle) Print(tipo string) {
+	//fmt.Println("Vamo a graficar", len(a.fondos))
 	graph = "digraph structs {\n"
 	nodes = ""
 	pointers = ""
@@ -190,19 +223,19 @@ func (a *Arbol_Merkle) Print() {
 		log.Fatal(err)
 	}
 	//Creación de la imagen
-	fmt.Println(graph)
+	//fmt.Println(graph)
 	path, _ := exec.LookPath("dot") //Para que funcione bien solo asegurate de tener todas las herramientas para
 	// Graphviz en tu compu, si no descargalas osea el Graphviz
-	cmd, _ := exec.Command(path, "-Tpdf", "graph.dot").Output() //En esta parte en lugar de graph va el nombre de tu grafica
-	mode := int(0777)                                           //Se mantiene igual
-	ioutil.WriteFile("Merkle.pdf", cmd, os.FileMode(mode))      //Creacion de la imagen
+	cmd, _ := exec.Command(path, "-Tpdf", "graph.dot").Output()     //En esta parte en lugar de graph va el nombre de tu grafica
+	mode := int(0777)                                               //Se mantiene igual
+	ioutil.WriteFile("Merkle-"+tipo+".pdf", cmd, os.FileMode(mode)) //Creacion de la imagen
 	pointers = ""
 	nodes = ""
 	graph = ""
 }
 
 func _imprimir(nodo []*Nodo_markle, cantidad, point int) {
-	fmt.Println("tamo imprimiendo ", len(nodo))
+	//fmt.Println("tamo imprimiendo ", len(nodo))
 	if len(nodo) > 1 {
 		var raices []*Nodo_markle
 		for i := 0; i < len(nodo); i++ {

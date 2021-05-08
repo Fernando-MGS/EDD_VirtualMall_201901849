@@ -1,68 +1,95 @@
 <div class="container">
-    <div class="row">
-        <div class="col">
-            <div class="card mt-4" style="width: 18rem;">
-                <div class="card-body">
-                      <h5 class="card-title">{{year}}</h5>
-                </div>
-                <ul class="list-group list-group-flush">
-                  <li *ngFor="let ped of pedido" class="list-group-item">
-                    <div class="row">
-                    <div class="col">
-                      <button type="button" (click)="tesl(ped)" class="btn btn-danger btn-sm">{{ped}}</button>
-                    </div>
-                    <div class="col">
-                      <button type="button" class="btn btn-warning btn-sm" style="color: white; background-color: rgb(36, 36, 36);"(click)="graf_mes(ped)">Reporte</button>
-                    </div>
-                    </div>
-                  </li>
-                </ul>
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col" *ngIf="indice>0">
-                      <a href="/pedido/2" class="card-link">Anterior</a>
-                    </div>
-                    <div class="col" *ngIf="indice!=large-1">
-                      <a href="/pedido/1" class="card-link">Siguiente</a>
-                    </div>
-                  </div>
-                </div>
+  <div class="row">
+    <div class="col">
+      <div class="card mt-4" style="width: 18rem;">
+        <div class="card-body">
+          <h5 class="card-title">{{year}}</h5>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li *ngFor="let ped of pedido" class="list-group-item">
+            <div class="row">
+              <div class="col">
+                <button type="button" (click)="tesl(ped)" class="btn btn-danger btn-sm">{{ped}}</button>
               </div>
-              <br>
-<h1>REPORTES</h1>
-<div class="row">
-  
-  <div class="col mt-4">
-  <ul class="list-group list-group-flush">
-    <li class="list-group-item"><button type="button" (click)="graf_store()" class="btn btn-success btn-sm" style="background-color: blueviolet;">Tiendas</button></li>
-    <li class="list-group-item"><button type="button" (click)="graf_year()" class="btn btn-success btn-sm" style="background-color: blueviolet;">Arbol de Pedidos</button></li>
-    <li class="list-group-item"><button type="button" (click)="graf_alm()" class="btn btn-success btn-sm" style="background-color: blueviolet;">Almacen</button></li>
+              <div class="col">
+                <button type="button" class="btn btn-warning btn-sm"
+                  style="color: white; background-color: rgb(36, 36, 36);" (click)="graf_mes(ped)">Reporte</button>
+              </div>
+            </div>
+          </li>
+        </ul>
+        <div class="card-body">
+          <div class="row">
+            <div class="col" *ngIf="indice>0">
+              <a href="/pedido/2" class="card-link">Anterior</a>
+            </div>
+            <div class="col" *ngIf="indice!=large-1">
+              <a href="/pedido/1" class="card-link">Siguiente</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <h1>REPORTES</h1>
+      <div class="row">
+
+        <div class="col mt-4">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item"><button type="button" (click)="graf_store()" class="btn btn-success btn-sm"
+                style="background-color: blueviolet;">Tiendas</button></li>
+            <li class="list-group-item"><button type="button" (click)="graf_year()" class="btn btn-success btn-sm"
+                style="background-color: blueviolet;">Arbol de Pedidos</button></li>
+            <li class="list-group-item"><button type="button" (click)="graf_alm()" class="btn btn-success btn-sm"
+                style="background-color: blueviolet;">Almacen</button></li>
+
+            <li class="list-group-item"><button type="button" (click)="graf_user()" class="btn btn-success btn-sm"
+                style="background-color: blueviolet;">Arbol sin Cifrar</button></li>
+            <li class="list-group-item"><button type="button" (click)="graf_user__()" class="btn btn-success btn-sm"
+                style="background-color: blueviolet;">Arbol Cifrado</button></li>
+            <li class="list-group-item"><button type="button" (click)="graf_user_()" class="btn btn-success btn-sm"
+                style="background-color: blueviolet;">Arbol de Cifrado sensible</button></li>
+            <li class="list-group-item"><button type="button" (click)="graf_user_()" class="btn btn-success btn-sm"
+                style="background-color: blueviolet;">Arbol Merkle de Tiendas</button></li>
+            <li class="list-group-item"><button type="button" (click)="graf_user_()" class="btn btn-success btn-sm"
+                style="background-color: blueviolet;">Arbol Merkle de Productos</button></li>
+            <li class="list-group-item"><button type="button" (click)="graf_user_()" class="btn btn-success btn-sm"
+                style="background-color: blueviolet;">Arbol Merkle de Pedidos</button></li>
+            <li class="list-group-item"><button type="button" (click)="graf_user_()" class="btn btn-success btn-sm"
+                style="background-color: blueviolet;">Arbol Merkle de Usuarios</button></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col mt-4 mr-4">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Dia</th>
+            <th scope="col">Usuario</th>
+            <th scope="col">Departamento</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let pet of rest">
+            <td>{{pet.Dia}}</td>
+            <td>{{pet.Usuario}}</td>
+            <td>{{pet.Departamento}}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="row" style="position:absolute;top: 820px;">
+        <h1>ACCIONES</h1> 
+            <ul class="list-group list-group-flush"style="position:absolute;top: 75px;">
+              <li class="list-group-item"><button type="button" (click)="graf_user_()" class="btn btn-success btn-sm"
+                  style="background-color: blueviolet;">Arreglar Arbol Merkle de Tiendas</button></li>
+              <li class="list-group-item"><button type="button" (click)="graf_user_()" class="btn btn-success btn-sm"
+                  style="background-color: blueviolet;">Arreglar Arbol Merkle de Productos</button></li>
+              <li class="list-group-item"><button type="button" (click)="graf_user_()" class="btn btn-success btn-sm"
+                  style="background-color: blueviolet;">Arreglar Arbol Merkle de Pedidos</button></li>
+              <li class="list-group-item"><button type="button" (click)="graf_user_()" class="btn btn-success btn-sm"
+                  style="background-color: blueviolet;">Arreglar Arbol Merkle de Usuarios</button></li>
+            </ul>
+      </div>
+    </div>
     
-    <li class="list-group-item"><button type="button" (click)="graf_user()" class="btn btn-success btn-sm" style="background-color: blueviolet;">Arbol sin Cifrar</button></li>
-    <li class="list-group-item"><button type="button" (click)="graf_user__()" class="btn btn-success btn-sm" style="background-color: blueviolet;">Arbol Cifrado</button></li>
-    <li class="list-group-item"><button type="button" (click)="graf_user_()" class="btn btn-success btn-sm" style="background-color: blueviolet;">Arbol de Cifrado sensible</button></li>
-  </ul>
-</div>
-</div>
-        </div>
-        <div class="col mt-4 mr-4">
-          <table class="table">
-            <thead>
-              <tr>
-                <th scope="col">Dia</th>
-                <th scope="col">Usuario</th>
-                <th scope="col">Departamento</th>          
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let pet of rest">
-                <td>{{pet.Dia}}</td>
-                <td>{{pet.Usuario}}</td>
-                <td>{{pet.Departamento}}</td>
-              </tr>
-            </tbody>
-          </table>
-          <button type="button" class="btn btn-outline-dark">Dark</button>
-        </div>
-        
-</div>
+  </div>

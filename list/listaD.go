@@ -103,6 +103,14 @@ func (m *Lista) GetItem(index int) Tipos.Tienda { //Devuelve un dato de la lista
 	return aux.dato
 }
 
+func (m *Lista) Comentar(nombre string, comment Tipos.Comentario) { //Devuelve una tienda en especifico
+	aux := m.inicio
+	for nombre != aux.dato.Nombre {
+		aux = aux.siguiente
+	}
+	aux.dato.Comentarios.Insertar(comment.Contenido, comment.User)
+}
+
 func (m *Lista) Get(nombre string) Tipos.Tienda { //Devuelve una tienda en especifico
 	aux := m.inicio
 	for nombre != aux.dato.Nombre {

@@ -196,6 +196,40 @@ func rehacer_hash(nodo []*Nodo_markle, len_original int) {
 	}
 }
 
+func (a *Arbol_Merkle) Fix() {
+	Fix_hash(a.fondos, len(a.fondos))
+}
+
+func Fix_hash(nodo []*Nodo_markle, len_original int) {
+	if len(nodo) > 1 {
+		var nodos []*Nodo_markle
+		for i := 0; i < len(nodo); i += 2 {
+			if nodo[i].Estado == 2 {
+				nodo[i] = newnodo_nil()
+
+			}
+			if nodo[i+1].Estado == 2 {
+				nodo[i+1] = newnodo_nil()
+			}
+			root := nodo[i].Siguiente
+			if nodo[i].Estado != 2 && nodo[i+1].Estado != 2 { //solo se modifico el if nodo estado
+				var data Data_hash
+				data.Data = nodo[i].hash.Hash + "-" + nodo[i+1].hash.Hash
+				split := strings.Split(data.Data, "-")
+				data.Data_original = split
+				hsh := sha256.New()
+				hsh.Write([]byte(data.Data))
+				y := hex.EncodeToString(hsh.Sum(nil))
+				data.Hash = y
+				root.hash = data
+			}
+			nodos = append(nodos, root)
+		}
+		rehacer_hash(nodos, len_original)
+
+	}
+}
+
 func completar_raices(nodo []*Nodo_markle) {
 	//fmt.Println("Completar raices alv")
 	if len(nodo) > 1 {

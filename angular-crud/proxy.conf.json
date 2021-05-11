@@ -178,5 +178,20 @@
         "target": "http://localhost:3000",
         "secure": false,
         "loglevel": "debug"
+    },
+    "/del_user":{
+        "target": "http://localhost:3000",
+        "secure": false,
+        "loglevel": "debug"
+    },
+    "/fix_user":{
+        "target": "http://localhost:3000",
+        "secure": false,
+        "loglevel": "debug"
+    },
+    "/fix_store":{
+        "target": "http://localhost:3000",
+        "secure": false,
+        "loglevel": "debug"
     }
 }

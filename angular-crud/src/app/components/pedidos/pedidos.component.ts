@@ -44,6 +44,15 @@ export class PedidosComponent implements OnInit {
     var split = chain.concat('-',this.year)
     
   }
+
+  fix_user(){
+    this.storeServices.fix_user().subscribe((res)=>{})
+  }
+
+  fix_store(){
+    this.storeServices.fix_store().subscribe((res)=>{})
+  }
+
   graf_alm(){
     this.storeServices.Graph_Alm().subscribe((res)=>{})
   }

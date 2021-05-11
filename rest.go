@@ -975,7 +975,8 @@ func llenar_users(e Tipos.Cuentas) {
 		array[sum].Mail = d
 		usuarios.Insertar(array[sum], sum)
 		//insertar en el merkle de usuarios
-		data.Data = array[sum].DPI + "-" + array[sum].Nombre + "-" + strconv.Itoa(sum)
+		//data.Data = array[sum].DPI + "-" + array[sum].Nombre + "-" + strconv.Itoa(sum)
+		data.Data = array[sum].DPI + "-" + array[sum].Nombre + "-" + array[sum].Correo
 		split := strings.Split(data.Data, "-")
 		data.Data_original = split
 		hsh := sha256.New()
@@ -1085,6 +1086,15 @@ func regisUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(e.Mail)*/
 	//fmt.Printf("%x", e.SHA_pass)
 	user_actual = e
+	var data Seguridad.Data_hash
+	data.Data = e.DPI + "-" + e.Nombre + "-" + e.Correo
+	split := strings.Split(data.Data, "-")
+	data.Data_original = split
+	hsh := sha256.New()
+	hsh.Write([]byte(data.Data))
+	y := hex.EncodeToString(hsh.Sum(nil))
+	data.Hash = y
+	user_merkle.Insert(data)
 }
 
 func loginUser(w http.ResponseWriter, r *http.Request) {
@@ -1560,9 +1570,26 @@ func del_ped(w http.ResponseWriter, r *http.Request) {
 }
 
 func del_user(w http.ResponseWriter, r *http.Request) {
-
+	e := user_actual
+	var data Seguridad.Data_hash
+	data.Data = e.DPI + "-" + e.Nombre + "-" + e.Correo
+	split := strings.Split(data.Data, "-")
+	data.Data_original = split
+	hsh := sha256.New()
+	hsh.Write([]byte(data.Data))
+	y := hex.EncodeToString(hsh.Sum(nil))
+	data.Hash = y
+	fmt.Println(data)
+	user_merkle.Delete(data)
 }
 
+func fix_user(w http.ResponseWriter, r *http.Request) {
+	user_merkle.Fix()
+}
+
+func fix_store(w http.ResponseWriter, r *http.Request) {
+	tiendas_merkle.Fix()
+}
 func main() {
 	router := mux.NewRouter()
 	//test_b()
@@ -1612,7 +1639,9 @@ func main() {
 	router.HandleFunc("/merkle_user", merkle_user).Methods("GET")
 	router.HandleFunc("/del_store/{id}", del_store).Methods("GET")
 	router.HandleFunc("/del_ped/{id}", merkle_ped).Methods("GET")
-	router.HandleFunc("/del_user/{id}", merkle_user).Methods("GET")
+	router.HandleFunc("/del_user", del_user).Methods("GET")
+	router.HandleFunc("/fix_user", fix_user).Methods("GET")
+	router.HandleFunc("/fix_store", fix_store).Methods("GET")
 	//router.HandleFunc("/graf_b", graf_b).Methods("POST")
 	log.Fatal(http.ListenAndServe(":3000", router))
 }

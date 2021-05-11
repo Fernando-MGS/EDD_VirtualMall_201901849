@@ -16,6 +16,10 @@ export class UserComponent implements OnInit {
     this.storeServices.Logout().subscribe()
   }
 
+  del_user(){
+    this.storeServices.del_user().subscribe()
+  }
+
   ngOnInit(): void {
     this.storeServices.Tipo_User().subscribe((resP) =>{
       this.user=resP;

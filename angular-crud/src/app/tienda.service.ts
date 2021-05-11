@@ -136,4 +136,13 @@ export class TiendaService {
   del_store(dir:any):Observable<any>{
     return this.http.get<any>('/del_store/'+dir)
   }
+  del_user():Observable<any>{
+    return this.http.get<any>('/del_user')
+  }
+  fix_store():Observable<any>{
+    return this.http.get<any>('/fix_store')
+  }
+  fix_user():Observable<any>{
+    return this.http.get<any>('/fix_user')
+  }
 }

@@ -63,12 +63,20 @@ export class PedidosComponent implements OnInit {
     this.storeServices.Graph_year().subscribe((res)=>{})
   }
   graf_mes(file:any){
-    
     var post: POST={Tipo:"0",Par1:"0",Par2:file,Par3:this.year,Par4:0}
     console.log(post)
     this.storeServices.Graph_mes(post).subscribe(data=>console.log(data),err=>console.log(err),()=>console.log("Finish"));
-    
   }
+  m_store(){
+    this.storeServices.m_store().subscribe(data=>console.log(data),err=>console.log(err),()=>console.log("Finish"));
+  }
+  m_ped(){
+    this.storeServices.m_ped().subscribe(data=>console.log(data),err=>console.log(err),()=>console.log("Finish"));
+  }
+  m_user(){
+    this.storeServices.m_user().subscribe(data=>console.log(data),err=>console.log(err),()=>console.log("Finish"));
+  }
+
   ngOnInit(): void {
     
     this.id=this.rutaActiva.snapshot.params.id

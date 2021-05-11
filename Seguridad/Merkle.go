@@ -148,6 +148,16 @@ func (a *Arbol_Merkle) Fondo() {
 	}
 }
 
+func (a *Arbol_Merkle) Delete(dato Data_hash) {
+	for i := 0; i < len(a.fondos); i++ {
+		if a.fondos[i].hash.Data == dato.Data {
+			fmt.Println("Se encontro a ", dato.Data)
+			a.fondos[i].Estado = 2
+			break
+		}
+	}
+}
+
 func dev_hash(datos []string) Data_hash {
 	var a Data_hash
 	b := datos[0] + "-"

@@ -1,4 +1,6 @@
 export class Respuesta {
-    Main: String
-    Resp: String[]
+    Respuesta: string
+    User: string
+    Autor:string
+    Index: string
 }

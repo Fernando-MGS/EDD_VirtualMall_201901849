@@ -1,3 +1,6 @@
+<button type="button" class="close" aria-label="Close">
+  <span aria-hidden="true">&times;</span>
+</button>
 <div class="container">
   <div class="row">
     <div class="col-md-8 mt-4">
@@ -15,13 +18,18 @@
           </div>
            <div id="li_h" class="col" style="color:white;font-weight: bolder;">
             <br>
-            {{store.ID}}
+            {{store.Descripcion}}
             
           </div>
           <div class="col">
             <a href="/inventario/{{store.ID}}" class="btn btn-info">Productos</a>
             <br>
             <a href="/coments/1-{{store.ID}}" class="btn btn-info mt-1">Comentarios</a>
+            <div *ngIf="tipo==1">
+              <button type="button" (click)="del_tienda(store.ID)" class="close" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>

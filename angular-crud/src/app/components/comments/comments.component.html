@@ -1,13 +1,13 @@
+<h3 class="ml-4">Comentarios</h3>
 <div class="container">
     <div class="col" style="position:absolute;left: 5px;">
         <div>
-        <h6 class="mt-4">{{Respondiendo}}</h6>
-        <textarea #carga
-            style="width: 100vh; height: 1cm; align-self: center; border-color: rgb(198, 148, 245);"></textarea>
-        
-        <br>
-        <a href="comments/{{id}}" (click)="comentar(carga.value)" class="btn btn-primary"
-                style="background-color:rgb(165, 111, 216);border-color: darkmagenta;">Comentar1</a>
+            <h6 class="mt-4">{{Respondiendo}}</h6>
+            <textarea #carga
+                style="width: 100vh; height: 1cm; align-self: center; border-color: rgb(198, 148, 245);"></textarea>
+            <br>
+            <a href="comments/{{id}}" (click)="comentar(carga.value)" class="btn btn-primary"
+                style="background-color:rgb(165, 111, 216);border-color: darkmagenta;">Comentar</a>
         </div>
         <div class="card" style="width: 100vh; border-color: rgb(198, 148, 245);">
             <ul class="list-group mt-1">
@@ -18,8 +18,21 @@
                         <br>
                         <button class="link" style="padding-right: 20px;" (click)="test(com.User, com.Index)"
                             style="color: rgb(156, 95, 235); border: white;">Responder</button>
+                        <ul class="list-group mt-1">
+                            <div *ngFor="let res of com.Respuestas">
+                                <li class="list-group-item">
+                                    <h6>👤 {{res.User}}</h6>
+                                    {{res.Respuesta}}
+                                    <br>
+                                    <button class="link" style="padding-right: 20px;"
+                                        (click)="test(res.Autor, res.Index)"
+                                        style="color: rgb(156, 95, 235); border: white;">Responder</button>
+                                </li>
+
+                            </div>
+                        </ul>
                     </li>
-                    
+
                 </div>
             </ul>
         </div>
@@ -30,7 +43,8 @@
             <div class="card-body">
                 <h4>{{producto.Nombre}}</h4>
                 <b>Precio</b>
-                <span  class="badge badge-primary badge-pill" style="background-color: rgb(165, 111, 216);;">Q{{producto.Precio}}</span>
+                <span class="badge badge-primary badge-pill"
+                    style="background-color: rgb(165, 111, 216);;">Q{{producto.Precio}}</span>
                 <p class="card-text">{{producto.Descripcion}}</p>
             </div>
         </div>

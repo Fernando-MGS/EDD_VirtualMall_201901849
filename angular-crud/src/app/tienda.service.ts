@@ -124,4 +124,16 @@ export class TiendaService {
   Responder(file:any,dir:any):Observable<any>{
     return this.http.post<any>('/respuesta/'+dir,file)
   }
+  m_store():Observable<any>{
+    return this.http.get<any>('/merkle_store')
+  }
+  m_ped():Observable<any>{
+    return this.http.get<any>('/merkle_ped')
+  }
+  m_user():Observable<any>{
+    return this.http.get<any>('/merkle_user')
+  }
+  del_store(dir:any):Observable<any>{
+    return this.http.get<any>('/del_store/'+dir)
+  }
 }

@@ -111,6 +111,14 @@ func (m *Lista) Comentar(nombre string, comment Tipos.Comentario) { //Devuelve u
 	aux.dato.Comentarios.Insertar(comment.Contenido, comment.User)
 }
 
+func (m *Lista) Responder(nombre string, respuesta Tipos.Respuestas) { //Devuelve una tienda en especifico
+	aux := m.inicio
+	for nombre != aux.dato.Nombre {
+		aux = aux.siguiente
+	}
+	aux.dato.Comentarios.Respuesta(respuesta)
+}
+
 func (m *Lista) Get(nombre string) Tipos.Tienda { //Devuelve una tienda en especifico
 	aux := m.inicio
 	for nombre != aux.dato.Nombre {

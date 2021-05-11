@@ -19,6 +19,7 @@ export class CommentsComponent implements OnInit {
   comentario:any
   Comments:Comentarios[]
   indice:any
+  receptor: string
   t: number[] = [];
   constructor(private rutaActiva: ActivatedRoute, private storeServices: TiendaService) { }
   Respondiendo: string
@@ -29,7 +30,8 @@ export class CommentsComponent implements OnInit {
     console.log(index)
     this.indice=index
     console.log("Hola si funciono uwu")
-    this.Respondiendo = "Respondiendo a"+user
+    this.Respondiendo = "Respondiendo a "+user
+    this.receptor=user
   }
   comentar(text: string) {
     this.r_index=this.indice+""
@@ -37,7 +39,7 @@ export class CommentsComponent implements OnInit {
     if (this.r_activ!=0){
     this.storeServices.Comentar(comentario,this.id).subscribe(data=>console.log(data),err=>console.log(err),()=>console.log("Finish"));
     }else{
-      var Respuestas:Respuestas={Index:this.r_index,Respuesta:text,User:this.user}
+      var Respuestas:Respuestas={Index:this.r_index,Respuesta:text,Receptor:this.receptor,User:this.user}
       this.storeServices.Responder(Respuestas,this.id).subscribe(data=>console.log(data),err=>console.log(err),()=>console.log("Finish"));
     }
   }

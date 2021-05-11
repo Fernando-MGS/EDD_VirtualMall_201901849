@@ -89,6 +89,24 @@ func Agregar_com(root **nodo_m, indice int, content Comentario) {
 	}
 }
 
+func (avl *AVL) Responder(indice int, content Respuestas) {
+	Agregar_res(&avl.raiz, indice, content)
+}
+
+func Agregar_res(root **nodo_m, indice int, content Respuestas) {
+	if (*root) != nil {
+		if indice < (*root).indice.Codigo {
+			//fmt.Println(indice, "--", (*root).indice.Codigo)
+			Agregar_res(&(*root).izq, indice, content)
+		} else if indice > (*root).indice.Codigo {
+			//fmt.Println(indice, "--", (*root).indice.Codigo)
+			Agregar_res(&(*root).der, indice, content)
+		} else if indice == (*root).indice.Codigo {
+			(*root).indice.Comentarios.Respuesta(content)
+		}
+	}
+}
+
 func (avl *AVL) Buscar_(indice int) Consulta_prod {
 	//fmt.Println("Llego a buscar ", indice)
 	return _prob_exist_(indice, &avl.raiz)

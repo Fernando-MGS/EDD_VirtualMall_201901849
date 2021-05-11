@@ -45,6 +45,7 @@ var pedido_merkle Seguridad.Arbol_Merkle
 var user_merkle Seguridad.Arbol_Merkle
 var tiendas_merkle Seguridad.Arbol_Merkle
 var product_merkle Seguridad.Arbol_Merkle
+var bloque int
 
 //F U N C I O N E S
 
@@ -103,10 +104,6 @@ func llenar_matriz(info Tipos.Archivo) {
 						k[cont].Departamento = b[suma].Nombre
 						store = k[cont]
 						data := store.Nombre + "-" + store.Departamento + "-" + strconv.Itoa(store.Calificacion)
-						/*var array_dato []string
-						array_dato=append(array_dato, store.Nombre)
-						array_dato=append(array_dato, store.Departamento)
-						array_dato=append(array_dato, strconv.Itoa(store.Calificacion))*/
 						var datos Seguridad.Data_hash
 						datos.Data = data
 						split := strings.Split(data, "-")
@@ -130,7 +127,7 @@ func llenar_matriz(info Tipos.Archivo) {
 	}
 	fmt.Println("tOTAL", len(inf))
 	llenar_lista(prelista)
-	tiendas_merkle.Print("Tiendas")
+
 	//pedido_merkle.Fondo()
 	//os.Exit(0)
 
@@ -584,7 +581,7 @@ func pedido_json(pedido Tipos.Pedidos) {
 		}
 		cont++
 	}
-	pedido_merkle.Print("Pedidos")
+
 	//AVL_Pedidos.Dev("ENERO", 2013, depto)
 	//AVL_Pedidos.Print()
 }
@@ -696,6 +693,15 @@ func pedido_carrito(w http.ResponseWriter, r *http.Request) {
 	for sum < carrito.Cantidad {
 		prod := carrito.GetItem(sum)
 		//fmt.Println(prod)
+		var data Seguridad.Data_hash
+		fecha := strconv.Itoa(dia) + "-" + mes + "-" + strconv.Itoa(año)
+		data.Data = strconv.Itoa(user_actual.Dpi_) + "," + fecha + "," + strconv.Itoa(prod.Codigo)
+		data.Data_original = strings.Split(data.Data, ",")
+		hsh := sha256.New()
+		hsh.Write([]byte(data.Data))
+		y := hex.EncodeToString(hsh.Sum(nil))
+		data.Hash = y
+		pedido_merkle.Insert(data)
 		index := strings.Split(prod.ID, "-")
 		ID, err := strconv.Atoi(index[0])
 		inutil(err)
@@ -979,7 +985,7 @@ func llenar_users(e Tipos.Cuentas) {
 		user_merkle.Insert(data)
 		sum++
 	}
-	user_merkle.Print("Users")
+
 	//usuarios.Print()
 	//fmt.Println(array)
 	//fmt.Println(usuarios.Buscar(array[0]))
@@ -1071,12 +1077,12 @@ func regisUser(w http.ResponseWriter, r *http.Request) {
 	e.Mail = d
 	e.Pass = z
 	usuarios.Insertar(e, 1)
-	usuarios.Print()
-	fmt.Println(e.Pass)
+	//usuarios.Print()
+	/*fmt.Println(e.Pass)
 	fmt.Println("(())")
 	fmt.Println(e.D_PI)
 	fmt.Println("(())")
-	fmt.Println(e.Mail)
+	fmt.Println(e.Mail)*/
 	//fmt.Printf("%x", e.SHA_pass)
 	user_actual = e
 }
@@ -1400,27 +1406,27 @@ func add_respuesta(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	errorResponse(w, "Archivo Recibido", http.StatusOK)
-	fmt.Println("Estoy respondiendo")
-	fmt.Println(e)
-	//params := mux.Vars(r)
-	//conv := params["id"]
-	//index := strings.Split(conv, "-") //El index[0] tiene el indice en el array
+	/*fmt.Println("Estoy respondiendo")
+	fmt.Println(e)*/
+	params := mux.Vars(r)
+	conv := params["id"]
+	index := strings.Split(conv, "-") //El index[0] tiene el indice en el array
 	//y el [1] tiene el nombre y el [2] tiene el codigo de producto
 	//tipo, err := strconv.Atoi(index[0])
-	/*i, err := strconv.Atoi(index[1])
+	i, err := strconv.Atoi(index[1])
 	str := rowmajor[i].Get(index[2])
 	if len(index) > 3 {
 		codigo, er := strconv.Atoi(index[3])
 		inutil(er)
-		str.Inventario.Comentar(codigo, e)
-		prod := str.Inventario.Buscar_(codigo).Prod.Comentarios
-		prod.Print_com()
+		str.Inventario.Responder(codigo, e)
+		/*prod := str.Inventario.Buscar_(codigo).Prod.Comentarios
+		prod.Print_com()*/
 	} else {
-		rowmajor[i].Comentar(index[2], e)
-		st := rowmajor[i].Get(index[2])
+		rowmajor[i].Responder(index[2], e)
+		//st := rowmajor[i].Get(index[2])
 		//str.Comentarios.Insertar(e.Contenido, e.User)
-		st.Comentarios.Print_com()
-	}*/
+		//st.Comentarios.Print_com()
+	}
 }
 
 func ver_comments(w http.ResponseWriter, r *http.Request) {
@@ -1494,9 +1500,73 @@ func inutil(a error) {
 
 }
 
+//MERKLES
+func merkle_store(w http.ResponseWriter, r *http.Request) {
+	tiendas_merkle.Print("Tiendas")
+	return
+}
+
+func merkle_ped(w http.ResponseWriter, r *http.Request) {
+	pedido_merkle.Print("Pedidos")
+	return
+}
+func merkle_user(w http.ResponseWriter, r *http.Request) {
+	user_merkle.Print("Users")
+	return
+}
+
+func del_store(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	conv := params["id"]
+	index := strings.Split(conv, "-") //El index[0] tiene el indice en el array y el [1] tiene el nombre
+	i, err := strconv.Atoi(index[0])
+	inutil(err)
+	fmt.Println(index)
+	store := rowmajor[i].Get(index[1])
+	data := store.Nombre + "-" + store.Departamento + "-" + strconv.Itoa(store.Calificacion)
+	var datos Seguridad.Data_hash
+	datos.Data = data
+	split := strings.Split(data, "-")
+	datos.Data_original = split
+	h := sha256.New()
+	h.Write([]byte(data))
+	z := hex.EncodeToString(h.Sum(nil))
+	datos.Hash = z
+	tiendas_merkle.Delete(datos)
+	return
+}
+
+func del_ped(w http.ResponseWriter, r *http.Request) {
+	headerContentTtype := r.Header.Get("Content-Type")
+	if headerContentTtype != "application/json" {
+		errorResponse(w, "Content Type is not application/json", http.StatusUnsupportedMediaType)
+		return
+	}
+	var e Tipos.POST
+	var unmarshalErr *json.UnmarshalTypeError
+
+	decoder := json.NewDecoder(r.Body)
+	decoder.DisallowUnknownFields()
+	err := decoder.Decode(&e)
+	if err != nil {
+		if errors.As(err, &unmarshalErr) {
+			errorResponse(w, "Bad Request. Wrong Type provided for field "+unmarshalErr.Field, http.StatusBadRequest)
+		} else {
+			errorResponse(w, "Bad Request "+err.Error(), http.StatusBadRequest)
+		}
+		return
+	}
+	errorResponse(w, "Archivo Recibido", http.StatusOK)
+}
+
+func del_user(w http.ResponseWriter, r *http.Request) {
+
+}
+
 func main() {
 	router := mux.NewRouter()
 	//test_b()
+
 	cart_s()
 	add_carp()
 	default_user()
@@ -1537,7 +1607,12 @@ func main() {
 	router.HandleFunc("/respuesta/{id}", add_respuesta).Methods("POST")
 	router.HandleFunc("/comentarios/{id}", ver_comments).Methods("GET")
 	router.HandleFunc("/articulo/{id}", ver_articulo).Methods("GET")
-
+	router.HandleFunc("/merkle_store", merkle_store).Methods("GET")
+	router.HandleFunc("/merkle_ped", merkle_ped).Methods("GET")
+	router.HandleFunc("/merkle_user", merkle_user).Methods("GET")
+	router.HandleFunc("/del_store/{id}", del_store).Methods("GET")
+	router.HandleFunc("/del_ped/{id}", merkle_ped).Methods("GET")
+	router.HandleFunc("/del_user/{id}", merkle_user).Methods("GET")
 	//router.HandleFunc("/graf_b", graf_b).Methods("POST")
 	log.Fatal(http.ListenAndServe(":3000", router))
 }

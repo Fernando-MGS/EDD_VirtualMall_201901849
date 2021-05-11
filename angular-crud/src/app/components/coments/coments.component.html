@@ -1,3 +1,4 @@
+<h3 class="ml-4">Comentarios</h3>
 <div class="container">
     <div class="col" style="position:absolute;left: 5px;">
         <div>
@@ -10,7 +11,7 @@
                 style="background-color:rgb(165, 111, 216);border-color: darkmagenta;">Comentar</a>
         </div>
         <div class="card" style="width: 100vh; border-color: rgb(198, 148, 245);">
-            
+
             <ul class="list-group mt-1">
                 <div *ngFor="let com of Comments">
                     <li class="list-group-item">
@@ -19,8 +20,21 @@
                         <br>
                         <button class="link" style="padding-right: 20px;" (click)="test(com.User, com.Index)"
                             style="color: rgb(156, 95, 235); border: white;">Responder</button>
+                        <ul class="list-group mt-1">
+                            <div *ngFor="let res of com.Respuestas">
+                                <li class="list-group-item">
+                                    <h6>👤 {{res.User}}</h6>
+                                    {{res.Respuesta}}
+                                    <br>
+                                    <button class="link" style="padding-right: 20px;"
+                                        (click)="test(res.Autor, res.Index)"
+                                        style="color: rgb(156, 95, 235); border: white;">Responder</button>
+                                </li>
+
+                            </div>
+                        </ul>
                     </li>
-                    
+
                 </div>
             </ul>
         </div>

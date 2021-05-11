@@ -5,6 +5,7 @@ import {Comentario} from 'src/app/models/comentario';
 import {Prod} from 'src/app/models/producto';
 import {Store} from 'src/app/models/store';
 import {Comentarios} from 'src/app/models/comentarios';
+import {Respuestas} from 'src/app/models/respuestas';
 @Component({
   selector: 'app-coments',
   templateUrl: './coments.component.html',
@@ -19,7 +20,10 @@ export class ComentsComponent implements OnInit {
   t:number[]=[];
   comentarios:any
   Comments:Comentarios[]
-  r_activ:number
+  indice:any
+  receptor:string
+  r_activ=1
+  r_index:any
   constructor(private rutaActiva: ActivatedRoute, private storeServices: TiendaService) { 
 
   }
@@ -27,14 +31,18 @@ export class ComentsComponent implements OnInit {
   test(user:any, index:any){
     this.r_activ=0
     console.log(index)
+    this.indice=index
+    this.receptor=user
     this.Respondiendo="Respondiendo a "+user
   }
   comentar(text:string){
+    this.r_index=this.indice+""
     var comentario: Comentario={Contenido:text,User:this.user}
     if (this.r_activ!=0){
     this.storeServices.Comentar(comentario,this.id).subscribe(data=>console.log(data),err=>console.log(err),()=>console.log("Finish"));
     }else{
-      console.log("comentararara")
+      var Respuestas:Respuestas={Index:this.r_index,Respuesta:text,Receptor:this.receptor,User:this.user}
+      this.storeServices.Responder(Respuestas,this.id).subscribe(data=>console.log(data),err=>console.log(err),()=>console.log("Finish"));
     }
   }
 
